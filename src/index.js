@@ -362,111 +362,125 @@ const matrix = [
 
 ];
 
-const figures = {
-  pawn: {},
-  rook: {},
-  king: {},
-  queen: {},
-  knight: {},
-  bishop: {},
-};
+// const pieces = {
+//   pawn: {},
+//   rook: {},
+//   king: {},
+//   queen: {},
+//   knight: {},
+//   bishop: {},
+// };
 
-function createPieces() {
-  const wRook = document.createElement('img');
-  wRook.setAttribute('src', './assets/wR.svg');
-
-  const wKnight = document.createElement('img');
-  wKnight.setAttribute('src', './assets/wN.svg');
-
-  const wBishop = document.createElement('img');
-  wBishop.setAttribute('src', './assets/wB.svg');
-
-  const wQueen = document.createElement('img');
-  wQueen.setAttribute('src', './assets/wQ.svg');
-
-  const wKing = document.createElement('img');
-  wKing.setAttribute('src', './assets/wK.svg');
-
-  const wPawn = document.createElement('img');
-  wPawn.setAttribute('src', './assets/wP.svg');
-
-  const bRook = document.createElement('img');
-  bRook.setAttribute('src', './assets/bR.svg');
-
-  const bKnight = document.createElement('img');
-  bKnight.setAttribute('src', './assets/bN.svg');
-
-  const bBishop = document.createElement('img');
-  bBishop.setAttribute('src', './assets/bB.svg');
-
-  const bQueen = document.createElement('img');
-  bQueen.setAttribute('src', './assets/bQ.svg');
-
-  const bKing = document.createElement('img');
-  bKing.setAttribute('src', './assets/bK.svg');
-
-  const bPawn = document.createElement('img');
-  bPawn.setAttribute('src', './assets/bP.svg');
-
-  return {
-    bRook,
-    bKnight,
-    bBishop,
-    bQueen,
-    bKing,
-    bPawn,
-    wRook,
-    wKnight,
-    wBishop,
-    wQueen,
-    wKing,
-    wPawn,
-  };
+function createPiece(piece) {
+  switch (piece) {
+    case 'wRook': {
+      const wRook = document.createElement('img');
+      wRook.setAttribute('src', './assets/wR.svg');
+      return wRook;
+    }
+    case 'wKnight': {
+      const wKnight = document.createElement('img');
+      wKnight.setAttribute('src', './assets/wN.svg');
+      return wKnight;
+    }
+    case 'wBishop': {
+      const wBishop = document.createElement('img');
+      wBishop.setAttribute('src', './assets/wB.svg');
+      return wBishop;
+    }
+    case 'wQueen': {
+      const wQueen = document.createElement('img');
+      wQueen.setAttribute('src', './assets/wQ.svg');
+      return wQueen;
+    }
+    case 'wKing': {
+      const wKing = document.createElement('img');
+      wKing.setAttribute('src', './assets/wK.svg');
+      return wKing;
+    }
+    case 'wPawn': {
+      const wPawn = document.createElement('img');
+      wPawn.setAttribute('src', './assets/wP.svg');
+      return wPawn;
+    }
+    case 'bRook': {
+      const bRook = document.createElement('img');
+      bRook.setAttribute('src', './assets/bR.svg');
+      return bRook;
+    }
+    case 'bKnight': {
+      const bKnight = document.createElement('img');
+      bKnight.setAttribute('src', './assets/bN.svg');
+      return bKnight;
+    }
+    case 'bBishop': {
+      const bBishop = document.createElement('img');
+      bBishop.setAttribute('src', './assets/bB.svg');
+      return bBishop;
+    }
+    case 'bQueen': {
+      const bQueen = document.createElement('img');
+      bQueen.setAttribute('src', './assets/bQ.svg');
+      return bQueen;
+    }
+    case 'bKing': {
+      const bKing = document.createElement('img');
+      bKing.setAttribute('src', './assets/bK.svg');
+      return bKing;
+    }
+    case 'bPawn': {
+      const bPawn = document.createElement('img');
+      bPawn.setAttribute('src', './assets/bP.svg');
+      return bPawn;
+    }
+    default: {
+      throw new Error('Unknown name of the piece');
+    }
+  }
 }
 
 const board = document.querySelector('.board');
 function render() {
   matrix.forEach((row) => {
     row.forEach((cell) => {
-      const pieces = createPieces();
       const [cellY, cellX] = cell.name.split('');
       const currRow = board.querySelector(`[data-row="${cellX}"]`);
       const currCell = currRow.querySelector(`[data-cell="${cellY}"]`);
       switch (cell.contains.type) {
         case 'pawn': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wPawn)
-            : currCell.replaceChildren(pieces.bPawn);
+            ? currCell.replaceChildren(createPiece('wPawn'))
+            : currCell.replaceChildren(createPiece('bPawn'));
           break;
         }
         case 'rook': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wRook)
-            : currCell.replaceChildren(pieces.bRook);
+            ? currCell.replaceChildren(createPiece('wRook'))
+            : currCell.replaceChildren(createPiece('bRook'));
           break;
         }
         case 'knight': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wKnight)
-            : currCell.replaceChildren(pieces.bKnight);
+            ? currCell.replaceChildren(createPiece('wKnight'))
+            : currCell.replaceChildren(createPiece('bKnight'));
           break;
         }
         case 'bishop': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wBishop)
-            : currCell.replaceChildren(pieces.bBishop);
+            ? currCell.replaceChildren(createPiece('wBishop'))
+            : currCell.replaceChildren(createPiece('bBishop'));
           break;
         }
         case 'queen': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wQueen)
-            : currCell.replaceChildren(pieces.bQueen);
+            ? currCell.replaceChildren(createPiece('wQueen'))
+            : currCell.replaceChildren(createPiece('bQueen'));
           break;
         }
         case 'king': {
           cell.contains.color === 'white'
-            ? currCell.replaceChildren(pieces.wKing)
-            : currCell.replaceChildren(pieces.bKing);
+            ? currCell.replaceChildren(createPiece('wKing'))
+            : currCell.replaceChildren(createPiece('bKing'));
           break;
         }
         default: {
