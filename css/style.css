@@ -28,7 +28,3 @@
 .row:nth-child(odd) .cell:nth-child(odd)  {
   background-color: #f8e0b0
 }
-
-.piece {
-  border-radius: 50px;
-}
