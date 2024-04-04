@@ -1,4 +1,5 @@
-import createPiece from './createPiece.js';
+import getMoves from './getMoves.js';
+import renderCell from './renderCell.js';
 
 const matrix = [
   [{
@@ -364,6 +365,11 @@ const matrix = [
 
 ];
 
+const cursorState = {
+  status: null,
+}
+
+
 // const pieces = {
 //   pawn: {},
 //   rook: {},
@@ -373,56 +379,39 @@ const matrix = [
 //   bishop: {},
 // };
 
+
+
 const board = document.querySelector('.board');
 function render() {
   matrix.forEach((row) => {
-    row.forEach((cell) => {
-      const [cellY, cellX] = cell.name.split('');
+    row.forEach((matrixCell) => {
+      const [cellY, cellX] = matrixCell.name.split('');
       const currRow = board.querySelector(`[data-row="${cellX}"]`);
-      const currCell = currRow.querySelector(`[data-cell="${cellY}"]`);
-      switch (cell.contains.type) {
-        case 'pawn': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wPawn'))
-            : currCell.replaceChildren(createPiece('bPawn'));
-          break;
-        }
-        case 'rook': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wRook'))
-            : currCell.replaceChildren(createPiece('bRook'));
-          break;
-        }
-        case 'knight': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wKnight'))
-            : currCell.replaceChildren(createPiece('bKnight'));
-          break;
-        }
-        case 'bishop': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wBishop'))
-            : currCell.replaceChildren(createPiece('bBishop'));
-          break;
-        }
-        case 'queen': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wQueen'))
-            : currCell.replaceChildren(createPiece('bQueen'));
-          break;
-        }
-        case 'king': {
-          cell.contains.color === 'white'
-            ? currCell.replaceChildren(createPiece('wKing'))
-            : currCell.replaceChildren(createPiece('bKing'));
-          break;
-        }
-        default: {
-          return null;
-        }
-      }
+      const domCell = currRow.querySelector(`[data-cell="${cellY}"]`);
+      renderCell(matrixCell, domCell);
     });
   });
 }
+
+board.addEventListener('click', (e) => {
+  if (e.target.tagName === 'IMG') {
+    cursorState.status = 'select'
+  }
+  switch(cursorState.status){
+    case 'select': {
+      const availableMoves = getMoves(e.target, matrix);
+      console.log(availableMoves);
+      console.log(1);
+      cursorState.status = "move";
+      break;
+    }
+    case 'move': {
+      console.log('moving');
+      console.log(e.target);
+      break;
+    }
+  }
+  
+})
 
 render();
