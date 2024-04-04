@@ -13,11 +13,6 @@
   display: flex;
 }
 
-.cell {
-  width: 70px;
-  height: 70px;
-  background-color: #a37043;
-}
 
 .cell img {
   width: 100%;
@@ -27,4 +22,15 @@
 .row:nth-child(even) .cell:nth-child(even),
 .row:nth-child(odd) .cell:nth-child(odd)  {
   background-color: #f8e0b0
+}
+
+.available {
+  background: URL('../assets/greenDot.svg') no-repeat center center;
+  background-size: 20% 20%;
+}
+
+.cell {
+  width: 70px;
+  height: 70px;
+  background-color: #a37043;
 }
