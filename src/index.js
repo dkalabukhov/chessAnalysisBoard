@@ -441,6 +441,10 @@ const cursorState = {
   status: null,
 };
 
+const state = {
+  currentCell: null,
+};
+
 // const pieces = {
 //   pawn: {},
 //   rook: {},
@@ -462,19 +466,24 @@ function render() {
 
 board.addEventListener('click', (e) => {
   if (e.target.tagName === 'IMG') {
+    state.currentCell?.classList.remove('active-cell');
+    state.currentCell = e.target.parentNode;
     cursorState.status = 'select';
     removeAvailableMoves();
   }
   switch (cursorState.status) {
     case 'select': {
+      state.currentCell.classList.add('active-cell');
       const availableMoves = getMoves(e.target, matrix);
       showAvailableMoves(availableMoves, matrix);
       cursorState.status = 'move';
       break;
     }
     case 'move': {
+      state.currentCell.classList.remove('active-cell');
       removeAvailableMoves();
       cursorState.status = null;
+      state.currentCell = null;
       break;
     }
     default: {

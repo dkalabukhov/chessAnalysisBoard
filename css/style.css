@@ -29,6 +29,10 @@
   background-size: 25% 25%;
 }
 
+.active-cell {
+  background: URL('../assets/greenSquare.png') no-repeat center center/cover;
+}
+
 .cell {
   width: 70px;
   height: 70px;
