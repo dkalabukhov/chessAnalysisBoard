@@ -25,8 +25,8 @@
 }
 
 .available {
-  background: URL('../assets/greenDot.svg') no-repeat center center;
-  background-size: 20% 20%;
+  background: URL('../assets/greenDot.png') no-repeat center center;
+  background-size: 25% 25%;
 }
 
 .cell {

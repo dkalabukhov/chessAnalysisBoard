@@ -468,7 +468,6 @@ board.addEventListener('click', (e) => {
   switch (cursorState.status) {
     case 'select': {
       const availableMoves = getMoves(e.target, matrix);
-      console.log(availableMoves);
       showAvailableMoves(availableMoves, matrix);
       cursorState.status = 'move';
       break;

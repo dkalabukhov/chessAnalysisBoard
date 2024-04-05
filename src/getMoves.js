@@ -23,7 +23,6 @@ export default (element, matrix) => {
         const availableCell1 = matrix[row][cellsToIntegers[cell]];
         if (row === 2) {
           const availableCell2 = matrix[row + 1][cellsToIntegers[cell]];
-          console.log(availableCell2);
           return [availableCell1, availableCell2];
         } return [availableCell1];
       }
