@@ -1,5 +1,5 @@
 const showAvailableMoves = (availableMoves, matrix) => {
-  if (!availableMoves) return null;
+  if (!availableMoves || availableMoves.length === 0) return null;
   availableMoves.forEach((moveCell) => {
     matrix.forEach((row) => {
       row.forEach((matrixCell) => {
