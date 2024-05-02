@@ -38,7 +38,15 @@ export default (matrixCell, domCell) => {
         : domCell.replaceChildren(createPiece('bKing'));
       break;
     }
-    default: {
+    case 'dot': {
+      domCell.classList.add('available');
+      break;
+    }
+    case null: {
+      domCell.classList.remove('available');
+      break;
+    }
+    default: {      
       return null;
     }
   }
