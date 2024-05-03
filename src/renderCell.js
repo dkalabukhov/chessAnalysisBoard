@@ -1,4 +1,4 @@
-import createPiece from "./createPiece.js";
+import createPiece from './createPiece.js';
 
 export default (matrixCell, domCell) => {
   switch (matrixCell.contains.type) {
@@ -46,8 +46,22 @@ export default (matrixCell, domCell) => {
       domCell.classList.remove('available');
       break;
     }
-    default: {      
+    default: {
       return null;
     }
   }
-}
+
+  switch (matrixCell.isActive) {
+    case true: {
+      domCell.classList.add('active-cell');
+      break;
+    }
+    case false: {
+      domCell.classList.remove('active-cell');
+      break;
+    }
+    default: {
+      return null;
+    }
+  }
+};

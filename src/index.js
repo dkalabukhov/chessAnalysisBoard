@@ -1,6 +1,7 @@
-import getAvailableCells from './getMoves.js';
+import getAvailableCells from './getAvailableCells.js';
 import renderCell from './renderCell.js';
-import { removeAvailableMoves } from './showAvailableMoves.js';
+import removeAvailableMoves from './removeAvailableMoves.js';
+import removeActiveStatus from './removeActiveStatus.js';
 
 const matrix = [
   [
@@ -18,6 +19,7 @@ const matrix = [
         type: 'knight',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'c1',
@@ -25,6 +27,7 @@ const matrix = [
         type: 'bishop',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'd1',
@@ -32,6 +35,7 @@ const matrix = [
         type: 'queen',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'e1',
@@ -39,6 +43,7 @@ const matrix = [
         type: 'king',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'f1',
@@ -46,6 +51,7 @@ const matrix = [
         type: 'bishop',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'g1',
@@ -53,6 +59,7 @@ const matrix = [
         type: 'knight',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'h1',
@@ -60,6 +67,7 @@ const matrix = [
         type: 'rook',
         color: 'white',
       },
+      isActive: false,
     },
   ],
   [
@@ -69,6 +77,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'b2',
@@ -76,6 +85,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'c2',
@@ -83,6 +93,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'd2',
@@ -90,6 +101,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'e2',
@@ -97,6 +109,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'f2',
@@ -104,6 +117,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'g2',
@@ -111,6 +125,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'h2',
@@ -118,6 +133,7 @@ const matrix = [
         type: 'pawn',
         color: 'white',
       },
+      isActive: false,
     },
   ],
   [
@@ -327,6 +343,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'b7',
@@ -334,6 +351,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'c7',
@@ -341,6 +359,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'd7',
@@ -348,6 +367,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'e7',
@@ -355,6 +375,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'f7',
@@ -362,6 +383,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'g7',
@@ -369,6 +391,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'h7',
@@ -376,6 +399,7 @@ const matrix = [
         type: 'pawn',
         color: 'black',
       },
+      isActive: false,
     },
   ],
   [
@@ -385,6 +409,7 @@ const matrix = [
         type: 'rook',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'b8',
@@ -392,6 +417,7 @@ const matrix = [
         type: 'knight',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'c8',
@@ -399,6 +425,7 @@ const matrix = [
         type: 'bishop',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'd8',
@@ -406,6 +433,7 @@ const matrix = [
         type: 'queen',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'e8',
@@ -413,6 +441,7 @@ const matrix = [
         type: 'king',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'f8',
@@ -420,6 +449,7 @@ const matrix = [
         type: 'bishop',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'g8',
@@ -427,6 +457,7 @@ const matrix = [
         type: 'knight',
         color: 'black',
       },
+      isActive: false,
     },
     {
       name: 'h8',
@@ -434,46 +465,42 @@ const matrix = [
         type: 'rook',
         color: 'black',
       },
+      isActive: false,
     },
   ],
 ];
 
-const cursorState = {
-  status: null,
-};
-
-// const pieces = {
-//   pawn: {},
-//   rook: {},
-//   king: {},
-//   queen: {},
-//   knight: {},
-//   bishop: {},
-// };
-
 const board = document.querySelector('.board');
-function render() {
+
+const render = () => {
   matrix.forEach((row) => {
     row.forEach((matrixCell) => {
       const domCell = document.querySelector(`[data-cell="${matrixCell.name}"]`);
       renderCell(matrixCell, domCell);
     });
   });
-}
+};
 
 board.addEventListener('click', (e) => {
   removeAvailableMoves(matrix);
-  const availableCells = getAvailableCells(e.target, matrix);
-  matrix.forEach((row) => {
-    row.forEach((cell) => {
-      if (availableCells.includes(cell.name)) {
-        if (!cell.contains.type) {
-          cell.contains = { type: 'dot' }
+  removeActiveStatus(matrix);
+  if (e.target.hasAttribute('alt')) {
+    const cellItem = e.target.parentElement;
+    const activeCellName = cellItem.dataset.cell;
+    const availableCells = getAvailableCells(e.target, matrix);
+    matrix.forEach((row) => {
+      row.forEach((cell) => {
+        if (availableCells.includes(cell.name)) {
+          if (!cell.contains.type) {
+            cell.contains = { type: 'dot' };
+          }
         }
-      }
-    })
-  })
-  
+        if (cell.name === activeCellName) {
+          cell.isActive = true;
+        }
+      });
+    });
+  }
   render();
 });
 
