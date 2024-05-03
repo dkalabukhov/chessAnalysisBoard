@@ -23,17 +23,17 @@ export default (element, matrix) => {
         const availableCell1 = matrix[row][cellsToIntegers[cell]];
         if (row === 2) {
           const availableCell2 = matrix[row + 1][cellsToIntegers[cell]];
-          return [availableCell1, availableCell2];
-        } return [availableCell1];
+          return [availableCell1.name, availableCell2.name];
+        } return [availableCell1.name];
       }
       const availableCell1 = matrix[row - 2][cellsToIntegers[cell]];
       if (row === 7) {
         const availableCell2 = matrix[row - 3][cellsToIntegers[cell]];
-        return [availableCell1, availableCell2];
-      } return [availableCell1];
+        return [availableCell1.name, availableCell2.name];
+      } return [availableCell1.name];
     }
     default: {
-      return null;
+      return [];
     }
   }
 };

@@ -1,6 +1,6 @@
-import getMoves from './getMoves.js';
+import getAvailableCells from './getMoves.js';
 import renderCell from './renderCell.js';
-import { showAvailableMoves, removeAvailableMoves } from './showAvailableMoves.js';
+import { removeAvailableMoves } from './showAvailableMoves.js';
 
 const matrix = [
   [
@@ -10,6 +10,7 @@ const matrix = [
         type: 'rook',
         color: 'white',
       },
+      isActive: false,
     },
     {
       name: 'b1',
@@ -441,10 +442,6 @@ const cursorState = {
   status: null,
 };
 
-const state = {
-  currentCell: null,
-};
-
 // const pieces = {
 //   pawn: {},
 //   rook: {},
@@ -465,31 +462,19 @@ function render() {
 }
 
 board.addEventListener('click', (e) => {
-  if (e.target.tagName === 'IMG') {
-    state.currentCell?.classList.remove('active-cell');
-    state.currentCell = e.target.parentNode;
-    cursorState.status = 'select';
-    removeAvailableMoves();
-  }
-  switch (cursorState.status) {
-    case 'select': {
-      state.currentCell.classList.add('active-cell');
-      const availableMoves = getMoves(e.target, matrix);
-      showAvailableMoves(availableMoves, matrix);
-      cursorState.status = 'move';
-      break;
-    }
-    case 'move': {
-      state.currentCell.classList.remove('active-cell');
-      removeAvailableMoves();
-      cursorState.status = null;
-      state.currentCell = null;
-      break;
-    }
-    default: {
-      return null;
-    }
-  }
+  removeAvailableMoves(matrix);
+  const availableCells = getAvailableCells(e.target, matrix);
+  matrix.forEach((row) => {
+    row.forEach((cell) => {
+      if (availableCells.includes(cell.name)) {
+        if (!cell.contains.type) {
+          cell.contains = { type: 'dot' }
+        }
+      }
+    })
+  })
+  
+  render();
 });
 
 render();
