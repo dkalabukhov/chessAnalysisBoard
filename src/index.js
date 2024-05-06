@@ -487,7 +487,6 @@ const render = () => {
 };
 
 board.addEventListener('click', (e) => {
-  cleanEffects(matrix);
   switch (state.cursor) {
     case 'idle': {
       if (e.target.hasAttribute('alt')) {
@@ -511,6 +510,7 @@ board.addEventListener('click', (e) => {
       const activeCellName = e.target.dataset.cell;
       move(matrix, activeCellName, state.figure);
       state.cursor = 'idle';
+      cleanEffects(matrix);
       break;
     }
     default: {
