@@ -1,11 +1,11 @@
 import getAvailableCells from './getAvailableCells.js';
 import renderCell from './renderCell.js';
-import removeAvailableMoves from './removeAvailableMoves.js';
-import removeActiveStatus from './removeActiveStatus.js';
+import cleanEffects from './cleanEffects.js';
+import move from './move.js';
 
-const matrix = [
-  [
-    {
+const matrix = {
+  1: {
+    a: {
       name: 'a1',
       contains: {
         type: 'rook',
@@ -13,7 +13,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    b: {
       name: 'b1',
       contains: {
         type: 'knight',
@@ -21,7 +21,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    c: {
       name: 'c1',
       contains: {
         type: 'bishop',
@@ -29,7 +29,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    d: {
       name: 'd1',
       contains: {
         type: 'queen',
@@ -37,7 +37,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    e: {
       name: 'e1',
       contains: {
         type: 'king',
@@ -45,7 +45,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    f: {
       name: 'f1',
       contains: {
         type: 'bishop',
@@ -53,7 +53,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    g: {
       name: 'g1',
       contains: {
         type: 'knight',
@@ -61,7 +61,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    h: {
       name: 'h1',
       contains: {
         type: 'rook',
@@ -69,9 +69,9 @@ const matrix = [
       },
       isActive: false,
     },
-  ],
-  [
-    {
+  },
+  2: {
+    a: {
       name: 'a2',
       contains: {
         type: 'pawn',
@@ -79,7 +79,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    b: {
       name: 'b2',
       contains: {
         type: 'pawn',
@@ -87,7 +87,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    c: {
       name: 'c2',
       contains: {
         type: 'pawn',
@@ -95,7 +95,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    d: {
       name: 'd2',
       contains: {
         type: 'pawn',
@@ -103,7 +103,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    e: {
       name: 'e2',
       contains: {
         type: 'pawn',
@@ -111,7 +111,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    f: {
       name: 'f2',
       contains: {
         type: 'pawn',
@@ -119,7 +119,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    g: {
       name: 'g2',
       contains: {
         type: 'pawn',
@@ -127,7 +127,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    h: {
       name: 'h2',
       contains: {
         type: 'pawn',
@@ -135,209 +135,209 @@ const matrix = [
       },
       isActive: false,
     },
-  ],
-  [
-    {
+  },
+  3: {
+    a: {
       name: 'a3',
       contains: {
         type: null,
       },
     },
-    {
+    b: {
       name: 'b3',
       contains: {
         type: null,
       },
     },
-    {
+    c: {
       name: 'c3',
       contains: {
         type: null,
       },
     },
-    {
+    d: {
       name: 'd3',
       contains: {
         type: null,
       },
     },
-    {
+    e: {
       name: 'e3',
       contains: {
         type: null,
       },
     },
-    {
+    f: {
       name: 'f3',
       contains: {
         type: null,
       },
     },
-    {
+    g: {
       name: 'g3',
       contains: {
         type: null,
       },
     },
-    {
+    h: {
       name: 'h3',
       contains: {
         type: null,
       },
     },
-  ],
-  [
-    {
+  },
+  4: {
+    a: {
       name: 'a4',
       contains: {
         type: null,
       },
     },
-    {
+    b: {
       name: 'b4',
       contains: {
         type: null,
       },
     },
-    {
+    c: {
       name: 'c4',
       contains: {
         type: null,
       },
     },
-    {
+    d: {
       name: 'd4',
       contains: {
         type: null,
       },
     },
-    {
+    e: {
       name: 'e4',
       contains: {
         type: null,
       },
     },
-    {
+    f: {
       name: 'f4',
       contains: {
         type: null,
       },
     },
-    {
+    g: {
       name: 'g4',
       contains: {
         type: null,
       },
     },
-    {
+    h: {
       name: 'h4',
       contains: {
         type: null,
       },
     },
-  ],
-  [
-    {
+  },
+  5: {
+    a: {
       name: 'a5',
       contains: {
         type: null,
       },
     },
-    {
+    b: {
       name: 'b5',
       contains: {
         type: null,
       },
     },
-    {
+    c: {
       name: 'c5',
       contains: {
         type: null,
       },
     },
-    {
+    d: {
       name: 'd5',
       contains: {
         type: null,
       },
     },
-    {
+    e: {
       name: 'e5',
       contains: {
         type: null,
       },
     },
-    {
+    f: {
       name: 'f5',
       contains: {
         type: null,
       },
     },
-    {
+    g: {
       name: 'g5',
       contains: {
         type: null,
       },
     },
-    {
+    h: {
       name: 'h5',
       contains: {
         type: null,
       },
     },
-  ],
-  [
-    {
+  },
+  6: {
+    a: {
       name: 'a6',
       contains: {
         type: null,
       },
     },
-    {
+    b: {
       name: 'b6',
       contains: {
         type: null,
       },
     },
-    {
+    c: {
       name: 'c6',
       contains: {
         type: null,
       },
     },
-    {
+    d: {
       name: 'd6',
       contains: {
         type: null,
       },
     },
-    {
+    e: {
       name: 'e6',
       contains: {
         type: null,
       },
     },
-    {
+    f: {
       name: 'f6',
       contains: {
         type: null,
       },
     },
-    {
+    g: {
       name: 'g6',
       contains: {
         type: null,
       },
     },
-    {
+    h: {
       name: 'h6',
       contains: {
         type: null,
       },
     },
-  ],
-  [
-    {
+  },
+  7: {
+    a: {
       name: 'a7',
       contains: {
         type: 'pawn',
@@ -345,7 +345,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    b: {
       name: 'b7',
       contains: {
         type: 'pawn',
@@ -353,7 +353,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    c: {
       name: 'c7',
       contains: {
         type: 'pawn',
@@ -361,7 +361,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    d: {
       name: 'd7',
       contains: {
         type: 'pawn',
@@ -369,7 +369,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    e: {
       name: 'e7',
       contains: {
         type: 'pawn',
@@ -377,7 +377,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    f: {
       name: 'f7',
       contains: {
         type: 'pawn',
@@ -385,7 +385,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    g: {
       name: 'g7',
       contains: {
         type: 'pawn',
@@ -393,7 +393,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    h: {
       name: 'h7',
       contains: {
         type: 'pawn',
@@ -401,9 +401,9 @@ const matrix = [
       },
       isActive: false,
     },
-  ],
-  [
-    {
+  },
+  8: {
+    a: {
       name: 'a8',
       contains: {
         type: 'rook',
@@ -411,7 +411,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    b: {
       name: 'b8',
       contains: {
         type: 'knight',
@@ -419,7 +419,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    c: {
       name: 'c8',
       contains: {
         type: 'bishop',
@@ -427,7 +427,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    d: {
       name: 'd8',
       contains: {
         type: 'queen',
@@ -435,7 +435,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    e: {
       name: 'e8',
       contains: {
         type: 'king',
@@ -443,7 +443,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    f: {
       name: 'f8',
       contains: {
         type: 'bishop',
@@ -451,7 +451,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    g: {
       name: 'g8',
       contains: {
         type: 'knight',
@@ -459,7 +459,7 @@ const matrix = [
       },
       isActive: false,
     },
-    {
+    h: {
       name: 'h8',
       contains: {
         type: 'rook',
@@ -467,40 +467,54 @@ const matrix = [
       },
       isActive: false,
     },
-  ],
-];
+  },
+};
+
+const state = {
+  cursor: 'idle',
+  figure: null
+}
 
 const board = document.querySelector('.board');
 
 const render = () => {
-  matrix.forEach((row) => {
-    row.forEach((matrixCell) => {
-      const domCell = document.querySelector(`[data-cell="${matrixCell.name}"]`);
-      renderCell(matrixCell, domCell);
+  Object.keys(matrix).forEach((row) => {
+    Object.keys(matrix[row]).forEach((matrixCell) => {
+      const domCell = document.querySelector(`[data-cell="${matrix[row][matrixCell].name}"]`);
+      renderCell(matrix[row][matrixCell], domCell);
     });
   });
 };
 
 board.addEventListener('click', (e) => {
-  removeAvailableMoves(matrix);
-  removeActiveStatus(matrix);
-  if (e.target.hasAttribute('alt')) {
-    const cellItem = e.target.parentElement;
-    const activeCellName = cellItem.dataset.cell;
-    const availableCells = getAvailableCells(e.target, matrix);
-    matrix.forEach((row) => {
-      row.forEach((cell) => {
-        if (availableCells.includes(cell.name)) {
-          if (!cell.contains.type) {
-            cell.contains = { type: 'dot' };
-          }
-        }
-        if (cell.name === activeCellName) {
-          cell.isActive = true;
-        }
-      });
-    });
+  cleanEffects(matrix);
+  switch(state.cursor) {
+    case 'idle': {
+      if (e.target.hasAttribute('alt')) {
+        state.cursor = 'active'
+        const cellItem = e.target.parentElement;
+        const activeCellName = cellItem.dataset.cell;
+        state.figure = activeCellName;
+        const availableCells = getAvailableCells(e.target, matrix);
+        availableCells.forEach((availableCell) => {
+          const [cell, row] = availableCell.split('');
+          if (!matrix[row][cell].contains.type) {
+            matrix[row][cell].contains = { type: 'dot' }
+          } 
+        })
+        const [cell, row] = activeCellName.split('');
+        matrix[row][cell].isActive = true;
+      }
+      break;
+    }
+    case 'active': {
+      const activeCellName = e.target.dataset.cell;
+      if (move(matrix, activeCellName, state.figure)){
+        state.cursor = 'idle'
+      }
+    }
   }
+  
   render();
 });
 
