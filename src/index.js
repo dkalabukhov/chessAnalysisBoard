@@ -472,8 +472,8 @@ const matrix = {
 
 const state = {
   cursor: 'idle',
-  figure: null
-}
+  figure: null,
+};
 
 const board = document.querySelector('.board');
 
@@ -488,10 +488,10 @@ const render = () => {
 
 board.addEventListener('click', (e) => {
   cleanEffects(matrix);
-  switch(state.cursor) {
+  switch (state.cursor) {
     case 'idle': {
       if (e.target.hasAttribute('alt')) {
-        state.cursor = 'active'
+        state.cursor = 'active';
         const cellItem = e.target.parentElement;
         const activeCellName = cellItem.dataset.cell;
         state.figure = activeCellName;
@@ -499,9 +499,9 @@ board.addEventListener('click', (e) => {
         availableCells.forEach((availableCell) => {
           const [cell, row] = availableCell.split('');
           if (!matrix[row][cell].contains.type) {
-            matrix[row][cell].contains = { type: 'dot' }
-          } 
-        })
+            matrix[row][cell].contains = { type: 'dot' };
+          }
+        });
         const [cell, row] = activeCellName.split('');
         matrix[row][cell].isActive = true;
       }
@@ -509,12 +509,14 @@ board.addEventListener('click', (e) => {
     }
     case 'active': {
       const activeCellName = e.target.dataset.cell;
-      if (move(matrix, activeCellName, state.figure)){
-        state.cursor = 'idle'
-      }
+      move(matrix, activeCellName, state.figure);
+      state.cursor = 'idle';
+      break;
+    }
+    default: {
+      return null;
     }
   }
-  
   render();
 });
 
