@@ -1,7 +1,8 @@
-import getAvailableCells from './getAvailableCells.js';
 import renderCell from './renderCell.js';
 import cleanEffects from './cleanEffects.js';
 import move from './move.js';
+import pickFigure from './pickFigure.js';
+import take from './take.js';
 
 const matrix = {
   1: {
@@ -467,12 +468,20 @@ const matrix = {
       },
       isActive: false,
     },
-  ],
-];
+  },
+};
+
+const state = {
+  cursor: 'idle',
+  figure: null,
+  turn: 'white',
+};
 
 const board = document.querySelector('.board');
+const info = document.querySelector('.info');
 
 const render = () => {
+  info.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`
   Object.keys(matrix).forEach((row) => {
     Object.keys(matrix[row]).forEach((matrixCell) => {
       const domCell = document.querySelector(`[data-cell="${matrix[row][matrixCell].name}"]`);
@@ -482,25 +491,37 @@ const render = () => {
 };
 
 board.addEventListener('click', (e) => {
-  removeAvailableMoves(matrix);
-  removeActiveStatus(matrix);
-  if (e.target.hasAttribute('alt')) {
-    const cellItem = e.target.parentElement;
-    const activeCellName = cellItem.dataset.cell;
-    const availableCells = getAvailableCells(e.target, matrix);
-    matrix.forEach((row) => {
-      row.forEach((cell) => {
-        if (availableCells.includes(cell.name)) {
-          if (!cell.contains.type) {
-            cell.contains = { type: 'dot' };
-          }
-        }
-        if (cell.name === activeCellName) {
-          cell.isActive = true;
-        }
-      });
-    });
+  switch (state.cursor) {
+    case 'idle': {
+      if (e.target.hasAttribute('alt')) {
+        state.cursor = 'active';
+        pickFigure(e, state, matrix)
+      }
+      break;
+    }
+    case 'active': {
+      const activeCellName = e.target.alt 
+        ? e.target.parentElement.dataset.cell 
+        : e.target.dataset.cell
+      const color = e.target.alt ? e.target.alt.split(' ')[0] : null;
+      if (color === state.turn) {
+        cleanEffects(matrix)
+        pickFigure(e, state, matrix);        
+        break;
+      }
+      const hasMoved = move(matrix, activeCellName, state.figure);
+      if (hasMoved) {
+        state.turn = state.turn === 'white' ? 'black' : 'white'
+      }
+      state.cursor = 'idle';
+      cleanEffects(matrix);
+      break;
+    }
+    default: {
+      return null;
+    }
   }
+
   render();
 });
 

@@ -5,21 +5,20 @@ export default (element, matrix) => {
 
   const [cell, rowString] = element.parentNode.getAttribute('data-cell').split('');
   const row = parseInt(rowString, 10);
+  const availableCells = [];
 
   switch (figure) {
     case 'pawn': {
       if (color === 'white') {
-        const availableCell1 = matrix[row + 1][cell];
+        availableCells.push(matrix[row + 1][cell].name);
         if (row === 2) {
-          const availableCell2 = matrix[row + 2][cell];
-          return [availableCell1.name, availableCell2.name];
-        } return [availableCell1.name];
+          availableCells.push(matrix[row + 2][cell].name);
+        } return availableCells;
       }
-      const availableCell1 = matrix[row - 1][cell];
+      availableCells.push(matrix[row - 1][cell].name);
       if (row === 7) {
-        const availableCell2 = matrix[row - 2][cell];
-        return [availableCell1.name, availableCell2.name];
-      } return [availableCell1.name];
+        availableCells.push(matrix[row - 2][cell].name);
+      } return availableCells;
     }
     default: {
       return [];
