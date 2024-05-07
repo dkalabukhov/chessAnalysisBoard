@@ -467,13 +467,8 @@ const matrix = {
       },
       isActive: false,
     },
-  },
-};
-
-const state = {
-  cursor: 'idle',
-  figure: null
-}
+  ],
+];
 
 const board = document.querySelector('.board');
 
@@ -487,34 +482,25 @@ const render = () => {
 };
 
 board.addEventListener('click', (e) => {
-  cleanEffects(matrix);
-  switch(state.cursor) {
-    case 'idle': {
-      if (e.target.hasAttribute('alt')) {
-        state.cursor = 'active'
-        const cellItem = e.target.parentElement;
-        const activeCellName = cellItem.dataset.cell;
-        state.figure = activeCellName;
-        const availableCells = getAvailableCells(e.target, matrix);
-        availableCells.forEach((availableCell) => {
-          const [cell, row] = availableCell.split('');
-          if (!matrix[row][cell].contains.type) {
-            matrix[row][cell].contains = { type: 'dot' }
-          } 
-        })
-        const [cell, row] = activeCellName.split('');
-        matrix[row][cell].isActive = true;
-      }
-      break;
-    }
-    case 'active': {
-      const activeCellName = e.target.dataset.cell;
-      if (move(matrix, activeCellName, state.figure)){
-        state.cursor = 'idle'
-      }
-    }
+  removeAvailableMoves(matrix);
+  removeActiveStatus(matrix);
+  if (e.target.hasAttribute('alt')) {
+    const cellItem = e.target.parentElement;
+    const activeCellName = cellItem.dataset.cell;
+    const availableCells = getAvailableCells(e.target, matrix);
+    matrix.forEach((row) => {
+      row.forEach((cell) => {
+        if (availableCells.includes(cell.name)) {
+          if (!cell.contains.type) {
+            cell.contains = { type: 'dot' };
+          }
+        }
+        if (cell.name === activeCellName) {
+          cell.isActive = true;
+        }
+      });
+    });
   }
-  
   render();
 });
 
