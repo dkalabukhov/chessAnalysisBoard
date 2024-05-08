@@ -1,19 +1,24 @@
-import getAvailableCells from "./getAvailableCells.js";
+/* eslint-disable no-shadow */
+import getAvailableCells from './getAvailableCells.js';
+import { getRowAndCell } from './helpers.js';
 
 export default (e, state, matrix) => {
   const cellItem = e.target.parentElement;
   const activeCellName = cellItem.dataset.cell;
   state.figure = activeCellName;
-  const [cell, row] = activeCellName.split('');
+  const [row, cell] = getRowAndCell(activeCellName);
   const figureColor = matrix[row][cell].contains.color;
   if (figureColor === state.turn) {
     const availableCells = getAvailableCells(e.target, matrix);
     availableCells.forEach((availableCell) => {
-      const [cell, row] = availableCell.split('');
+      const [row, cell] = getRowAndCell(availableCell.name);
       if (!matrix[row][cell].contains.type) {
-        matrix[row][cell].contains = { type: 'dot' };
+        matrix[row][cell].effect = availableCell.effect;
+      }
+      if (matrix[row][cell].contains.type && availableCell.effect === 'danger') {
+        matrix[row][cell].effect = availableCell.effect;
       }
     });
     matrix[row][cell].isActive = true;
   }
-}
+};

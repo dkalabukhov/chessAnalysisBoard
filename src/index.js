@@ -2,7 +2,6 @@ import renderCell from './renderCell.js';
 import cleanEffects from './cleanEffects.js';
 import move from './move.js';
 import pickFigure from './pickFigure.js';
-import take from './take.js';
 
 const matrix = {
   1: {
