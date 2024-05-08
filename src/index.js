@@ -1,7 +1,8 @@
-import getAvailableCells from './getAvailableCells.js';
 import renderCell from './renderCell.js';
 import cleanEffects from './cleanEffects.js';
 import move from './move.js';
+import pickFigure from './pickFigure.js';
+import take from './take.js';
 
 const matrix = {
   1: {
@@ -473,11 +474,14 @@ const matrix = {
 const state = {
   cursor: 'idle',
   figure: null,
+  turn: 'white',
 };
 
 const board = document.querySelector('.board');
+const info = document.querySelector('.info');
 
 const render = () => {
+  info.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`
   Object.keys(matrix).forEach((row) => {
     Object.keys(matrix[row]).forEach((matrixCell) => {
       const domCell = document.querySelector(`[data-cell="${matrix[row][matrixCell].name}"]`);
@@ -491,24 +495,24 @@ board.addEventListener('click', (e) => {
     case 'idle': {
       if (e.target.hasAttribute('alt')) {
         state.cursor = 'active';
-        const cellItem = e.target.parentElement;
-        const activeCellName = cellItem.dataset.cell;
-        state.figure = activeCellName;
-        const availableCells = getAvailableCells(e.target, matrix);
-        availableCells.forEach((availableCell) => {
-          const [cell, row] = availableCell.split('');
-          if (!matrix[row][cell].contains.type) {
-            matrix[row][cell].contains = { type: 'dot' };
-          }
-        });
-        const [cell, row] = activeCellName.split('');
-        matrix[row][cell].isActive = true;
+        pickFigure(e, state, matrix)
       }
       break;
     }
     case 'active': {
-      const activeCellName = e.target.dataset.cell;
-      move(matrix, activeCellName, state.figure);
+      const activeCellName = e.target.alt 
+        ? e.target.parentElement.dataset.cell 
+        : e.target.dataset.cell
+      const color = e.target.alt ? e.target.alt.split(' ')[0] : null;
+      if (color === state.turn) {
+        cleanEffects(matrix)
+        pickFigure(e, state, matrix);        
+        break;
+      }
+      const hasMoved = move(matrix, activeCellName, state.figure);
+      if (hasMoved) {
+        state.turn = state.turn === 'white' ? 'black' : 'white'
+      }
       state.cursor = 'idle';
       cleanEffects(matrix);
       break;
@@ -517,6 +521,7 @@ board.addEventListener('click', (e) => {
       return null;
     }
   }
+
   render();
 });
 

@@ -1,4 +1,8 @@
 export default (matrix, targetCell, figure) => {
+  if (!targetCell) {
+    return false;
+  }
+
   const [tcell, trow] = targetCell.split('');
   const [currentCell, currentRow] = figure.split('');
 
