@@ -3,6 +3,10 @@
   justify-content: center;
 }
 
+.danger {
+  border: 2px solid red;
+}
+
 .board {
   display: flex;
   flex-direction: column;

@@ -51,6 +51,21 @@ export default (matrixCell, domCell) => {
     }
   }
 
+  switch (matrixCell.effect) {
+    case 'dot': {
+      domCell.classList.add('available');
+      break;
+    }
+    case 'danger': {
+      domCell.classList.add('danger');
+      break;
+    }
+    default: {
+      domCell.classList.remove('available');
+      domCell.classList.remove('danger');
+    }
+  }
+
   switch (matrixCell.isActive) {
     case true: {
       domCell.classList.add('active-cell');
