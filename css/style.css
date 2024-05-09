@@ -4,7 +4,7 @@
 }
 
 .danger {
-  border: 2px solid red;
+  background: radial-gradient(transparent 0%, transparent 79%, rgba(37, 72, 2, 0.3) 70%);
 }
 
 .board {

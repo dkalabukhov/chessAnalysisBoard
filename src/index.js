@@ -480,7 +480,7 @@ const board = document.querySelector('.board');
 const info = document.querySelector('.info');
 
 const render = () => {
-  info.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`
+  info.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
   Object.keys(matrix).forEach((row) => {
     Object.keys(matrix[row]).forEach((matrixCell) => {
       const domCell = document.querySelector(`[data-cell="${matrix[row][matrixCell].name}"]`);
@@ -494,23 +494,23 @@ board.addEventListener('click', (e) => {
     case 'idle': {
       if (e.target.hasAttribute('alt')) {
         state.cursor = 'active';
-        pickFigure(e, state, matrix)
+        pickFigure(e, state, matrix);
       }
       break;
     }
     case 'active': {
-      const activeCellName = e.target.alt 
-        ? e.target.parentElement.dataset.cell 
-        : e.target.dataset.cell
+      const activeCellName = e.target.alt
+        ? e.target.parentElement.dataset.cell
+        : e.target.dataset.cell;
       const color = e.target.alt ? e.target.alt.split(' ')[0] : null;
       if (color === state.turn) {
-        cleanEffects(matrix)
-        pickFigure(e, state, matrix);        
+        cleanEffects(matrix);
+        pickFigure(e, state, matrix);
         break;
       }
       const hasMoved = move(matrix, activeCellName, state.figure);
       if (hasMoved) {
-        state.turn = state.turn === 'white' ? 'black' : 'white'
+        state.turn = state.turn === 'white' ? 'black' : 'white';
       }
       state.cursor = 'idle';
       cleanEffects(matrix);

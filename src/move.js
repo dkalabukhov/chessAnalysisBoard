@@ -1,4 +1,4 @@
-import { getRowAndCell } from "./helpers.js";
+import { getRowAndCell } from './helpers.js';
 
 export default (matrix, targetCell, figure) => {
   const [trow, tcell] = getRowAndCell(targetCell);
