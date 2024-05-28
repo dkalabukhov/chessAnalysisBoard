@@ -1,11 +1,13 @@
 import {
-  getField, name2coord, coord2name, getRowAndCell, makeAvailableCell, shiftCell,
+  getField, name2coord, makeAvailableCell,
 } from '../helpers.js';
 
-export default class MoveValidator {
-  constructor(matrix) {
+export default class Schema {
+  constructor(matrix, isMove = false, isAttack = false) {
     this.matrix = matrix;
     this.checks = [];
+    this.isMove = isMove;
+    this.isAttack = isAttack;
     console.log(this);
   }
 
@@ -41,16 +43,20 @@ export default class MoveValidator {
   }
 
   line([dX, dY], range) {
-    this.checks.push(([col, row], colorModifier) => {
+    this.checks.push(([col, row], color) => {
+      const colorModifier = color === 'black' ? -1 : 1;
       const iterator = ([col, row], remainingRange) => {
         if (remainingRange <= 0) return [];
         if (col > 8 || col < 1 || row > 8 || row < 1) return [];
-
         const field = getField(this.matrix, [col, row]);
-        if (field.contains.type === null) {
+        if ((field.contains.type === null) && this.isMove) {
           const out = [makeAvailableCell(field.name, 'dot'), ...iterator([col + dX, row + dY * colorModifier], remainingRange - 1)];
-          //   console.log(out);
           return out;
+        }
+        if (field.contains.type !== null
+          && (field.contains.color !== color)
+          && this.isAttack) {
+          return [makeAvailableCell(field.name, 'danger')];
         }
         return [];
       };
@@ -59,12 +65,12 @@ export default class MoveValidator {
     return this;
   }
 
-  move(field) {
+  check(field) {
     const [col, row] = name2coord(field.name);
-    const colorModifier = field.contains.color === 'black' ? -1 : 1;
-    console.log('validating move');
-    // const actorColor = field.contains.color;
-    const validFields = this.checks.reduce((acc, check) => [...acc, ...check([col, row], colorModifier)], []);
+    const { color } = field.contains;
+    const validFields = this
+      .checks
+      .reduce((acc, check) => [...acc, ...check([col, row], color)], []);
     console.log(validFields);
     return validFields;
   }
