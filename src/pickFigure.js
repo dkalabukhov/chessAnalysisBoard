@@ -8,7 +8,7 @@ export default (e, state, matrix) => {
   const [row, cell] = getRowAndCell(activeCellName);
   const figureColor = matrix[row][cell].contains.color;
   if (figureColor === state.turn) {
-    const availableCells = getAvailableCells(e.target, matrix);
+    const availableCells = getAvailableCells(e.target, matrix); // << проверка доступных ячеек
     availableCells.forEach((availableCell) => {
       const [row, cell] = getRowAndCell(availableCell.name);
       if (!matrix[row][cell].contains.type) {
