@@ -1,11 +1,11 @@
-import { getRowAndCell, makeAvailableCell, shiftCell } from "./helpers.js";
+import { getRowAndCell, makeAvailableCell, shiftCell } from './helpers.js';
 
 export default (element, matrix) => {
   const [color, figure] = element.hasAttribute('alt')
     ? element.getAttribute('alt').split(' ')
     : [null, null];
 
-  const cellName = element.parentNode.getAttribute('data-cell')
+  const cellName = element.parentNode.getAttribute('data-cell');
   const [rowString, cell] = getRowAndCell(cellName);
   const row = parseInt(rowString, 10);
   const availableCells = [];

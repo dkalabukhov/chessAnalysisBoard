@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 import getAvailableCells from './getAvailableCells.js';
 import { getRowAndCell } from './helpers.js';
 

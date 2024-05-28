@@ -10,7 +10,7 @@ const shiftCell = (cell, number) => {
     f: 6,
     g: 7,
     h: 8,
-  }
+  };
   const numsToCells = {
     1: 'a',
     2: 'b',
@@ -20,8 +20,8 @@ const shiftCell = (cell, number) => {
     6: 'f',
     7: 'g',
     8: 'h',
-  }
-  return numsToCells[cellsToNums[cell] + number]
-}
+  };
+  return numsToCells[cellsToNums[cell] + number];
+};
 
-export { getRowAndCell, makeAvailableCell, shiftCell }
+export { getRowAndCell, makeAvailableCell, shiftCell };
