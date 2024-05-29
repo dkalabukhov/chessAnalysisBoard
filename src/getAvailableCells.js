@@ -22,12 +22,12 @@ export default (element, matrix) => {
         ...validator.attack().line([1, 1], 1).line([-1, 1], 1).check(field)];
     },
     bishop: () => validator.moveNattack().Xcross(8).check(field),
-    knight: (field) => validator.moveNattack().knight().check(field),
-    rook: (field) => validator.moveNattack().cross(8).check(field),
+    knight: () => validator.moveNattack().knight().check(field),
+    rook: () => validator.moveNattack().cross(8).check(field),
     queen: () => validator.moveNattack().cross(8).Xcross(8).check(field),
     king: () => validator.moveNattack().cross(1).Xcross(1).check(field),
   };
 
-  const availableCells = pieces[field.contains.type](field);
+  const availableCells = pieces[field.contains.type]();
   return availableCells;
 };
