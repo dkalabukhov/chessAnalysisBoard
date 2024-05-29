@@ -2,7 +2,7 @@ import {
   getField, name2coord, makeAvailableCell,
 } from '../helpers.js';
 
-export default class Schema {
+export default class actionValidator {
   constructor(matrix, isMove = false, isAttack = false) {
     this.matrix = matrix;
     this.checks = [];
