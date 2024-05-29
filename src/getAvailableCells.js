@@ -21,12 +21,6 @@ export default (element, matrix) => {
       return [...validator.move().line([0, 1], 1).check(field),
         ...validator.attack().line([1, 1], 1).line([-1, 1], 1).check(field)];
     },
-
-
-  const pieces = {
-    pawn: () => [...validator.move().line([0, 1], 2).check(field),
-      ...validator.attack().line([1, 1], 1).line([-1, 1], 1).check(field)],
-
     bishop: () => validator.moveNattack().Xcross(8).check(field),
     knight: (field) => validator.moveNattack().knight().check(field),
     rook: (field) => validator.moveNattack().cross(8).check(field),
