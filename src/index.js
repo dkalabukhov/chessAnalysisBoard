@@ -1,7 +1,7 @@
 import renderCell from './renders/renderCell.js';
-import cleanEffects from './controllers/cleanEffects.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
+import getAvailableCells from './controllers/getAvailableCells.js';
 
 const state = {
   cursor: 'idle',
@@ -26,6 +26,32 @@ domBoard.addEventListener('click', (e) => {
   switch (state.cursor) {
     case 'idle': {
       if (e.target.hasAttribute('alt')) {
+        // ++++++++++++++++++++++
+        const figureCells = board.getFigureCells();
+        figureCells.forEach((cell) => {
+          cell.canMoveToCells = [];
+          cell.canAttackCells = [];
+          cell.underAttackingCells = [];
+        });
+        figureCells.forEach((cell) => {
+          const availableCells = getAvailableCells(cell, board);
+          availableCells.forEach((aCeil) => {
+            switch (aCeil.effect) {
+              case 'dot':
+                cell.canMoveToCells.push(aCeil.name);
+                break;
+              case 'danger':
+                cell.canAttackCells.push(aCeil.name);
+                board.cellByName(aCeil.name).underAttackingCells.push(cell.name);
+                break;
+              default:
+                break;
+            }
+          });
+
+          console.log(cell);
+        });
+        // ++++++++++++++++++++++
         const activeCellName = e.target.parentElement.dataset.cell;
         const activeCell = board.cellByName(activeCellName);
         if (activeCell.figure.color === state.turn) {
@@ -43,7 +69,7 @@ domBoard.addEventListener('click', (e) => {
         : e.target.dataset.cell;
       const targetCell = board.cellByName(targetCellName);
       if (targetCell.figure && targetCell.figure.color === state.turn) {
-        cleanEffects(board);
+        board.cleanEffects();
         state.figure = targetCellName;
         pickFigure(targetCell, board);
         targetCell.isActive = true;
@@ -56,7 +82,7 @@ domBoard.addEventListener('click', (e) => {
         state.turn = state.turn === 'white' ? 'black' : 'white';
       }
       state.cursor = 'idle';
-      cleanEffects(board);
+      board.cleanEffects();
       break;
     }
     default: {

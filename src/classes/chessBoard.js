@@ -57,7 +57,12 @@ export default class ChessBoard {
         this.cells[cellKey].xyCoordinates = [x, y];
         this.cells[cellKey].figure = null;
         this.cells[cellKey].cellColor = (x + y) % 2 ? 'white' : 'black';
+
         this.cellNames.push(name);
+
+        this.cells[cellKey].canMoveToCells = [];
+        this.cells[cellKey].canAttackCells = [];
+        this.cells[cellKey].underAttackingCells = [];
       }
     }
   }
@@ -149,6 +154,19 @@ export default class ChessBoard {
       return true;
     }
     return false;
+  }
+
+  getFigureCells() {
+    return this.cellNames
+      .filter((name) => this.cellByName(name).figure)
+      .map((name) => this.cellByName(name));
+  }
+
+  cleanEffects() {
+    this.cellNames.forEach((name) => {
+      this.cellByName(name).effect = null;
+      this.cellByName(name).isActive = false;
+    });
   }
 
   endOfTurn() {
