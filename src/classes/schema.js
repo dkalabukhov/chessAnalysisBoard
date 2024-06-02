@@ -1,19 +1,15 @@
-import {
-  getField, name2coord, makeAvailableCell,
-} from '../helpers.js';
+const makeAvailableCell = (name, effect) => ({ name, effect });
 
 export default class Schema {
-  constructor(matrix, isMove = false, isAttack = false) {
-    this.matrix = matrix;
+  constructor(board, isMove = false, isAttack = false) {
+    this.board = board;
     this.checks = [];
     this.isMove = isMove;
     this.isAttack = isAttack;
-    console.log(this);
   }
 
   knight() {
-    this
-      .line([1, 2], 1)
+    this.line([1, 2], 1)
       .line([2, 1], 1)
       .line([-1, 2], 1)
       .line([-2, 1], 1)
@@ -25,20 +21,12 @@ export default class Schema {
   }
 
   cross(range) {
-    this
-      .line([0, 1], range)
-      .line([1, 0], range)
-      .line([-1, 0], range)
-      .line([0, -1], range);
+    this.line([0, 1], range).line([1, 0], range).line([-1, 0], range).line([0, -1], range);
     return this;
   }
 
   Xcross(range) {
-    this
-      .line([1, 1], range)
-      .line([1, -1], range)
-      .line([-1, 1], range)
-      .line([-1, -1], range);
+    this.line([1, 1], range).line([1, -1], range).line([-1, 1], range).line([-1, -1], range);
     return this;
   }
 
@@ -48,15 +36,16 @@ export default class Schema {
       const iterator = ([col, row], remainingRange) => {
         if (remainingRange <= 0) return [];
         if (col > 8 || col < 1 || row > 8 || row < 1) return [];
-        const field = getField(this.matrix, [col, row]);
-        if ((field.contains.type === null) && this.isMove) {
-          const out = [makeAvailableCell(field.name, 'dot'), ...iterator([col + dX, row + dY * colorModifier], remainingRange - 1)];
+        const cell = this.board.cell(col, row);
+        if (!cell.figure && this.isMove) {
+          const out = [
+            makeAvailableCell(cell.name, 'dot'),
+            ...iterator([col + dX, row + dY * colorModifier], remainingRange - 1),
+          ];
           return out;
         }
-        if (field.contains.type !== null
-          && (field.contains.color !== color)
-          && this.isAttack) {
-          return [makeAvailableCell(field.name, 'danger')];
+        if (cell.figure && cell.figure.color !== color && this.isAttack) {
+          return [makeAvailableCell(cell.name, 'danger')];
         }
         return [];
       };
@@ -65,13 +54,13 @@ export default class Schema {
     return this;
   }
 
-  check(field) {
-    const [col, row] = name2coord(field.name);
-    const { color } = field.contains;
-    const validFields = this
-      .checks
-      .reduce((acc, check) => [...acc, ...check([col, row], color)], []);
-    console.log(validFields);
+  check(cell) {
+    const [cellX, cellY] = cell.xyCoordinates;
+    const { color } = cell.figure;
+    const validFields = this.checks.reduce(
+      (acc, check) => [...acc, ...check([cellX, cellY], color)],
+      [],
+    );
     return validFields;
   }
 }
