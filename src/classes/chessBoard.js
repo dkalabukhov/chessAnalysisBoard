@@ -102,6 +102,8 @@ export default class ChessBoard {
     this.cells.c67.figure = new ChessFigure('pawn', 'black');
     this.cells.c77.figure = new ChessFigure('pawn', 'black');
     this.cells.c87.figure = new ChessFigure('pawn', 'black');
+
+    this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
   }
 
   setPlayerSide(playerSide) {
@@ -163,7 +165,34 @@ export default class ChessBoard {
       .map((name) => this.cellByName(name));
   }
 
+  // ++++++++++++++++++++++++++
+
+  fixKingsAffects(figureCells, kingsCells) {
+    console.log('board.fixKingsAffects()');
+    const kingsColors = Object.keys(kingsCells);
+    kingsColors.forEach((kingColor) => {
+      const allDangerCells = figureCells.reduce((acc, cell) => {
+        if (cell.figure.color === kingColor) return acc;
+        return [...acc, ...cell.canMoveToCells];
+      }, []);
+
+      // console.log(12311, kingsCells[kingColor].canMoveToCells);
+      console.log(12311, kingsCells[kingColor]);
+      const filteredMoveCells = kingsCells[kingColor].canMoveToCells.filter(
+        (moveCell) => !allDangerCells.includes(moveCell),
+      );
+      // const arr = this.cellNames
+
+      // console.log(kingColor, filteredMoveCells);
+      this.kingsCells[kingColor].canMoveToCells = filteredMoveCells;
+      // kingsCells[kingColor].canMoveToCells.forEach((moveCell) => {
+      // figureCells
+    });
+  }
+  // ++++++++++++++++++++++++++
+
   setAffects(figureCells) {
+    console.log('board.setAffects()');
     this.cellNames.forEach((cellName) => {
       this.cellByName(cellName).canMoveToCells = [];
       this.cellByName(cellName).canAttackCells = [];
@@ -186,6 +215,10 @@ export default class ChessBoard {
         }
       });
     });
+    this.fixKingsAffects(figureCells, this.kingsCells);
+
+    // console.log(this.kingsCells.white);
+    // console.log(this.kingsCells.black);
   }
 
   cleanEffects() {
@@ -196,6 +229,7 @@ export default class ChessBoard {
   }
 
   startNewTurn() {
+    console.log('board.startNewTurn()');
     this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
