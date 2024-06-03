@@ -1,3 +1,4 @@
+import getAvailableCells from '../controllers/getAvailableCells.js';
 import ChessFigure from './chessFigure.js';
 // const figureTypes = ['king', 'queen', 'bishop', 'knight', 'rook', 'pawn'];
 
@@ -27,12 +28,14 @@ export default class ChessBoard {
   }
 
   constructor(playerSide = 'spectator') {
+    this.cells = {};
+    this.cellNames = [];
     this.createCells();
     this.placeAllFigures();
     this.setPlayerSide(playerSide);
 
     // this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
-    this.currentTurnColor = 'white';
+    this.currentTurnColor = null;
 
     this.activeFigure = {
       ref: null,
@@ -46,8 +49,6 @@ export default class ChessBoard {
   }
 
   createCells() {
-    this.cells = {};
-    this.cellNames = [];
     for (let x = ChessBoard.bounds.startX; x <= ChessBoard.bounds.endX; x += 1) {
       for (let y = ChessBoard.bounds.startY; y <= ChessBoard.bounds.endY; y += 1) {
         const cellKey = `c${x}${y}`;
@@ -162,6 +163,31 @@ export default class ChessBoard {
       .map((name) => this.cellByName(name));
   }
 
+  setAffects(figureCells) {
+    this.cellNames.forEach((cellName) => {
+      this.cellByName(cellName).canMoveToCells = [];
+      this.cellByName(cellName).canAttackCells = [];
+      this.cellByName(cellName).underAttackingCells = [];
+    });
+
+    figureCells.forEach((cell) => {
+      const availableCells = getAvailableCells(cell, this);
+      availableCells.forEach((aCeil) => {
+        switch (aCeil.effect) {
+          case 'dot':
+            cell.canMoveToCells.push(aCeil.name);
+            break;
+          case 'danger':
+            cell.canAttackCells.push(aCeil.name);
+            this.cellByName(aCeil.name).underAttackingCells.push(cell.name);
+            break;
+          default:
+            break;
+        }
+      });
+    });
+  }
+
   cleanEffects() {
     this.cellNames.forEach((name) => {
       this.cellByName(name).effect = null;
@@ -169,8 +195,11 @@ export default class ChessBoard {
     });
   }
 
-  endOfTurn() {
+  startNewTurn() {
     this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
+    const figureCells = this.getFigureCells();
+    this.setAffects(figureCells);
+    // console.log(this.cell(1, 3));
   }
 }
 
