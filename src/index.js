@@ -4,7 +4,7 @@ import ChessBoard from './classes/chessBoard.js';
 // import getAvailableCells from './controllers/getAvailableCells.js';
 
 const domBoard = document.querySelector('.board');
-const info = document.querySelector('.info');
+const turn = document.querySelector('.info__turn');
 
 const board = new ChessBoard('white');
 board.startNewTurn();
@@ -16,7 +16,7 @@ const state = {
 };
 
 const render = () => {
-  info.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+  turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
   board.cellNames.forEach((name) => {
     const domCell = document.querySelector(`[data-cell="${name}"]`);
     renderCell(board.cellByName(name), domCell);

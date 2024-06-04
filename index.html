@@ -8,8 +8,18 @@
   <script src="./src/index.js" type="module" defer></script>
 </head>
 <body>
-  <h3 class="info">Ход белых</h3>
   <div class="container">
+    <div class="info">
+      <h3 class="info__turn">Ход белых</h3>
+      <form class="info__controls">
+        <button class="info__btn draw" title="Предложить ничью">
+          <img src="./assets/draw.png" alt="Предложить ничью" srcset="">
+        </button>
+        <button class="info__btn surrender" title="Сдаться">
+          <img src="./assets/surrender.png" alt="Сдаться" srcset="">
+        </button>
+      </form>
+    </div>
     <div class="board">
       <div class="row" data-row="8">
         <div class="cell" data-cell="a8"></div>
