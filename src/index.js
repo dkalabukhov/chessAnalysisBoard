@@ -10,7 +10,7 @@ const fenForm = document.querySelector('.fen__form');
 const fenInput = document.querySelector('.fen__input');
 
 const board = new ChessBoard('white');
-board.startNewTurn();
+board.startNewTurn('white');
 
 const state = {
   cursor: 'idle',
@@ -29,6 +29,7 @@ const render = () => {
 domBoard.addEventListener('click', (e) => {
   switch (state.cursor) {
     case 'idle': {
+      // console.log('domBoard click event: state.cursor = idle');
       if (e.target.hasAttribute('alt')) {
         const activeCellName = e.target.parentElement.dataset.cell;
         const activeCell = board.cellByName(activeCellName);
@@ -41,9 +42,8 @@ domBoard.addEventListener('click', (e) => {
       break;
     }
     case 'active': {
-      const targetCellName = e.target.alt
-        ? e.target.parentElement.dataset.cell
-        : e.target.dataset.cell;
+      // console.log('domBoard click event: state.cursor = active');
+      const targetCellName = e.target.alt ? e.target.parentElement.dataset.cell : e.target.dataset.cell;
       const targetCell = board.cellByName(targetCellName);
       if (targetCell.figure && targetCell.figure.color === state.turn) {
         board.cleanEffects();
@@ -79,9 +79,9 @@ fenForm.addEventListener('submit', (e) => {
     alert('Неверный FEN!');
   } else {
     board.setupPositionFromFen(fenString);
-    const fen = new FenParser(fenString);
-    board.currentTurnColor = fen.turn === 'w' ? 'white' : 'black';
     state.turn = board.currentTurnColor;
+    state.cursor = 'idle';
+    state.figure = null;
     render();
   }
 });
