@@ -47,6 +47,9 @@ export default class ChessBoard {
     this.effect = null;
     this.isActive = false;
     this.lostFigures = [];
+
+    this.inCheckKing = null;
+    this.checkMateKing = null;
   }
 
   createCells() {
@@ -286,12 +289,24 @@ export default class ChessBoard {
     });
   }
 
+  isCheck(kingColor) {
+    if (this.kingsCells[kingColor].underAttackingCells.length) {
+      this.inCheckKing = kingColor;
+      console.log(`The ${kingColor} king is in check!`);
+      // if (!this.kingsCells[kingColor].canMoveToCells.length) {
+      //   this.checkMateKing = kingColor;
+      //   console.log(`The checkMateKing!`);
+      // }
+    } else this.inCheckKing = null;
+  }
+
   startNewTurn(newTurnColor = null) {
     // console.log('board.startNewTurn()');
     if (newTurnColor) this.currentTurnColor = newTurnColor;
     else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
+    this.isCheck(this.currentTurnColor);
   }
 }
 
