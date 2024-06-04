@@ -1,3 +1,5 @@
+import FenParser from '../fenParser.js';
+import parse from '../helpers.js';
 import getAvailableCells from '../controllers/getAvailableCells.js';
 import ChessFigure from './chessFigure.js';
 // const figureTypes = ['king', 'queen', 'bishop', 'knight', 'rook', 'pawn'];
@@ -104,6 +106,68 @@ export default class ChessBoard {
     this.cells.c87.figure = new ChessFigure('pawn', 'black');
 
     this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
+  }
+
+  clearFigures() {
+    this.getFigureCells().forEach((cell) => {
+      cell.figure = null;
+    });
+  }
+
+  setupPositionFromFen(fenString) {
+    this.clearFigures();
+    const fen = new FenParser(fenString);
+    const fenArray = fen.positions
+      .split('/')
+      .reverse()
+      .map((row) => row.split(''));
+    const positions = fenArray.map((row) => parse(row));
+    positions
+      .forEach((row, i) => {
+        row.forEach((cell, j) => {
+          const cellKey = `c${j + 1}${i + 1}`;
+          switch (cell) {
+            case 'r':
+              this.cells[cellKey].figure = new ChessFigure('rook', 'black');
+              break;
+            case 'n':
+              this.cells[cellKey].figure = new ChessFigure('knight', 'black');
+              break;
+            case 'b':
+              this.cells[cellKey].figure = new ChessFigure('bishop', 'black');
+              break;
+            case 'k':
+              this.cells[cellKey].figure = new ChessFigure('king', 'black');
+              break;
+            case 'q':
+              this.cells[cellKey].figure = new ChessFigure('queen', 'black');
+              break;
+            case 'p':
+              this.cells[cellKey].figure = new ChessFigure('pawn', 'black');
+              break;
+            case 'R':
+              this.cells[cellKey].figure = new ChessFigure('rook', 'white');
+              break;
+            case 'N':
+              this.cells[cellKey].figure = new ChessFigure('knight', 'white');
+              break;
+            case 'B':
+              this.cells[cellKey].figure = new ChessFigure('bishop', 'white');
+              break;
+            case 'Q':
+              this.cells[cellKey].figure = new ChessFigure('queen', 'white');
+              break;
+            case 'K':
+              this.cells[cellKey].figure = new ChessFigure('king', 'white');
+              break;
+            case 'P':
+              this.cells[cellKey].figure = new ChessFigure('pawn', 'white');
+              break;
+            default:
+              this.cells[cellKey].figure = null;
+          }
+        });
+      });
   }
 
   setPlayerSide(playerSide) {

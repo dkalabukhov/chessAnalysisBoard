@@ -43,6 +43,8 @@ export default (boardCell, domCell) => {
         break;
       }
     }
+  } else {
+    domCell.innerHTML = '';
   }
 
   switch (boardCell.effect) {

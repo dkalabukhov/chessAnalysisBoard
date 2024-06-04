@@ -9,6 +9,8 @@
   position: relative;
 }
 
+/* Info */
+
 .info {
   border-radius: 5px;
   border: 1px solid rgb(209, 208, 208);
@@ -33,6 +35,7 @@
   border: 1px solid rgb(209, 208, 208);
   border-radius: 5px;
   padding: 5px 15px;
+  cursor: pointer;
 }
 
 .info__btn:hover {
@@ -47,6 +50,8 @@
 .info__btn + .info__btn {
   margin-left: 5px;
 }
+
+/* Board */
 
 .board {
   display: flex;
@@ -87,4 +92,31 @@
   width: 70px;
   height: 70px;
   background-color: #a37043;
+}
+
+/* FEN */
+
+.fen {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.fen__heading {
+  display: inline-block;
+}
+
+.fen__input {
+  padding: 10px 0;
+  border: 1px solid rgb(148, 146, 146);
+  width: 350px;
+  font-size: .85em;
+}
+
+.fen__btn {
+  padding: 11px 30px;
+  background-color: rgb(48, 82, 48);
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }

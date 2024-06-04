@@ -1,3 +1,4 @@
+import FenParser from './fenParser.js';
 import renderCell from './renders/renderCell.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
@@ -5,6 +6,8 @@ import ChessBoard from './classes/chessBoard.js';
 
 const domBoard = document.querySelector('.board');
 const turn = document.querySelector('.info__turn');
+const fenForm = document.querySelector('.fen__form');
+const fenInput = document.querySelector('.fen__input');
 
 const board = new ChessBoard('white');
 board.startNewTurn();
@@ -51,8 +54,8 @@ domBoard.addEventListener('click', (e) => {
       }
       const hasMoved = board.moveFigure(board.cellByName(state.figure), targetCell);
       if (hasMoved) {
-        const currentDomCell = document.querySelector(`div[data-cell="${state.figure}`);
-        currentDomCell.firstChild.remove();
+        // const currentDomCell = document.querySelector(`div[data-cell="${state.figure}`);
+        // currentDomCell.firstChild.remove();
         // state.turn = state.turn === 'white' ? 'black' : 'white';
         board.startNewTurn();
         state.turn = board.currentTurnColor;
@@ -67,6 +70,17 @@ domBoard.addEventListener('click', (e) => {
   }
 
   render();
+});
+
+fenForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const fenString = fenInput.value.trim();
+  if (!FenParser.isFen(fenString)) {
+    alert('Неверный FEN!');
+  } else {
+    board.setupPositionFromFen(fenString);
+    render();
+  }
 });
 
 render();
