@@ -31,7 +31,7 @@ export default class Schema {
   }
 
   line([dX, dY], range) {
-    this.checks.push(([col, row], color) => {
+    this.checks.push(([col, row], color, isPawn) => {
       const colorModifier = color === 'black' ? -1 : 1;
       const iterator = ([col, row], remainingRange) => {
         if (remainingRange <= 0) return [];
@@ -47,6 +47,9 @@ export default class Schema {
         if (cell.figure && cell.figure.color !== color && this.isAttack) {
           return [makeAvailableCell(cell.name, 'danger')];
         }
+        if (!cell.figure && isPawn) {
+          return [makeAvailableCell(cell.name, 'pawnCanAttack')];
+        }
         return [];
       };
       return iterator([col + dX, row + dY * colorModifier], range);
@@ -57,10 +60,8 @@ export default class Schema {
   check(cell) {
     const [cellX, cellY] = cell.xyCoordinates;
     const { color } = cell.figure;
-    const validFields = this.checks.reduce(
-      (acc, check) => [...acc, ...check([cellX, cellY], color)],
-      [],
-    );
+    const isPawn = cell.figure.type === 'pawn';
+    const validFields = this.checks.reduce((acc, check) => [...acc, ...check([cellX, cellY], color, isPawn)], []);
     return validFields;
   }
 }
