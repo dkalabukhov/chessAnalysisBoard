@@ -79,6 +79,9 @@ fenForm.addEventListener('submit', (e) => {
     alert('Неверный FEN!');
   } else {
     board.setupPositionFromFen(fenString);
+    const fen = new FenParser(fenString);
+    board.currentTurnColor = fen.turn === 'w' ? 'white' : 'black';
+    state.turn = board.currentTurnColor;
     render();
   }
 });
