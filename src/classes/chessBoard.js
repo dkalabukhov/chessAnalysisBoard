@@ -230,7 +230,9 @@ export default class ChessBoard {
   }
 
   getFigureCells() {
-    return this.cellNames.filter((name) => this.cellByName(name).figure).map((name) => this.cellByName(name));
+    return this.cellNames
+      .filter((name) => this.cellByName(name).figure)
+      .map((name) => this.cellByName(name));
   }
 
   fixKingsAffects(figureCells, kingsCells) {

@@ -43,7 +43,9 @@ domBoard.addEventListener('click', (e) => {
     }
     case 'active': {
       // console.log('domBoard click event: state.cursor = active');
-      const targetCellName = e.target.alt ? e.target.parentElement.dataset.cell : e.target.dataset.cell;
+      const targetCellName = e.target.alt
+        ? e.target.parentElement.dataset.cell
+        : e.target.dataset.cell;
       const targetCell = board.cellByName(targetCellName);
       if (targetCell.figure && targetCell.figure.color === state.turn) {
         board.cleanEffects();
