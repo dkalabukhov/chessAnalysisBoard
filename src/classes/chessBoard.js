@@ -314,6 +314,23 @@ export default class ChessBoard {
   }
 
   // ### Danya)
+  // isAttacked(cell, opponentColor) {
+  //   const figures = this.getFigureCells();
+  //   const opponentFigures = figures.filter((piece) => piece.figure.color === opponentColor);
+  //   console.log(opponentFigures);
+  //   const attackedCells = [];
+  //   opponentFigures.forEach((piece) => {
+  //     if (piece.figure.type === 'pawn') {
+  //       attackedCells.push(...piece.pawnAttackingEmptyCells);
+  //     } else {
+  //       attackedCells.push(...piece.canMoveToCells);
+  //     }
+  //   });
+  //   const result = new Set(attackedCells);
+  //   console.log(result);
+  //   console.log(result.has(cell));
+  // }
+
   moveFigure(figureCell, targetCell) {
     const canMove = figureCell.canMoveToCells.includes(targetCell.name);
     const canAttack = figureCell.canAttackCells.includes(targetCell.name);
