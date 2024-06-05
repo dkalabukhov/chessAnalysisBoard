@@ -317,7 +317,10 @@ export default class ChessBoard {
       const { figure } = figureCell;
       const lostFigure = targetCell.figure;
       if (lostFigure) this.lostFigures.push(lostFigure);
-      if (figure.type === 'king') this.kingsCells[figure.color] = targetCell;
+      if (figure.type === 'king') {
+        this.kingsCells[figure.color] = targetCell;
+        figureCell.effect = null;
+      }
       if (figure.type === 'pawn' && targetCell.name === this.enpass) {
         const [x, y] = targetCell.xyCoordinates;
         if (figure.color === 'white') {
