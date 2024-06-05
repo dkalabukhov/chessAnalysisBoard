@@ -9,14 +9,21 @@ const turn = document.querySelector('.info__turn');
 const fenForm = document.querySelector('.fen__form');
 const fenInput = document.querySelector('.fen__input');
 
-const board = new ChessBoard('white');
-board.startNewTurn('white');
-
 const state = {
   cursor: 'idle',
   figure: null,
   turn: 'white',
 };
+
+const board = new ChessBoard('white');
+board.startNewTurn('white');
+// TEMP >>>
+// board.setupPositionFromFen('7k/8/6B1/8/8/3n4/5q2/6K1 w - - 11 44');
+// state.turn = board.currentTurnColor;
+// state.cursor = 'idle';
+// state.figure = null;
+// board.setFEN();
+// <<< TEMP
 
 const render = () => {
   turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;

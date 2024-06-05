@@ -6,6 +6,7 @@ export default (activeCell, board) => {
   //   const targetCell = board.cellByName(availableCell.name);
   //   targetCell.effect = availableCell.effect;
   // });
+  board.checkAllMoves(activeCell);
   activeCell.canMoveToCells.forEach((cell) => {
     board.cellByName(cell).effect = 'dot';
   });

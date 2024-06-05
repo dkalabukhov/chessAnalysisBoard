@@ -213,11 +213,17 @@ export default class ChessBoard {
     });
   }
 
+  clearTouches() {
+    this.cellNames.forEach((name) => {
+      this.cellByName(name).wasTouched = false;
+    });
+  }
+
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
       this.kingsCells[kingColor].effect = 'incheck';
-      console.log(`The ${kingColor} king is in check!`);
-      console.log(this.kingsCells[kingColor]);
+      // console.log(`The ${kingColor} king is in check!`);
+      // console.log(this.kingsCells[kingColor]);
       return true;
     }
     return false;
@@ -230,11 +236,84 @@ export default class ChessBoard {
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
     this.isCheck(this.currentTurnColor);
+    this.clearTouches();
+    this.setFEN();
+  }
+
+  checkAllMoves(figureCell) {
+    if (figureCell.wasTouched) return;
+
+    const figureName = figureCell.name;
+
+    const moveCellsNames = [...figureCell.canMoveToCells];
+    const attackCellsNames = [...figureCell.canAttackCells];
+
+    const filteredMoves = [];
+    const filteredAttacks = [];
+
+    moveCellsNames.forEach((cellName) => {
+      const testBoard = new ChessBoard();
+      testBoard.setupPositionFromFen(this.fenString);
+      const testFigureCell = testBoard.cellByName(figureName);
+      const testTargetCell = testBoard.cellByName(cellName);
+      testBoard.moveFigure(testFigureCell, testTargetCell);
+      const testFigureCells = testBoard.getFigureCells();
+      testBoard.setAffects(testFigureCells);
+      const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
+      if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
+    });
+    figureCell.canMoveToCells = [...filteredMoves];
+
+    attackCellsNames.forEach((cellName) => {
+      const testBoard = new ChessBoard();
+      testBoard.setupPositionFromFen(this.fenString);
+      const testFigureCell = testBoard.cellByName(figureName);
+      const testTargetCell = testBoard.cellByName(cellName);
+      testBoard.moveFigure(testFigureCell, testTargetCell);
+      const testFigureCells = testBoard.getFigureCells();
+      testBoard.setAffects(testFigureCells);
+      const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
+      if (!testKingCell.underAttackingCells.length) filteredAttacks.push(cellName);
+    });
+    figureCell.canAttackCells = [...filteredAttacks];
+
+    figureCell.wasTouched = true;
+  }
+
+  setFEN() {
+    const fenArray = [];
+    for (let y = 8; y >= 1; y -= 1) {
+      const rowArray = [];
+      let emptyCellsCount = 0;
+      for (let x = 1; x <= 8; x += 1) {
+        const cellFigure = this.cell(x, y).figure;
+        if (cellFigure) {
+          if (emptyCellsCount) {
+            rowArray.push(emptyCellsCount.toString());
+            emptyCellsCount = 0;
+          }
+          const [figure] = cellFigure.type === 'knight' ? 'n' : cellFigure.type;
+          const fenLetter = cellFigure.color === 'white' ? figure.toUpperCase() : figure;
+          rowArray.push(fenLetter);
+        } else emptyCellsCount += 1;
+      }
+      if (emptyCellsCount) rowArray.push(emptyCellsCount.toString());
+      fenArray.push(rowArray.join(''));
+    }
+
+    const fenColor = this.currentTurnColor === 'black' ? 'b' : 'w';
+    const fenEnpass = this.enpass || '-';
+    const fenInfo = ` ${fenColor} KQkq ${fenEnpass} 0 1`;
+
+    this.fenString = `${fenArray.join('/')}${fenInfo}`;
+    console.log('board current FEN: ', this.fenString);
   }
 
   // ### Danya)
   moveFigure(figureCell, targetCell) {
-    if (targetCell.effect) {
+    const canMove = figureCell.canMoveToCells.includes(targetCell.name);
+    const canAttack = figureCell.canAttackCells.includes(targetCell.name);
+    if (canMove || canAttack) {
       const { figure } = figureCell;
       const lostFigure = targetCell.figure;
       if (lostFigure) this.lostFigures.push(lostFigure);
