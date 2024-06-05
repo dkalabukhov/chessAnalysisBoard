@@ -59,6 +59,7 @@ domBoard.addEventListener('click', (e) => {
         // const currentDomCell = document.querySelector(`div[data-cell="${state.figure}`);
         // currentDomCell.firstChild.remove();
         // state.turn = state.turn === 'white' ? 'black' : 'white';
+        board.clearCheck();
         board.startNewTurn();
         state.turn = board.currentTurnColor;
       }

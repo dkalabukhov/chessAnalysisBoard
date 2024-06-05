@@ -48,18 +48,19 @@ export default (boardCell, domCell) => {
   }
 
   switch (boardCell.effect) {
-    case 'dot': {
+    case 'dot':
       domCell.classList.add('available');
       break;
-    }
-    case 'danger': {
+    case 'danger':
       domCell.classList.add('danger');
       break;
-    }
-    default: {
+    case 'incheck':
+      domCell.classList.add('incheck');
+      break;
+    default:
       domCell.classList.remove('available');
       domCell.classList.remove('danger');
-    }
+      domCell.classList.remove('incheck');
   }
 
   switch (boardCell.isActive) {

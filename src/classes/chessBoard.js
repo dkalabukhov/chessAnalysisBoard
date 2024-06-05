@@ -220,9 +220,14 @@ export default class ChessBoard {
 
   cleanEffects() {
     this.cellNames.forEach((name) => {
-      this.cellByName(name).effect = null;
+      if (this.cellByName(name).effect !== 'incheck') this.cellByName(name).effect = null;
       this.cellByName(name).isActive = false;
     });
+  }
+
+  clearCheck() {
+    this.kingsCells.white.effect = null;
+    this.kingsCells.black.effect = null;
   }
 
   isCheck(kingColor) {
