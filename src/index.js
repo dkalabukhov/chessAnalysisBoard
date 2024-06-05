@@ -78,6 +78,7 @@ fenForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const fenString = fenInput.value.trim();
   if (!FenParser.isFen(fenString)) {
+    // eslint-disable-next-line no-alert
     alert('Неверный FEN!');
   } else {
     board.setupPositionFromFen(fenString);

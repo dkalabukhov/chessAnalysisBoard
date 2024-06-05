@@ -4,6 +4,7 @@ import getAvailableCells from '../controllers/getAvailableCells.js';
 import ChessFigure from './chessFigure.js';
 // const figureTypes = ['king', 'queen', 'bishop', 'knight', 'rook', 'pawn'];
 
+// ### Sanya)
 export default class ChessBoard {
   static bounds = {
     startX: 1,
@@ -47,9 +48,6 @@ export default class ChessBoard {
     this.effect = null;
     this.isActive = false;
     this.lostFigures = [];
-
-    this.inCheckKing = null;
-    this.checkMateKing = null;
   }
 
   createCells() {
@@ -111,75 +109,11 @@ export default class ChessBoard {
     this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
   }
 
-  clearFigures() {
-    this.getFigureCells().forEach((cell) => {
-      cell.figure = null;
-    });
-  }
-
-  setupPositionFromFen(fenString) {
-    this.clearFigures();
-    const fen = new FenParser(fenString);
-    const fenArray = fen.positions
-      .split('/')
-      .reverse()
-      .map((row) => row.split(''));
-    const positions = fenArray.map((row) => parse(row));
-    positions.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        const cellKey = `c${j + 1}${i + 1}`;
-        switch (cell) {
-          case 'r':
-            this.cells[cellKey].figure = new ChessFigure('rook', 'black');
-            break;
-          case 'n':
-            this.cells[cellKey].figure = new ChessFigure('knight', 'black');
-            break;
-          case 'b':
-            this.cells[cellKey].figure = new ChessFigure('bishop', 'black');
-            break;
-          case 'k':
-            this.cells[cellKey].figure = new ChessFigure('king', 'black');
-            this.kingsCells.black = this.cells[cellKey];
-            break;
-          case 'q':
-            this.cells[cellKey].figure = new ChessFigure('queen', 'black');
-            break;
-          case 'p':
-            this.cells[cellKey].figure = new ChessFigure('pawn', 'black');
-            break;
-          case 'R':
-            this.cells[cellKey].figure = new ChessFigure('rook', 'white');
-            break;
-          case 'N':
-            this.cells[cellKey].figure = new ChessFigure('knight', 'white');
-            break;
-          case 'B':
-            this.cells[cellKey].figure = new ChessFigure('bishop', 'white');
-            break;
-          case 'Q':
-            this.cells[cellKey].figure = new ChessFigure('queen', 'white');
-            break;
-          case 'K':
-            this.cells[cellKey].figure = new ChessFigure('king', 'white');
-            this.kingsCells.white = this.cells[cellKey];
-            break;
-          case 'P':
-            this.cells[cellKey].figure = new ChessFigure('pawn', 'white');
-            break;
-          default:
-            this.cells[cellKey].figure = null;
-        }
-      });
-    });
-    this.cleanEffects();
-    const newTurnColor = fen.turn === 'w' ? 'white' : 'black';
-    this.startNewTurn(newTurnColor);
-  }
-
   setPlayerSide(playerSide) {
     if (playerSide !== 'white' && playerSide !== 'black' && playerSide !== 'spectator') {
-      throw new Error(`wrong value of "playerSide" argument: ${playerSide} // must be 'white', 'black' or 'spectator'`);
+      throw new Error(
+        `wrong value of "playerSide" argument: ${playerSide} // must be 'white', 'black' or 'spectator'`,
+      );
     }
     this.playerSide = playerSide;
   }
@@ -293,13 +227,12 @@ export default class ChessBoard {
 
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
-      this.inCheckKing = kingColor;
+      this.kingsCells[kingColor].effect = 'incheck';
       console.log(`The ${kingColor} king is in check!`);
-      // if (!this.kingsCells[kingColor].canMoveToCells.length) {
-      //   this.checkMateKing = kingColor;
-      //   console.log(`The checkMateKing!`);
-      // }
-    } else this.inCheckKing = null;
+      console.log(this.kingsCells[kingColor]);
+      return true;
+    }
+    return false;
   }
 
   startNewTurn(newTurnColor = null) {
@@ -309,6 +242,73 @@ export default class ChessBoard {
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
     this.isCheck(this.currentTurnColor);
+  }
+
+  // ### Danya)
+  clearFigures() {
+    this.getFigureCells().forEach((cell) => {
+      cell.figure = null;
+    });
+  }
+
+  setupPositionFromFen(fenString) {
+    this.clearFigures();
+    const fen = new FenParser(fenString);
+    const fenArray = fen.positions
+      .split('/')
+      .reverse()
+      .map((row) => row.split(''));
+    const positions = fenArray.map((row) => parse(row));
+    positions.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        const cellKey = `c${j + 1}${i + 1}`;
+        switch (cell) {
+          case 'r':
+            this.cells[cellKey].figure = new ChessFigure('rook', 'black');
+            break;
+          case 'n':
+            this.cells[cellKey].figure = new ChessFigure('knight', 'black');
+            break;
+          case 'b':
+            this.cells[cellKey].figure = new ChessFigure('bishop', 'black');
+            break;
+          case 'k':
+            this.cells[cellKey].figure = new ChessFigure('king', 'black');
+            this.kingsCells.black = this.cells[cellKey];
+            break;
+          case 'q':
+            this.cells[cellKey].figure = new ChessFigure('queen', 'black');
+            break;
+          case 'p':
+            this.cells[cellKey].figure = new ChessFigure('pawn', 'black');
+            break;
+          case 'R':
+            this.cells[cellKey].figure = new ChessFigure('rook', 'white');
+            break;
+          case 'N':
+            this.cells[cellKey].figure = new ChessFigure('knight', 'white');
+            break;
+          case 'B':
+            this.cells[cellKey].figure = new ChessFigure('bishop', 'white');
+            break;
+          case 'Q':
+            this.cells[cellKey].figure = new ChessFigure('queen', 'white');
+            break;
+          case 'K':
+            this.cells[cellKey].figure = new ChessFigure('king', 'white');
+            this.kingsCells.white = this.cells[cellKey];
+            break;
+          case 'P':
+            this.cells[cellKey].figure = new ChessFigure('pawn', 'white');
+            break;
+          default:
+            this.cells[cellKey].figure = null;
+        }
+      });
+    });
+    this.cleanEffects();
+    const newTurnColor = fen.turn === 'w' ? 'white' : 'black';
+    this.startNewTurn(newTurnColor);
   }
 }
 
