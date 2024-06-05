@@ -46,6 +46,7 @@ export default class ChessBoard {
     };
 
     this.effect = null;
+    this.enpass = null;
     this.isActive = false;
     this.lostFigures = [];
   }
@@ -150,19 +151,6 @@ export default class ChessBoard {
   //   this.kingsCells[color].figure = king;
   // }
 
-  moveFigure(figureCell, targetCell) {
-    if (targetCell.effect) {
-      const { figure } = figureCell;
-      const lostFigure = targetCell.figure;
-      if (lostFigure) this.lostFigures.push(lostFigure);
-      if (figure.type === 'king') this.kingsCells[figure.color] = targetCell;
-      targetCell.figure = figure;
-      figureCell.figure = null;
-      return true;
-    }
-    return false;
-  }
-
   getFigureCells() {
     return this.cellNames
       .filter((name) => this.cellByName(name).figure)
@@ -225,11 +213,6 @@ export default class ChessBoard {
     });
   }
 
-  clearCheck() {
-    this.kingsCells.white.effect = null;
-    this.kingsCells.black.effect = null;
-  }
-
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
       this.kingsCells[kingColor].effect = 'incheck';
@@ -250,10 +233,52 @@ export default class ChessBoard {
   }
 
   // ### Danya)
+  moveFigure(figureCell, targetCell) {
+    if (targetCell.effect) {
+      const { figure } = figureCell;
+      const lostFigure = targetCell.figure;
+      if (lostFigure) this.lostFigures.push(lostFigure);
+      if (figure.type === 'king') this.kingsCells[figure.color] = targetCell;
+      if (figure.type === 'pawn' && targetCell.name === this.enpass) {
+        const [x, y] = targetCell.xyCoordinates;
+        if (figure.color === 'white') {
+          this.cell(x, y - 1).figure = null;
+        } else {
+          this.cell(x, y + 1).figure = null;
+        }
+      }
+      if (figure.type === 'pawn') {
+        const [, currentPosition] = figureCell.xyCoordinates;
+        const [, targetPosition] = targetCell.xyCoordinates;
+        if (Math.abs(currentPosition - targetPosition) === 2) {
+          const [row, cell] = figureCell.name;
+          if (figure.color === 'white') {
+            this.enpass = `${row}${Number(cell) + 1}`;
+          } else {
+            this.enpass = `${row}${Number(cell) - 1}`;
+          }
+        } else {
+          this.enpass = null;
+        }
+      } else {
+        this.enpass = null;
+      }
+      targetCell.figure = figure;
+      figureCell.figure = null;
+      return true;
+    }
+    return false;
+  }
+
   clearFigures() {
     this.getFigureCells().forEach((cell) => {
       cell.figure = null;
     });
+  }
+
+  clearCheck() {
+    this.kingsCells.white.effect = null;
+    this.kingsCells.black.effect = null;
   }
 
   setupPositionFromFen(fenString) {

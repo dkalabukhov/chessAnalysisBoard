@@ -48,7 +48,10 @@ export default class Schema {
           return [makeAvailableCell(cell.name, 'danger')];
         }
         if (!cell.figure && isPawn) {
-          return [makeAvailableCell(cell.name, 'pawnCanAttack')];
+          if (cell.name !== this.board.enpass) {
+            return [makeAvailableCell(cell.name, 'pawnCanAttack')];
+          }
+          return [makeAvailableCell(cell.name, 'dot'), makeAvailableCell(cell.name, 'pawnCanAttack')];
         }
         return [];
       };
@@ -61,7 +64,8 @@ export default class Schema {
     const [cellX, cellY] = cell.xyCoordinates;
     const { color } = cell.figure;
     const isPawn = cell.figure.type === 'pawn';
-    const validFields = this.checks.reduce((acc, check) => [...acc, ...check([cellX, cellY], color, isPawn)], []);
+    const validFields = this.checks
+      .reduce((acc, check) => [...acc, ...check([cellX, cellY], color, isPawn)], []);
     return validFields;
   }
 }

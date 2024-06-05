@@ -82,6 +82,8 @@ fenForm.addEventListener('submit', (e) => {
     // eslint-disable-next-line no-alert
     alert('Неверный FEN!');
   } else {
+    const fen = new FenParser(fenString);
+    board.enpass = fen.enpass === '-' ? null : fen.enpass;
     board.setupPositionFromFen(fenString);
     state.turn = board.currentTurnColor;
     state.cursor = 'idle';
