@@ -20,6 +20,16 @@ export default class Schema {
     return this;
   }
 
+  castleKingSide() {
+    this.line([2, 0], 1);
+    return this;
+  }
+
+  castleQueenSide() {
+    this.line([-2, 0], 1);
+    return this;
+  }
+
   cross(range) {
     this.line([0, 1], range).line([1, 0], range).line([-1, 0], range).line([0, -1], range);
     return this;

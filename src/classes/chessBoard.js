@@ -49,6 +49,10 @@ export default class ChessBoard {
     this.enpass = null;
     this.isActive = false;
     this.lostFigures = [];
+    this.canCastleKingSideWhite = true;
+    this.canCastleQueenSideWhite = true;
+    this.canCastleKingSideBlack = true;
+    this.canCastleQueenSideBlack = true;
   }
 
   createCells() {
@@ -320,6 +324,49 @@ export default class ChessBoard {
       if (figure.type === 'king') {
         this.kingsCells[figure.color] = targetCell;
         figureCell.effect = null;
+        if (figure.color === 'white') {
+          this.canCastleKingSideWhite = false;
+          this.canCastleQueenSideWhite = false;
+        } else {
+          this.canCastleKingSideBlack = false;
+          this.canCastleQueenSideBlack = false;
+        }
+        const [currentPosition] = figureCell.xyCoordinates;
+        const [targetPosition] = targetCell.xyCoordinates;
+        if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g1') {
+          this.cellByName('h1').figure = null;
+          this.cellByName('f1').figure = new ChessFigure('rook', 'white');
+        }
+        if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g8') {
+          this.cellByName('h8').figure = null;
+          this.cellByName('f8').figure = new ChessFigure('rook', 'black');
+        }
+        if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c1') {
+          this.cellByName('a1').figure = null;
+          this.cellByName('d1').figure = new ChessFigure('rook', 'white');
+        }
+        if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c8') {
+          this.cellByName('a8').figure = null;
+          this.cellByName('d8').figure = new ChessFigure('rook', 'black');
+        }
+      }
+      if (figure.type === 'rook') {
+        switch (figureCell.name) {
+          case 'a1':
+            this.canCastleQueenSideWhite = false;
+            break;
+          case 'h1':
+            this.canCastleKingSideWhite = false;
+            break;
+          case 'a8':
+            this.canCastleQueenSideBlack = false;
+            break;
+          case 'h8':
+            this.canCastleKingSideBlack = false;
+            break;
+          default:
+            break;
+        }
       }
       if (figure.type === 'pawn' && targetCell.name === this.enpass) {
         const [x, y] = targetCell.xyCoordinates;
