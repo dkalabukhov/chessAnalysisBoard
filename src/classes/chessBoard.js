@@ -53,6 +53,9 @@ export default class ChessBoard {
     this.canCastleQueenSideWhite = true;
     this.canCastleKingSideBlack = true;
     this.canCastleQueenSideBlack = true;
+
+    this.stalemate = false;
+    this.checkmate = false;
   }
 
   createCells() {
@@ -233,6 +236,17 @@ export default class ChessBoard {
     return false;
   }
 
+  isStalemate() {
+    let result = true;
+    const currentTurnFigureCells = this.getFigureCells().filter(
+      (cell) => cell.figure.color === this.currentTurnColor,
+    );
+    currentTurnFigureCells.forEach((cell) => {
+      if (cell.canMoveToCells.length || cell.canAttackCells.length) result = false;
+    });
+    return result;
+  }
+
   startNewTurn(newTurnColor = null) {
     // console.log('board.startNewTurn()');
     if (newTurnColor) this.currentTurnColor = newTurnColor;
@@ -240,8 +254,12 @@ export default class ChessBoard {
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
     this.isCheck(this.currentTurnColor);
-    this.clearTouches();
     this.setFEN();
+    if (this.isStalemate()) {
+      this.stalemate = true;
+      console.log('Приехали: пат, епта...');
+    }
+    this.clearTouches();
   }
 
   checkAllMoves(figureCell) {
@@ -310,7 +328,7 @@ export default class ChessBoard {
     const fenInfo = ` ${fenColor} KQkq ${fenEnpass} 0 1`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
-    console.log('board current FEN: ', this.fenString);
+    // console.log('board current FEN: ', this.fenString);
   }
 
   // ### Danya)
