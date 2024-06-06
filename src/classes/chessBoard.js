@@ -58,8 +58,9 @@ export default class ChessBoard {
     this.turnsCount = 1;
     this.turnsCountExceptPawns = 0;
 
-    this.stalemate = false;
-    this.checkmate = false;
+    this.stalemate = null;
+    this.checkmate = null;
+    this.autoDraw = false;
   }
 
   createCells() {
@@ -254,6 +255,7 @@ export default class ChessBoard {
       this.stalemate = currentColor;
       console.log('STALEMATE!');
     }
+    if (this.turnsCountExceptPawns >= 50) this.autoDraw = true;
   }
 
   startNewTurn(newTurnColor = null) {
@@ -355,7 +357,7 @@ export default class ChessBoard {
       this.canCastleKingSideBlack ? 'k' : '',
       this.canCastleQueenSideBlack ? 'q' : '',
     ].join('') || '-';
-    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} 0 ${this.turnsCount}`;
+    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} ${this.turnsCountExceptPawns} ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
     if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
@@ -437,9 +439,10 @@ export default class ChessBoard {
         } else {
           this.enpass = null;
         }
-      } else {
-        this.enpass = null;
-      }
+      } else this.enpass = null;
+      if (figure.type === 'pawn' || (targetCell.figure && targetCell.figure.type === 'pawn')) {
+        this.turnsCountExceptPawns = 0;
+      } else this.turnsCountExceptPawns += 1;
       targetCell.figure = figure;
       figureCell.figure = null;
       return true;

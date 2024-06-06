@@ -23,6 +23,9 @@ const render = () => {
     turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} ${
       board.checkmate ? 'МАТ!' : 'ПАТ!'
     } `;
+  } else if (board.autoDraw) {
+    turn.classList.add('incheck');
+    turn.textContent = 'Боевая НИЧЬЯ!';
   } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
   board.cellNames.forEach((name) => {
     const domCell = document.querySelector(`[data-cell="${name}"]`);
