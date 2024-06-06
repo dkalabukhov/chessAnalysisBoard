@@ -49,10 +49,14 @@ export default class ChessBoard {
     this.enpass = null;
     this.isActive = false;
     this.lostFigures = [];
+
     this.canCastleKingSideWhite = true;
     this.canCastleQueenSideWhite = true;
     this.canCastleKingSideBlack = true;
     this.canCastleQueenSideBlack = true;
+
+    this.turnsCount = 0;
+    this.turnsCountExceptPawns = 0;
 
     this.stalemate = false;
     this.checkmate = false;
@@ -255,12 +259,14 @@ export default class ChessBoard {
     if (this.isCheck(this.currentTurnColor)) {
       this.kingsCells[this.currentTurnColor].effect = 'incheck';
     }
+    if (this.currentTurnColor === 'white') this.turnsCount += 1;
     this.setFEN();
     if (this.isStalemate()) {
       this.stalemate = true;
       console.log('Приехали: пат, епта...');
     }
     this.clearTouches();
+    // console.log(this.cellByName('e8'));
   }
 
   checkAllMoves(figureCell) {
@@ -274,6 +280,19 @@ export default class ChessBoard {
     const filteredMoves = [];
     const filteredAttacks = [];
 
+    const getIncorrectCastleKingMove = (kingCell, moves) => {
+      if (kingCell.name === 'e1' && moves.includes('c1') && !moves.includes('d1')) return 'c1';
+      if (kingCell.name === 'e1' && moves.includes('g1') && !moves.includes('f1')) return 'g1';
+      if (kingCell.name === 'e8' && moves.includes('c8') && !moves.includes('d8')) return 'c8';
+      if (kingCell.name === 'e8' && moves.includes('g8') && !moves.includes('f8')) return 'g8';
+      return null;
+    };
+
+    // console.log('BEFORE', figureCell.canMoveToCells);
+    // console.log('K', this.canCastleKingSideWhite);
+    // console.log('Q', this.canCastleQueenSideWhite);
+    // console.log('k', this.canCastleKingSideBlack);
+    // console.log('q', this.canCastleQueenSideBlack);
     moveCellsNames.forEach((cellName) => {
       const testBoard = new ChessBoard();
       testBoard.setupPositionFromFen(this.fenString);
@@ -285,7 +304,16 @@ export default class ChessBoard {
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
     });
+    // ++++++++++++++++
+    if (figureCell.figure.type === 'king') {
+      const deletedMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
+      // console.log(deletedMove);
+      if (deletedMove) {
+        filteredMoves.splice(filteredMoves.indexOf(deletedMove), 1);
+      }
+    }
     figureCell.canMoveToCells = [...filteredMoves];
+    // console.log('AFTER', figureCell.canMoveToCells);
 
     attackCellsNames.forEach((cellName) => {
       const testBoard = new ChessBoard();
@@ -326,7 +354,14 @@ export default class ChessBoard {
 
     const fenColor = this.currentTurnColor === 'black' ? 'b' : 'w';
     const fenEnpass = this.enpass || '-';
-    const fenInfo = ` ${fenColor} KQkq ${fenEnpass} 0 1`;
+    // prettier-ignore
+    const fenCastles = [
+      this.canCastleKingSideWhite ? 'K' : '',
+      this.canCastleQueenSideWhite ? 'Q' : '',
+      this.canCastleKingSideBlack ? 'k' : '',
+      this.canCastleQueenSideBlack ? 'q' : '',
+    ].join('') || '-';
+    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} 0 ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
     // console.log('board current FEN: ', this.fenString);
