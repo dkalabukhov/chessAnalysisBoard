@@ -228,7 +228,6 @@ export default class ChessBoard {
 
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
-      this.kingsCells[kingColor].effect = 'incheck';
       // console.log(`The ${kingColor} king is in check!`);
       // console.log(this.kingsCells[kingColor]);
       return true;
@@ -253,7 +252,9 @@ export default class ChessBoard {
     else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
-    this.isCheck(this.currentTurnColor);
+    if (this.isCheck(this.currentTurnColor)) {
+      this.kingsCells[this.currentTurnColor].effect = 'incheck';
+    }
     this.setFEN();
     if (this.isStalemate()) {
       this.stalemate = true;
@@ -447,6 +448,8 @@ export default class ChessBoard {
 
   setupPositionFromFen(fenString) {
     this.clearFigures();
+    this.cleanEffects();
+    this.clearCheck();
     const fen = new FenParser(fenString);
     const fenArray = fen.positions
       .split('/')
@@ -500,7 +503,7 @@ export default class ChessBoard {
         }
       });
     });
-    this.cleanEffects();
+
     const newTurnColor = fen.turn === 'w' ? 'white' : 'black';
     this.startNewTurn(newTurnColor);
   }
