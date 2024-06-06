@@ -91,6 +91,43 @@ fenForm.addEventListener('submit', (e) => {
   } else {
     const fen = new FenParser(fenString);
     board.enpass = fen.enpass === '-' ? null : fen.enpass;
+    const { castles } = fen;
+    console.log(castles);
+    const castlesArray = castles.split('');
+    castlesArray.forEach((char) => {
+      switch (char) {
+        case 'K':
+          board.canCastleKingSideWhite = true;
+          break;
+        case 'Q':
+          board.canCastleQueenSideWhite = true;
+          break;
+        case 'k':
+          board.canCastleKingSideBlack = true;
+          break;
+        case 'q':
+          board.canCastleQueenSideBlack = true;
+          break;
+        default:
+          board.canCastleKingSideBlack = false;
+          board.canCastleKingSideWhite = false;
+          board.canCastleQueenSideBlack = false;
+          board.canCastleQueenSideWhite = false;
+      }
+    });
+    if (!castles.includes('K')) {
+      board.canCastleKingSideWhite = false;
+    }
+    if (!castles.includes('Q')) {
+      board.canCastleQueenSideWhite = false;
+    }
+    if (!castles.includes('k')) {
+      board.canCastleKingSideBlack = false;
+    }
+    if (!castles.includes('q')) {
+      board.canCastleQueenSideBlack = false;
+    }
+
     board.setupPositionFromFen(fenString);
     state.turn = board.currentTurnColor;
     state.cursor = 'idle';

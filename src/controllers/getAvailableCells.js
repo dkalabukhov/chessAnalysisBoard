@@ -31,7 +31,6 @@ export default (cell, board) => {
         && !board.isCheck('white')
         && cell.name === 'e1'
         && board.cellByName('f1').figure === null
-        // && board.isAttacked('f1', 'black')
         && board.cellByName('g1').figure === null) {
         result.push(...validator.move().castleKingSide().check(cell));
       }
@@ -39,7 +38,6 @@ export default (cell, board) => {
         && !board.isCheck('black')
         && cell.name === 'e8'
         && board.cellByName('f8').figure === null
-        // && board.cellByName('e8').canMoveToCells.includes('f8')
         && board.cellByName('g8').figure === null) {
         result.push(...validator.move().castleKingSide().check(cell));
       }
@@ -47,7 +45,6 @@ export default (cell, board) => {
         && !board.isCheck('white')
         && cell.name === 'e1'
         && board.cellByName('d1').figure === null
-        // && board.cellByName('e1').canMoveToCells.includes('d1')
         && board.cellByName('c1').figure === null
         && board.cellByName('b1').figure === null) {
         result.push(...validator.move().castleQueenSide().check(cell));
@@ -56,7 +53,6 @@ export default (cell, board) => {
         && !board.isCheck('black')
         && cell.name === 'e8'
         && board.cellByName('d8').figure === null
-        // && board.cellByName('e8').canMoveToCells.includes('d8')
         && board.cellByName('c8').figure === null
         && board.cellByName('b8').figure === null) {
         result.push(...validator.move().castleQueenSide().check(cell));
