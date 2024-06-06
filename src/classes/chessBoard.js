@@ -55,7 +55,7 @@ export default class ChessBoard {
     this.canCastleKingSideBlack = true;
     this.canCastleQueenSideBlack = true;
 
-    this.turnsCount = 0;
+    this.turnsCount = 1;
     this.turnsCountExceptPawns = 0;
 
     this.stalemate = false;
@@ -259,7 +259,7 @@ export default class ChessBoard {
     if (this.isCheck(this.currentTurnColor)) {
       this.kingsCells[this.currentTurnColor].effect = 'incheck';
     }
-    if (this.currentTurnColor === 'white') this.turnsCount += 1;
+    if (this.currentTurnColor === 'white' && !newTurnColor) this.turnsCount += 1;
     this.setFEN();
     if (this.isStalemate()) {
       this.stalemate = true;
@@ -364,7 +364,7 @@ export default class ChessBoard {
     const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} 0 ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
-    // console.log('board current FEN: ', this.fenString);
+    console.log('board current FEN: ', this.fenString);
   }
 
   // ### Danya)
