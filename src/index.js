@@ -91,6 +91,8 @@ fenForm.addEventListener('submit', (e) => {
   } else {
     const fen = new FenParser(fenString);
     board.enpass = fen.enpass === '-' ? null : fen.enpass;
+    board.turnsCount = fen.moveNumber;
+    board.turnsCountExceptPawns = fen.halfmoveClock;
     const { castles } = fen;
     // console.log('fen castles: ', castles);
 
