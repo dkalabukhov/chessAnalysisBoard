@@ -2,7 +2,6 @@ import FenParser from './fenParser.js';
 import renderCell from './renders/renderCell.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
-// import getAvailableCells from './controllers/getAvailableCells.js';
 
 const domBoard = document.querySelector('.board');
 const turn = document.querySelector('.info__turn');
@@ -17,16 +16,14 @@ const state = {
 
 const board = new ChessBoard('white');
 board.startNewTurn('white');
-// TEMP >>>
-// board.setupPositionFromFen('7k/8/6B1/8/8/3n4/5q2/6K1 w - - 11 44');
-// state.turn = board.currentTurnColor;
-// state.cursor = 'idle';
-// state.figure = null;
-// board.setFEN();
-// <<< TEMP
 
 const render = () => {
-  turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+  if (board.checkmate || board.stalemate) {
+    turn.classList.add('incheck');
+    turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} ${
+      board.checkmate ? 'МАТ!' : 'ПАТ!'
+    } `;
+  } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
   board.cellNames.forEach((name) => {
     const domCell = document.querySelector(`[data-cell="${name}"]`);
     renderCell(board.cellByName(name), domCell);
@@ -92,41 +89,47 @@ fenForm.addEventListener('submit', (e) => {
     const fen = new FenParser(fenString);
     board.enpass = fen.enpass === '-' ? null : fen.enpass;
     const { castles } = fen;
-    console.log(castles);
-    const castlesArray = castles.split('');
-    castlesArray.forEach((char) => {
-      switch (char) {
-        case 'K':
-          board.canCastleKingSideWhite = true;
-          break;
-        case 'Q':
-          board.canCastleQueenSideWhite = true;
-          break;
-        case 'k':
-          board.canCastleKingSideBlack = true;
-          break;
-        case 'q':
-          board.canCastleQueenSideBlack = true;
-          break;
-        default:
-          board.canCastleKingSideBlack = false;
-          board.canCastleKingSideWhite = false;
-          board.canCastleQueenSideBlack = false;
-          board.canCastleQueenSideWhite = false;
-      }
-    });
-    if (!castles.includes('K')) {
-      board.canCastleKingSideWhite = false;
-    }
-    if (!castles.includes('Q')) {
-      board.canCastleQueenSideWhite = false;
-    }
-    if (!castles.includes('k')) {
-      board.canCastleKingSideBlack = false;
-    }
-    if (!castles.includes('q')) {
-      board.canCastleQueenSideBlack = false;
-    }
+    // console.log('fen castles: ', castles);
+
+    // const castlesArray = castles.split('');
+    // castlesArray.forEach((char) => {
+    //   switch (char) {
+    //     case 'K':
+    //       board.canCastleKingSideWhite = true;
+    //       break;
+    //     case 'Q':
+    //       board.canCastleQueenSideWhite = true;
+    //       break;
+    //     case 'k':
+    //       board.canCastleKingSideBlack = true;
+    //       break;
+    //     case 'q':
+    //       board.canCastleQueenSideBlack = true;
+    //       break;
+    //     default:
+    //       board.canCastleKingSideBlack = false;
+    //       board.canCastleKingSideWhite = false;
+    //       board.canCastleQueenSideBlack = false;
+    //       board.canCastleQueenSideWhite = false;
+    //   }
+    // });
+    // if (!castles.includes('K')) {
+    //   board.canCastleKingSideWhite = false;
+    // }
+    // if (!castles.includes('Q')) {
+    //   board.canCastleQueenSideWhite = false;
+    // }
+    // if (!castles.includes('k')) {
+    //   board.canCastleKingSideBlack = false;
+    // }
+    // if (!castles.includes('q')) {
+    //   board.canCastleQueenSideBlack = false;
+    // }
+
+    board.canCastleKingSideWhite = castles.includes('K');
+    board.canCastleQueenSideWhite = castles.includes('Q');
+    board.canCastleKingSideBlack = castles.includes('k');
+    board.canCastleQueenSideBlack = castles.includes('q');
 
     board.setupPositionFromFen(fenString);
     state.turn = board.currentTurnColor;

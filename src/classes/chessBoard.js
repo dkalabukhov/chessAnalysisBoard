@@ -2,7 +2,6 @@ import FenParser from '../fenParser.js';
 import parse from '../helpers.js';
 import getAvailableCells from '../controllers/getAvailableCells.js';
 import ChessFigure from './chessFigure.js';
-// const figureTypes = ['king', 'queen', 'bishop', 'knight', 'rook', 'pawn'];
 
 // ### Sanya)
 export default class ChessBoard {
@@ -30,7 +29,8 @@ export default class ChessBoard {
     return false;
   }
 
-  constructor(playerSide = 'spectator') {
+  constructor(playerSide = 'spectator', isVirtualBoard = false) {
+    this.isVirtualBoard = isVirtualBoard;
     this.cells = {};
     this.cellNames = [];
     this.createCells();
@@ -155,13 +155,6 @@ export default class ChessBoard {
     return this.cells[cellKey];
   }
 
-  // setKingCell(color, cell) {
-  //   const king = this.kingsCells[color].figure;
-  //   this.kingsCells[color].figure = null;
-  //   this.kingsCells[color] = cell;
-  //   this.kingsCells[color].figure = king;
-  // }
-
   getFigureCells() {
     return this.cellNames
       .filter((name) => this.cellByName(name).figure)
@@ -224,55 +217,63 @@ export default class ChessBoard {
     });
   }
 
-  clearTouches() {
-    this.cellNames.forEach((name) => {
-      this.cellByName(name).wasTouched = false;
-    });
-  }
+  // clearTouches() {
+  //   this.cellNames.forEach((name) => {
+  //     this.cellByName(name).wasTouched = false;
+  //   });
+  // }
 
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
-      // console.log(`The ${kingColor} king is in check!`);
-      // console.log(this.kingsCells[kingColor]);
       return true;
     }
     return false;
   }
 
-  isStalemate() {
-    let result = true;
-    const currentTurnFigureCells = this.getFigureCells().filter(
-      (cell) => cell.figure.color === this.currentTurnColor,
-    );
-    currentTurnFigureCells.forEach((cell) => {
-      if (cell.canMoveToCells.length || cell.canAttackCells.length) result = false;
+  checkGameState(figureCells) {
+    if (this.isVirtualBoard) return;
+    const currentColor = this.currentTurnColor;
+    const currentTurnFigureCells = figureCells.filter((cell) => cell.figure.color === currentColor);
+    currentTurnFigureCells.forEach((figureCell) => {
+      this.checkAllMoves(figureCell);
     });
-    return result;
+
+    let isAvailableMoves = false;
+    currentTurnFigureCells.forEach((cell) => {
+      if (cell.canMoveToCells.length || cell.canAttackCells.length) isAvailableMoves = true;
+    });
+    if (isAvailableMoves && this.isCheck(currentColor)) {
+      this.kingsCells[currentColor].effect = 'incheck';
+    }
+    if (!isAvailableMoves && this.isCheck(currentColor)) {
+      this.checkmate = currentColor;
+      this.kingsCells[currentColor].effect = 'incheck';
+      console.log('CHECKMATE!');
+    }
+    if (!isAvailableMoves && !this.isCheck(currentColor)) {
+      this.stalemate = currentColor;
+      console.log('STALEMATE!');
+    }
   }
 
   startNewTurn(newTurnColor = null) {
     // console.log('board.startNewTurn()');
     if (newTurnColor) this.currentTurnColor = newTurnColor;
     else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
-    const figureCells = this.getFigureCells();
-    this.setAffects(figureCells);
-    if (this.isCheck(this.currentTurnColor)) {
-      this.kingsCells[this.currentTurnColor].effect = 'incheck';
-    }
     if (this.currentTurnColor === 'white' && !newTurnColor) this.turnsCount += 1;
     this.setFEN();
-    if (this.isStalemate()) {
-      this.stalemate = true;
-      console.log('Приехали: пат, епта...');
-    }
-    this.clearTouches();
-    // console.log(this.cellByName('e8'));
+
+    const figureCells = this.getFigureCells();
+    this.setAffects(figureCells);
+
+    this.checkGameState(figureCells);
   }
 
   checkAllMoves(figureCell) {
-    if (figureCell.wasTouched) return;
-
+    // if (figureCell.wasTouched) return;
+    // console.log(`checkAllMoves ${figureCell.name}`);
     const figureName = figureCell.name;
+    const isVirtualBoard = true;
 
     const moveCellsNames = [...figureCell.canMoveToCells];
     const attackCellsNames = [...figureCell.canAttackCells];
@@ -288,13 +289,8 @@ export default class ChessBoard {
       return null;
     };
 
-    // console.log('BEFORE', figureCell.canMoveToCells);
-    // console.log('K', this.canCastleKingSideWhite);
-    // console.log('Q', this.canCastleQueenSideWhite);
-    // console.log('k', this.canCastleKingSideBlack);
-    // console.log('q', this.canCastleQueenSideBlack);
     moveCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard();
+      const testBoard = new ChessBoard('white', isVirtualBoard);
       testBoard.setupPositionFromFen(this.fenString);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
@@ -304,19 +300,17 @@ export default class ChessBoard {
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
     });
-    // ++++++++++++++++
     if (figureCell.figure.type === 'king') {
       const deletedMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
-      // console.log(deletedMove);
       if (deletedMove) {
         filteredMoves.splice(filteredMoves.indexOf(deletedMove), 1);
       }
     }
     figureCell.canMoveToCells = [...filteredMoves];
-    // console.log('AFTER', figureCell.canMoveToCells);
+    // console.log(`canMoveToCells ${figureCell.canMoveToCells}`);
 
     attackCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard();
+      const testBoard = new ChessBoard('white', isVirtualBoard);
       testBoard.setupPositionFromFen(this.fenString);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
@@ -328,7 +322,7 @@ export default class ChessBoard {
     });
     figureCell.canAttackCells = [...filteredAttacks];
 
-    figureCell.wasTouched = true;
+    // figureCell.wasTouched = true;
   }
 
   setFEN() {
@@ -364,7 +358,7 @@ export default class ChessBoard {
     const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} 0 ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
-    console.log('board current FEN: ', this.fenString);
+    if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
   }
 
   // ### Danya)
