@@ -445,6 +445,11 @@ export default class ChessBoard {
       } else this.turnsCountExceptPawns += 1;
       targetCell.figure = figure;
       figureCell.figure = null;
+      const [, targetYPosition] = targetCell.xyCoordinates;
+      if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
+        figure.type = 'queen';
+        if (!this.isVirtualBoard) console.log(targetCell.figure.type);
+      }
       return true;
     }
     return false;
