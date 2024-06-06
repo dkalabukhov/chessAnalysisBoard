@@ -56,7 +56,7 @@ export default class ChessBoard {
     this.canCastleQueenSideBlack = true;
 
     this.turnsCount = 1;
-    this.turnsCountExceptPawns = 0;
+    this.fiftyEmptyMovesCounter = 0;
 
     this.stalemate = null;
     this.checkmate = null;
@@ -255,7 +255,7 @@ export default class ChessBoard {
       this.stalemate = currentColor;
       console.log('STALEMATE!');
     }
-    if (this.turnsCountExceptPawns >= 50) this.autoDraw = true;
+    if (this.fiftyEmptyMovesCounter >= 50) this.autoDraw = true;
   }
 
   startNewTurn(newTurnColor = null) {
@@ -357,7 +357,7 @@ export default class ChessBoard {
       this.canCastleKingSideBlack ? 'k' : '',
       this.canCastleQueenSideBlack ? 'q' : '',
     ].join('') || '-';
-    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} ${this.turnsCountExceptPawns} ${this.turnsCount}`;
+    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} ${this.fiftyEmptyMovesCounter} ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
     if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
@@ -440,15 +440,14 @@ export default class ChessBoard {
           this.enpass = null;
         }
       } else this.enpass = null;
-      if (figure.type === 'pawn' || (targetCell.figure && targetCell.figure.type === 'pawn')) {
-        this.turnsCountExceptPawns = 0;
-      } else this.turnsCountExceptPawns += 1;
+      if (figure.type === 'pawn' || targetCell.figure) {
+        this.fiftyEmptyMovesCounter = 0;
+      } else this.fiftyEmptyMovesCounter += 1;
       targetCell.figure = figure;
       figureCell.figure = null;
       const [, targetYPosition] = targetCell.xyCoordinates;
       if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
         figure.type = 'queen';
-        if (!this.isVirtualBoard) console.log(targetCell.figure.type);
       }
       return true;
     }
@@ -470,7 +469,17 @@ export default class ChessBoard {
     this.clearFigures();
     this.cleanEffects();
     this.clearCheck();
+
     const fen = new FenParser(fenString);
+    this.enpass = fen.enpass === '-' ? null : fen.enpass;
+    this.turnsCount = fen.moveNumber;
+    this.fiftyEmptyMovesCounter = fen.halfmoveClock;
+    const { castles } = fen;
+    this.canCastleKingSideWhite = castles.includes('K');
+    this.canCastleQueenSideWhite = castles.includes('Q');
+    this.canCastleKingSideBlack = castles.includes('k');
+    this.canCastleQueenSideBlack = castles.includes('q');
+
     const fenArray = fen.positions
       .split('/')
       .reverse()

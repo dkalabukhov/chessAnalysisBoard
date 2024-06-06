@@ -63,8 +63,6 @@ domBoard.addEventListener('click', (e) => {
       }
       const hasMoved = board.moveFigure(board.cellByName(state.figure), targetCell);
       if (hasMoved) {
-        // const currentDomCell = document.querySelector(`div[data-cell="${state.figure}`);
-        // currentDomCell.firstChild.remove();
         // state.turn = state.turn === 'white' ? 'black' : 'white';
         board.clearCheck();
         board.startNewTurn();
@@ -89,53 +87,6 @@ fenForm.addEventListener('submit', (e) => {
     // eslint-disable-next-line no-alert
     alert('Неверный FEN!');
   } else {
-    const fen = new FenParser(fenString);
-    board.enpass = fen.enpass === '-' ? null : fen.enpass;
-    board.turnsCount = fen.moveNumber;
-    board.turnsCountExceptPawns = fen.halfmoveClock;
-    const { castles } = fen;
-    // console.log('fen castles: ', castles);
-
-    // const castlesArray = castles.split('');
-    // castlesArray.forEach((char) => {
-    //   switch (char) {
-    //     case 'K':
-    //       board.canCastleKingSideWhite = true;
-    //       break;
-    //     case 'Q':
-    //       board.canCastleQueenSideWhite = true;
-    //       break;
-    //     case 'k':
-    //       board.canCastleKingSideBlack = true;
-    //       break;
-    //     case 'q':
-    //       board.canCastleQueenSideBlack = true;
-    //       break;
-    //     default:
-    //       board.canCastleKingSideBlack = false;
-    //       board.canCastleKingSideWhite = false;
-    //       board.canCastleQueenSideBlack = false;
-    //       board.canCastleQueenSideWhite = false;
-    //   }
-    // });
-    // if (!castles.includes('K')) {
-    //   board.canCastleKingSideWhite = false;
-    // }
-    // if (!castles.includes('Q')) {
-    //   board.canCastleQueenSideWhite = false;
-    // }
-    // if (!castles.includes('k')) {
-    //   board.canCastleKingSideBlack = false;
-    // }
-    // if (!castles.includes('q')) {
-    //   board.canCastleQueenSideBlack = false;
-    // }
-
-    board.canCastleKingSideWhite = castles.includes('K');
-    board.canCastleQueenSideWhite = castles.includes('Q');
-    board.canCastleKingSideBlack = castles.includes('k');
-    board.canCastleQueenSideBlack = castles.includes('q');
-
     board.setupPositionFromFen(fenString);
     state.turn = board.currentTurnColor;
     state.cursor = 'idle';
