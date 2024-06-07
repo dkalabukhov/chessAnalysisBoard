@@ -46,6 +46,7 @@ export default class ChessBoard {
     this.stalemate = null;
     this.autoDraw = false;
     this.lostFigures = [];
+    this.turnsHistory = {};
 
     this.cells = {};
     this.cellNames = [];
@@ -280,7 +281,25 @@ export default class ChessBoard {
     // console.log('board.startNewTurn()');
     if (newTurnColor) this.currentTurnColor = newTurnColor;
     else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
-    if (this.currentTurnColor === 'white' && !newTurnColor) this.turnsCount += 1;
+    // ##1>
+    if (newTurnColor) this.turnsHistory = {};
+    if (this.currentTurnColor === 'white' && !this.isVirtualBoard) {
+      this.turnsCount += !newTurnColor ? 1 : 0;
+      this.turnsHistory[`turn${this.turnsCount}`] = {
+        turn: this.turnsCount,
+        figure: { white: '', black: '' },
+        move: { white: '', black: '' },
+      };
+    }
+    if (!this.isVirtualBoard) {
+      const tempArray = Object.keys(this.turnsHistory).map(
+        // prettier-ignore
+        (key) => `Turn #${this.turnsHistory[key].turn}::: white ${this.turnsHistory[key].figure.white} move: '${this.turnsHistory[key].move.white}' | black ${this.turnsHistory[key].figure.black} move: '${this.turnsHistory[key].move.black}'`,
+      );
+      console.log(tempArray.join('\n'));
+      console.log(this.turnsHistory);
+    }
+    // ##1<
     this.setFEN();
 
     const figureCells = this.getFigureCells();
@@ -375,7 +394,7 @@ export default class ChessBoard {
     const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} ${this.fiftyEmptyMovesCounter} ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
-    if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
+    // if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
   }
 
   // ### Danya)
@@ -458,12 +477,20 @@ export default class ChessBoard {
       if (figure.type === 'pawn' || targetCell.figure) {
         this.fiftyEmptyMovesCounter = 0;
       } else this.fiftyEmptyMovesCounter += 1;
+      // ##1>
+      if (!this.isVirtualBoard) {
+        const moveText = `${figureCell.name} - ${targetCell.name}`;
+        this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = figure.type;
+        this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = moveText;
+      }
+      // ##1<
       targetCell.figure = figure;
       figureCell.figure = null;
       const [, targetYPosition] = targetCell.xyCoordinates;
       if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
         figure.type = 'queen';
       }
+
       return true;
     }
     return false;
