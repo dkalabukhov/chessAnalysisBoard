@@ -281,17 +281,23 @@ export default class ChessBoard {
     // console.log('board.startNewTurn()');
     if (newTurnColor) this.currentTurnColor = newTurnColor;
     else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
+    if (this.currentTurnColor === 'white' && !newTurnColor) this.turnsCount += 1;
+    this.setFEN();
+
+    const figureCells = this.getFigureCells();
+    this.setAffects(figureCells);
+
+    this.checkGameState(figureCells);
     // ##1>
-    if (newTurnColor) this.turnsHistory = {};
-    if (this.currentTurnColor === 'white' && !this.isVirtualBoard) {
-      this.turnsCount += !newTurnColor ? 1 : 0;
-      this.turnsHistory[`turn${this.turnsCount}`] = {
-        turn: this.turnsCount,
-        figure: { white: '', black: '' },
-        move: { white: '', black: '' },
-      };
-    }
     if (!this.isVirtualBoard) {
+      if (newTurnColor) this.turnsHistory = {};
+      if (newTurnColor || this.currentTurnColor === 'white') {
+        this.turnsHistory[`turn${this.turnsCount}`] = {
+          turn: this.turnsCount,
+          figure: { white: '', black: '' },
+          move: { white: '', black: '' },
+        };
+      }
       const tempArray = Object.keys(this.turnsHistory).map(
         // prettier-ignore
         (key) => `Turn #${this.turnsHistory[key].turn}::: white ${this.turnsHistory[key].figure.white} move: '${this.turnsHistory[key].move.white}' | black ${this.turnsHistory[key].figure.black} move: '${this.turnsHistory[key].move.black}'`,
@@ -300,12 +306,6 @@ export default class ChessBoard {
       console.log(this.turnsHistory);
     }
     // ##1<
-    this.setFEN();
-
-    const figureCells = this.getFigureCells();
-    this.setAffects(figureCells);
-
-    this.checkGameState(figureCells);
   }
 
   checkAllMoves(figureCell) {

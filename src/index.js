@@ -163,6 +163,7 @@ fenForm.addEventListener('submit', (e) => {
     alert('Неверный FEN!');
   } else {
     board.setupPositionFromFen(fenString);
+    renderMovesTable();
     state.turn = board.currentTurnColor;
     state.cursor = 'idle';
     state.figure = null;
