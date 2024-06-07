@@ -2,11 +2,18 @@
   box-sizing: border-box;
 }
 
-.container {
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin: auto;
   margin-top: 3em;
-  position: relative;
+  gap: 50px;
+  max-width: 1280px;
 }
 
 /* Info */
@@ -15,18 +22,17 @@
   border-radius: 5px;
   border: 1px solid rgb(209, 208, 208);
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  left: 50px;
-  top: 130px;
   width: 300px;
-  height: 300px;
+  height: 260px;
   padding: 60px 30px;
 }
 
 .info__turn {
   font-size: 1.5em;
+  margin-bottom: 1.5em;
 }
 
 .info__btn {
@@ -67,7 +73,7 @@
   background: radial-gradient(ellipse at center, rgb(255, 0, 0) 0%, rgb(231, 0, 0) 25%, rgba(169, 0, 0, 0) 89%, rgba(158, 0, 0, 0) 100%)
 }
 
-.row {
+.board__row {
   display: flex;
 }
 
@@ -77,8 +83,8 @@
   height: 100%;
 }
 
-.row:nth-child(even) .cell:nth-child(even),
-.row:nth-child(odd) .cell:nth-child(odd)  {
+.board__row:nth-child(even) .cell:nth-child(even),
+.board__row:nth-child(odd) .cell:nth-child(odd)  {
   background-color: #f8e0b0
 }
 
@@ -107,10 +113,11 @@
 
 .fen__heading {
   display: inline-block;
+  font-size: 1.1em;
 }
 
 .fen__input {
-  padding: 10px 0;
+  padding: 10px;
   border: 1px solid rgb(148, 146, 146);
   width: 350px;
   font-size: .85em;
@@ -122,4 +129,38 @@
   color: #fff;
   border: none;
   cursor: pointer;
+}
+
+/* Moves */
+
+.moves {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-self: flex-start;
+  border: 1px solid rgb(148, 146, 146);
+  border-radius: 5px;
+  width: 320px;
+  height: 560px;
+  padding: 10px;
+  overflow: scroll;
+}
+
+/* Table */
+
+tr {
+  vertical-align: middle;
+  text-align: center;
+  height: 54.5px;
+}
+
+.table-light {
+  text-align: left;
+}
+
+td > img {
+  display: inline-flex;
+  margin-bottom: 5px;
+  height: 20px;
+  width: 20px;
 }

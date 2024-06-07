@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chess Analysis Board</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="./src/index.js" type="module" defer></script>
 </head>
 <body>
-  <div class="container">
+  <div class="wrapper">
     <div class="info">
       <h3 class="info__turn">Ход белых</h3>
       <form class="info__form">
@@ -21,7 +22,7 @@
       </form>
     </div>
     <div class="board">
-      <div class="row" data-row="8">
+      <div class="board__row" data-row="8">
         <div class="cell" data-cell="a8"></div>
         <div class="cell" data-cell="b8"></div>
         <div class="cell" data-cell="c8"></div>
@@ -31,7 +32,7 @@
         <div class="cell" data-cell="g8"></div>
         <div class="cell" data-cell="h8"></div>
       </div>
-      <div class="row" data-row="7">
+      <div class="board__row" data-row="7">
         <div class="cell" data-cell="a7"></div>
         <div class="cell" data-cell="b7"></div>
         <div class="cell" data-cell="c7"></div>
@@ -41,7 +42,7 @@
         <div class="cell" data-cell="g7"></div>
         <div class="cell" data-cell="h7"></div>
       </div>
-      <div class="row" data-row="6">
+      <div class="board__row" data-row="6">
         <div class="cell" data-cell="a6"></div>
         <div class="cell" data-cell="b6"></div>
         <div class="cell" data-cell="c6"></div>
@@ -51,7 +52,7 @@
         <div class="cell" data-cell="g6"></div>
         <div class="cell" data-cell="h6"></div>
       </div>
-      <div class="row" data-row="5">
+      <div class="board__row" data-row="5">
         <div class="cell" data-cell="a5"></div>
         <div class="cell" data-cell="b5"></div>
         <div class="cell" data-cell="c5"></div>
@@ -61,7 +62,7 @@
         <div class="cell" data-cell="g5"></div>
         <div class="cell" data-cell="h5"></div>
       </div>
-      <div class="row" data-row="4">
+      <div class="board__row" data-row="4">
         <div class="cell" data-cell="a4"></div>
         <div class="cell" data-cell="b4"></div>
         <div class="cell" data-cell="c4"></div>
@@ -71,7 +72,7 @@
         <div class="cell" data-cell="g4"></div>
         <div class="cell" data-cell="h4"></div>
       </div>
-      <div class="row" data-row="3">
+      <div class="board__row" data-row="3">
         <div class="cell" data-cell="a3"></div>
         <div class="cell" data-cell="b3"></div>
         <div class="cell" data-cell="c3"></div>
@@ -81,7 +82,7 @@
         <div class="cell" data-cell="g3"></div>
         <div class="cell" data-cell="h3"></div>
       </div>
-      <div class="row" data-row="2">
+      <div class="board__row" data-row="2">
         <div class="cell" data-cell="a2"></div>
         <div class="cell" data-cell="b2"></div>
         <div class="cell" data-cell="c2"></div>
@@ -91,7 +92,7 @@
         <div class="cell" data-cell="g2"></div>
         <div class="cell" data-cell="h2"></div>
       </div>
-      <div class="row" data-row="1">
+      <div class="board__row" data-row="1">
         <div class="cell" data-cell="a1"></div>
         <div class="cell" data-cell="b1"></div>
         <div class="cell" data-cell="c1"></div>
@@ -101,14 +102,32 @@
         <div class="cell" data-cell="g1"></div>
         <div class="cell" data-cell="h1"></div>
       </div>
+      <div class="fen">
+        <form class="fen__form">
+          <h3 class="fen__heading">FEN</h3>
+          <input type="text" class="fen__input">
+          <button class="fen__btn">Загрузить</button>
+        </form>
+      </div>
+    </div>
+    <div class="moves">
+      <table class="table table-hover">
+        <tbody>
+          
+        </tbody>
+          <!-- <tr>
+            <td class="table-secondary">1</td>
+            <td class="table-light"><span class="icon">&#9817;</span>e2-e4</td>
+            <td class="table-light"><span class="icon">&#9817;</span>e7-e5</td>
+          </tr>
+          <tr>
+            <td class="table-secondary">2</td>
+            <td class="table-light"><span class="icon">&#9817;</span>Nf3</td>
+            <td class="table-light"><span class="icon">&#9817;</span>Nf6</td>
+          </tr> -->
+      </table>
     </div>
   </div>
-  <div class="fen">
-    <form class="fen__form">
-      <h3 class="fen__heading">FEN</h3>
-      <input type="text" class="fen__input">
-      <button class="fen__btn">Загрузить</button>
-    </form>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
