@@ -93,17 +93,21 @@ const renderMovesTable = () => {
       default:
         break;
     }
-
     turnNumber.textContent = turn;
     turnNumber.classList.add('table-secondary');
     whiteMoveCell.textContent = white;
+    if (whiteMoveCell.textContent === '') {
+      whiteMoveCell.textContent = '...';
+    }
     if (figure.white) whiteMoveCell.prepend(whiteIcon);
     whiteMoveCell.classList.add('table-light');
     blackMoveCell.textContent = black;
     if (figure.black) blackMoveCell.prepend(blackIcon);
     blackMoveCell.classList.add('table-light');
-    tr.append(turnNumber, whiteMoveCell, blackMoveCell);
-    table.append(tr);
+    if (figure.white || figure.black) {
+      tr.append(turnNumber, whiteMoveCell, blackMoveCell);
+      table.append(tr);
+    }
   });
 };
 

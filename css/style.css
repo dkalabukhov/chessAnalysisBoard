@@ -138,6 +138,7 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   align-self: flex-start;
+  align-items: center;
   border: 1px solid rgb(148, 146, 146);
   border-radius: 5px;
   width: 320px;
@@ -146,12 +147,20 @@ body {
   overflow: scroll;
 }
 
+.moves__heading {
+  font-size: 18px;
+}
+
 /* Table */
 
 tr {
   vertical-align: middle;
   text-align: center;
   height: 54.5px;
+}
+
+.table-secondary {
+  width: 40px;
 }
 
 .table-light {
