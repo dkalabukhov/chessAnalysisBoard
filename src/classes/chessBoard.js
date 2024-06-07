@@ -29,38 +29,38 @@ export default class ChessBoard {
     return false;
   }
 
-  constructor(playerSide = 'spectator', isVirtualBoard = false) {
+  constructor(initFEN, playerSide = 'spectator', isVirtualBoard = false) {
     this.isVirtualBoard = isVirtualBoard;
-    this.cells = {};
-    this.cellNames = [];
-    this.createCells();
-    this.placeAllFigures();
     this.setPlayerSide(playerSide);
 
-    this.currentTurnColor = null;
-
-    this.activeFigure = {
-      ref: null,
-      currentCell: null,
-      targetCell: null,
-    };
-
-    this.effect = null;
-    this.enpass = null;
-    this.isActive = false;
-    this.lostFigures = [];
-
+    this.currentTurnColor = null; // null ????????????????????????????????????????????????
     this.canCastleKingSideWhite = true;
     this.canCastleQueenSideWhite = true;
     this.canCastleKingSideBlack = true;
     this.canCastleQueenSideBlack = true;
-
-    this.turnsCount = 1;
+    this.enpass = null;
     this.fiftyEmptyMovesCounter = 0;
+    this.turnsCount = 1;
 
-    this.stalemate = null;
     this.checkmate = null;
+    this.stalemate = null;
     this.autoDraw = false;
+    this.lostFigures = [];
+
+    this.cells = {};
+    this.cellNames = [];
+    this.createCells();
+    this.kingsCells = { white: null, black: null };
+
+    this.setupPositionFromFen(initFEN);
+    // this.placeAllFigures();
+
+    // this.effect = null;
+    // this.activeFigure = {
+    //   ref: null,
+    //   currentCell: null,
+    //   targetCell: null,
+    // };
   }
 
   createCells() {
@@ -80,47 +80,50 @@ export default class ChessBoard {
         this.cells[cellKey].canAttackCells = [];
         this.cells[cellKey].underAttackingCells = [];
         this.cells[cellKey].pawnAttackingEmptyCells = [];
+
+        this.cells[cellKey].effect = null;
+        this.cells[cellKey].isActive = false;
       }
     }
   }
 
-  placeAllFigures() {
-    this.cells.c11.figure = new ChessFigure('rook', 'white');
-    this.cells.c21.figure = new ChessFigure('knight', 'white');
-    this.cells.c31.figure = new ChessFigure('bishop', 'white');
-    this.cells.c41.figure = new ChessFigure('queen', 'white');
-    this.cells.c51.figure = new ChessFigure('king', 'white');
-    this.cells.c61.figure = new ChessFigure('bishop', 'white');
-    this.cells.c71.figure = new ChessFigure('knight', 'white');
-    this.cells.c81.figure = new ChessFigure('rook', 'white');
-    this.cells.c12.figure = new ChessFigure('pawn', 'white');
-    this.cells.c22.figure = new ChessFigure('pawn', 'white');
-    this.cells.c32.figure = new ChessFigure('pawn', 'white');
-    this.cells.c42.figure = new ChessFigure('pawn', 'white');
-    this.cells.c52.figure = new ChessFigure('pawn', 'white');
-    this.cells.c62.figure = new ChessFigure('pawn', 'white');
-    this.cells.c72.figure = new ChessFigure('pawn', 'white');
-    this.cells.c82.figure = new ChessFigure('pawn', 'white');
+  // placeAllFigures() {
+  //   this.cells.c11.figure = new ChessFigure('rook', 'white');
+  //   this.cells.c21.figure = new ChessFigure('knight', 'white');
+  //   this.cells.c31.figure = new ChessFigure('bishop', 'white');
+  //   this.cells.c41.figure = new ChessFigure('queen', 'white');
+  //   this.cells.c51.figure = new ChessFigure('king', 'white');
+  //   this.cells.c61.figure = new ChessFigure('bishop', 'white');
+  //   this.cells.c71.figure = new ChessFigure('knight', 'white');
+  //   this.cells.c81.figure = new ChessFigure('rook', 'white');
+  //   this.cells.c12.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c22.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c32.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c42.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c52.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c62.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c72.figure = new ChessFigure('pawn', 'white');
+  //   this.cells.c82.figure = new ChessFigure('pawn', 'white');
 
-    this.cells.c18.figure = new ChessFigure('rook', 'black');
-    this.cells.c28.figure = new ChessFigure('knight', 'black');
-    this.cells.c38.figure = new ChessFigure('bishop', 'black');
-    this.cells.c48.figure = new ChessFigure('queen', 'black');
-    this.cells.c58.figure = new ChessFigure('king', 'black');
-    this.cells.c68.figure = new ChessFigure('bishop', 'black');
-    this.cells.c78.figure = new ChessFigure('knight', 'black');
-    this.cells.c88.figure = new ChessFigure('rook', 'black');
-    this.cells.c17.figure = new ChessFigure('pawn', 'black');
-    this.cells.c27.figure = new ChessFigure('pawn', 'black');
-    this.cells.c37.figure = new ChessFigure('pawn', 'black');
-    this.cells.c47.figure = new ChessFigure('pawn', 'black');
-    this.cells.c57.figure = new ChessFigure('pawn', 'black');
-    this.cells.c67.figure = new ChessFigure('pawn', 'black');
-    this.cells.c77.figure = new ChessFigure('pawn', 'black');
-    this.cells.c87.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c18.figure = new ChessFigure('rook', 'black');
+  //   this.cells.c28.figure = new ChessFigure('knight', 'black');
+  //   this.cells.c38.figure = new ChessFigure('bishop', 'black');
+  //   this.cells.c48.figure = new ChessFigure('queen', 'black');
+  //   this.cells.c58.figure = new ChessFigure('king', 'black');
+  //   this.cells.c68.figure = new ChessFigure('bishop', 'black');
+  //   this.cells.c78.figure = new ChessFigure('knight', 'black');
+  //   this.cells.c88.figure = new ChessFigure('rook', 'black');
+  //   this.cells.c17.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c27.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c37.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c47.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c57.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c67.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c77.figure = new ChessFigure('pawn', 'black');
+  //   this.cells.c87.figure = new ChessFigure('pawn', 'black');
 
-    this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
-  }
+  //   this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
+  // }
 
   setPlayerSide(playerSide) {
     if (playerSide !== 'white' && playerSide !== 'black' && playerSide !== 'spectator') {
@@ -129,6 +132,14 @@ export default class ChessBoard {
       );
     }
     this.playerSide = playerSide;
+  }
+
+  getPlayerSide() {
+    return this.playerSide;
+  }
+
+  isSpectator() {
+    return this.playerSide === 'spectator';
   }
 
   cell(x, y) {
@@ -214,6 +225,7 @@ export default class ChessBoard {
   cleanEffects() {
     this.cellNames.forEach((name) => {
       if (this.cellByName(name).effect !== 'incheck') this.cellByName(name).effect = null;
+      // this.cellByName(name).effect = null;
       this.cellByName(name).isActive = false;
     });
   }
@@ -278,7 +290,6 @@ export default class ChessBoard {
   }
 
   checkAllMoves(figureCell) {
-    // if (figureCell.wasTouched) return;
     // console.log(`checkAllMoves ${figureCell.name}`);
     const figureName = figureCell.name;
     const isVirtualBoard = true;
@@ -298,8 +309,8 @@ export default class ChessBoard {
     };
 
     moveCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard('white', isVirtualBoard);
-      testBoard.setupPositionFromFen(this.fenString);
+      const testBoard = new ChessBoard(this.fenString, 'white', isVirtualBoard);
+      // testBoard.setupPositionFromFen(this.fenString);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
       testBoard.moveFigure(testFigureCell, testTargetCell);
@@ -309,17 +320,17 @@ export default class ChessBoard {
       if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
     });
     if (figureCell.figure.type === 'king') {
-      const deletedMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
-      if (deletedMove) {
-        filteredMoves.splice(filteredMoves.indexOf(deletedMove), 1);
+      const incorrectMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
+      if (incorrectMove) {
+        filteredMoves.splice(filteredMoves.indexOf(incorrectMove), 1);
       }
     }
     figureCell.canMoveToCells = [...filteredMoves];
     // console.log(`canMoveToCells ${figureCell.canMoveToCells}`);
 
     attackCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard('white', isVirtualBoard);
-      testBoard.setupPositionFromFen(this.fenString);
+      const testBoard = new ChessBoard(this.fenString, 'white', isVirtualBoard);
+      // testBoard.setupPositionFromFen(this.fenString);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
       testBoard.moveFigure(testFigureCell, testTargetCell);
@@ -329,8 +340,6 @@ export default class ChessBoard {
       if (!testKingCell.underAttackingCells.length) filteredAttacks.push(cellName);
     });
     figureCell.canAttackCells = [...filteredAttacks];
-
-    // figureCell.wasTouched = true;
   }
 
   setFEN() {
@@ -467,8 +476,8 @@ export default class ChessBoard {
   }
 
   clearCheck() {
-    this.kingsCells.white.effect = null;
-    this.kingsCells.black.effect = null;
+    if (this.kingsCells.white) this.kingsCells.white.effect = null;
+    if (this.kingsCells.black) this.kingsCells.black.effect = null;
   }
 
   setupPositionFromFen(fenString) {

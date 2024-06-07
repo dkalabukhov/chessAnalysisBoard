@@ -14,8 +14,10 @@ const state = {
   turn: 'white',
 };
 
-const board = new ChessBoard('white');
-board.startNewTurn('white');
+const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+const playerSide = 'white';
+const board = new ChessBoard(initFEN, playerSide);
+// board.startNewTurn('white');
 
 const render = () => {
   if (board.checkmate) {
