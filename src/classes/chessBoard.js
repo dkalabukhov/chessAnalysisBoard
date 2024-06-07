@@ -256,6 +256,12 @@ export default class ChessBoard {
       console.log('STALEMATE!');
     }
     if (this.fiftyEmptyMovesCounter >= 50) this.autoDraw = true;
+    if (figureCells.length <= 3) {
+      const figures = figureCells.map((cell) => cell.figure.type);
+      if (figures.length < 3 || figures.includes('knight') || figures.includes('bishop')) {
+        this.autoDraw = true;
+      }
+    }
   }
 
   startNewTurn(newTurnColor = null) {

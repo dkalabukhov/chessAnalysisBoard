@@ -18,11 +18,12 @@ const board = new ChessBoard('white');
 board.startNewTurn('white');
 
 const render = () => {
-  if (board.checkmate || board.stalemate) {
+  if (board.checkmate) {
     turn.classList.add('incheck');
-    turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} ${
-      board.checkmate ? 'МАТ!' : 'ПАТ!'
-    } `;
+    turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} МАТ!`;
+  } else if (board.stalemate) {
+    turn.classList.add('incheck');
+    turn.textContent = 'ПАТ!';
   } else if (board.autoDraw) {
     turn.classList.add('incheck');
     turn.textContent = 'Боевая НИЧЬЯ!';
