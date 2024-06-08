@@ -8,6 +8,7 @@ const turn = document.querySelector('.info__turn');
 const fenForm = document.querySelector('.fen__form');
 const fenInput = document.querySelector('.fen__input');
 const table = document.querySelector('tbody');
+const boardFEN = document.querySelector('#board__fen');
 
 const state = {
   cursor: 'idle',
@@ -35,6 +36,8 @@ const render = () => {
     const domCell = document.querySelector(`[data-cell="${name}"]`);
     renderCell(board.cellByName(name), domCell);
   });
+  console.log(boardFEN);
+  boardFEN.textContent = board.fenString;
 };
 
 const renderMovesTable = () => {
