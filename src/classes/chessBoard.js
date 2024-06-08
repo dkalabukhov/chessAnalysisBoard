@@ -402,6 +402,8 @@ export default class ChessBoard {
     const canMove = figureCell.canMoveToCells.includes(targetCell.name);
     const canAttack = figureCell.canAttackCells.includes(targetCell.name);
     if (canMove || canAttack) {
+      // ##1>
+      let castleMoveText;
       const { figure } = figureCell;
       const lostFigure = targetCell.figure;
       if (lostFigure) this.lostFigures.push(lostFigure);
@@ -418,18 +420,26 @@ export default class ChessBoard {
         const [currentPosition] = figureCell.xyCoordinates;
         const [targetPosition] = targetCell.xyCoordinates;
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g1') {
+          // ##1>
+          castleMoveText = ' O-O';
           this.cellByName('h1').figure = null;
           this.cellByName('f1').figure = new ChessFigure('rook', 'white');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g8') {
+          // ##1>
+          castleMoveText = ' O-O';
           this.cellByName('h8').figure = null;
           this.cellByName('f8').figure = new ChessFigure('rook', 'black');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c1') {
+          // ##1>
+          castleMoveText = ' O-O-O';
           this.cellByName('a1').figure = null;
           this.cellByName('d1').figure = new ChessFigure('rook', 'white');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c8') {
+          // ##1>
+          castleMoveText = ' O-O-O';
           this.cellByName('a8').figure = null;
           this.cellByName('d8').figure = new ChessFigure('rook', 'black');
         }
@@ -479,9 +489,14 @@ export default class ChessBoard {
       } else this.fiftyEmptyMovesCounter += 1;
       // ##1>
       if (!this.isVirtualBoard) {
-        const moveText = `${figureCell.name} - ${targetCell.name}`;
-        this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = figure.type;
-        this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = moveText;
+        if (castleMoveText) {
+          this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = 'king';
+          this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = castleMoveText;
+        } else {
+          const moveText = castleMoveText || ` ${figureCell.name} - ${targetCell.name}`;
+          this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = figure.type;
+          this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = moveText;
+        }
       }
       // ##1<
       targetCell.figure = figure;
