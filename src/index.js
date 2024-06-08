@@ -8,7 +8,7 @@ const turn = document.querySelector('.info__turn');
 const fenForm = document.querySelector('.fen__form');
 const fenInput = document.querySelector('.fen__input');
 const table = document.querySelector('tbody');
-const boardFEN = document.querySelector('#board__fen');
+const boardFEN = document.querySelector('.board__fen');
 
 const state = {
   cursor: 'idle',

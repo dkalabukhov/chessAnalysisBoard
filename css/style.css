@@ -119,17 +119,21 @@ body {
 .fen__input {
   padding: 10px;
   border: 1px solid rgb(148, 146, 146);
-  width: 350px;
+  width: 400px;
   font-size: .85em;
   margin-bottom: 10px;
 }
 
 .fen__btn {
-  padding: 11px 30px;
+  padding: 8.9px 20px;
   background-color: rgb(48, 82, 48);
   color: #fff;
   border: none;
   cursor: pointer;
+}
+
+.board__fen {
+  font-size: 13px;
 }
 
 /* Moves */
@@ -174,10 +178,4 @@ td > img {
   margin-bottom: 5px;
   height: 20px;
   width: 20px;
-}
-
-#board__fen {
-  color:rgb(231, 0, 0);
-  display: inline-block;
-  margin-top: 5px;
 }
