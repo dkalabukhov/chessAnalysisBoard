@@ -53,6 +53,7 @@ export default class ChessBoard {
     this.cellNames = [];
     this.createCells();
     this.kingsCells = { white: null, black: null };
+    this.pawnPromotion = null;
 
     this.fenString = initFEN;
     this.loadFen(this.fenString);
@@ -557,7 +558,8 @@ export default class ChessBoard {
       figureCell.figure = null;
       const [, targetYPosition] = targetCell.xyCoordinates;
       if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
-        figure.type = 'queen';
+        if (!this.isVirtualBoard) this.pawnPromotion = figure;
+        else figure.type = 'queen';
       }
       this.setFEN();
       return true;

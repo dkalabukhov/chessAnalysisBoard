@@ -1,5 +1,6 @@
 import FenParser from './controllers/fenParser.js';
 import renderCell from './renders/renderCell.js';
+import { createModalPiecesElements, renderModal } from './renders/renderModal.js';
 import renderMovesTable from './renders/renderMovesTable.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
@@ -12,6 +13,9 @@ const app = (connection) => {
   const fenInput = document.querySelector('.fen__input');
   const domTable = document.querySelector('tbody');
   const boardFEN = document.querySelector('.board__fen');
+  const pickFigureModal = document.querySelector('.pickFigureModal');
+  const modalPieces = document.querySelector('.pickFigureModal__pieces');
+  const modalPiecesElements = createModalPiecesElements(modalPieces);
 
   const state = {
     cursor: 'idle',
@@ -25,6 +29,9 @@ const app = (connection) => {
   const board = new ChessBoard(initFEN);
 
   const render = () => {
+    if (board.pawnPromotion) {
+      renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
+    }
     if (board.checkmate) {
       turn.classList.add('incheck');
       turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} МАТ!`;
@@ -103,7 +110,7 @@ const app = (connection) => {
           break;
         }
         const hasMoved = board.moveFigure(board.cellByName(state.figure), targetCell);
-        if (hasMoved) {
+        if (hasMoved && !board.pawnPromotion) {
           renderMovesTable(domTable, board);
           board.makeTurn();
           connection.send(
@@ -152,6 +159,26 @@ const app = (connection) => {
       renderMovesTable(domTable, board);
       render();
     }
+  });
+
+  modalPiecesElements.forEach((piece) => {
+    piece.classList.add('pickFigureModal__piece');
+    piece.addEventListener('click', (e) => {
+      pickFigureModal.style.display = 'none';
+      board.pawnPromotion.type = e.target.dataset.name;
+      board.pawnPromotion = null;
+      renderMovesTable(domTable, board);
+      board.makeTurn();
+      connection.send(
+        JSON.stringify({
+          action: 'makeTurn',
+          payload: {
+            fen: board.fenString,
+          },
+        }),
+      );
+      render();
+    });
   });
 
   render();
