@@ -33,7 +33,7 @@ export default class ChessBoard {
     this.isVirtualBoard = isVirtualBoard;
     this.setPlayerSide(playerSide);
 
-    this.currentTurnColor = null; // null ????????????????????????????????????????????????
+    this.currentTurnColor = null; // null ?
     this.canCastleKingSideWhite = true;
     this.canCastleQueenSideWhite = true;
     this.canCastleKingSideBlack = true;
@@ -53,7 +53,8 @@ export default class ChessBoard {
     this.createCells();
     this.kingsCells = { white: null, black: null };
 
-    this.setupPositionFromFen(initFEN);
+    this.fenString = initFEN;
+    this.loadFen(this.fenString);
     // this.placeAllFigures();
 
     // this.effect = null;
@@ -87,44 +88,6 @@ export default class ChessBoard {
       }
     }
   }
-
-  // placeAllFigures() {
-  //   this.cells.c11.figure = new ChessFigure('rook', 'white');
-  //   this.cells.c21.figure = new ChessFigure('knight', 'white');
-  //   this.cells.c31.figure = new ChessFigure('bishop', 'white');
-  //   this.cells.c41.figure = new ChessFigure('queen', 'white');
-  //   this.cells.c51.figure = new ChessFigure('king', 'white');
-  //   this.cells.c61.figure = new ChessFigure('bishop', 'white');
-  //   this.cells.c71.figure = new ChessFigure('knight', 'white');
-  //   this.cells.c81.figure = new ChessFigure('rook', 'white');
-  //   this.cells.c12.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c22.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c32.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c42.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c52.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c62.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c72.figure = new ChessFigure('pawn', 'white');
-  //   this.cells.c82.figure = new ChessFigure('pawn', 'white');
-
-  //   this.cells.c18.figure = new ChessFigure('rook', 'black');
-  //   this.cells.c28.figure = new ChessFigure('knight', 'black');
-  //   this.cells.c38.figure = new ChessFigure('bishop', 'black');
-  //   this.cells.c48.figure = new ChessFigure('queen', 'black');
-  //   this.cells.c58.figure = new ChessFigure('king', 'black');
-  //   this.cells.c68.figure = new ChessFigure('bishop', 'black');
-  //   this.cells.c78.figure = new ChessFigure('knight', 'black');
-  //   this.cells.c88.figure = new ChessFigure('rook', 'black');
-  //   this.cells.c17.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c27.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c37.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c47.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c57.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c67.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c77.figure = new ChessFigure('pawn', 'black');
-  //   this.cells.c87.figure = new ChessFigure('pawn', 'black');
-
-  //   this.kingsCells = { white: this.cells.c51, black: this.cells.c58 };
-  // }
 
   setPlayerSide(playerSide) {
     if (playerSide !== 'white' && playerSide !== 'black' && playerSide !== 'spectator') {
@@ -231,12 +194,6 @@ export default class ChessBoard {
     });
   }
 
-  // clearTouches() {
-  //   this.cellNames.forEach((name) => {
-  //     this.cellByName(name).wasTouched = false;
-  //   });
-  // }
-
   isCheck(kingColor) {
     if (this.kingsCells[kingColor].underAttackingCells.length) {
       return true;
@@ -251,7 +208,6 @@ export default class ChessBoard {
     currentTurnFigureCells.forEach((figureCell) => {
       this.checkAllMoves(figureCell);
     });
-
     let isAvailableMoves = false;
     currentTurnFigureCells.forEach((cell) => {
       if (cell.canMoveToCells.length || cell.canAttackCells.length) isAvailableMoves = true;
@@ -277,35 +233,41 @@ export default class ChessBoard {
     }
   }
 
-  startNewTurn(newTurnColor = null) {
-    // console.log('board.startNewTurn()');
-    if (newTurnColor) this.currentTurnColor = newTurnColor;
-    else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
-    if (this.currentTurnColor === 'white' && !newTurnColor) this.turnsCount += 1;
-    this.setFEN();
+  turnPrepare(turnColor) {
+    // console.log('board.turnPrepare()');
+    // if (turnColor) this.currentTurnColor = turnColor;
+    // else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
+    // console.log('turnPrepare: turnColor: ', turnColor, this.currentTurnColor);
+    this.currentTurnColor = turnColor;
+    // if (turnColor === 'white') this.turnsCount += 1;
+    // this.setFEN();
 
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
-
     this.checkGameState(figureCells);
     // ##1>
     if (!this.isVirtualBoard) {
-      if (newTurnColor) this.turnsHistory = {};
-      if (newTurnColor || this.currentTurnColor === 'white') {
+      if (turnColor) this.turnsHistory = {};
+      if (turnColor || this.currentTurnColor === 'white') {
         this.turnsHistory[`turn${this.turnsCount}`] = {
           turn: this.turnsCount,
           figure: { white: '', black: '' },
           move: { white: '', black: '' },
         };
       }
-      const tempArray = Object.keys(this.turnsHistory).map(
-        // prettier-ignore
-        (key) => `Turn #${this.turnsHistory[key].turn}::: white ${this.turnsHistory[key].figure.white} move: '${this.turnsHistory[key].move.white}' | black ${this.turnsHistory[key].figure.black} move: '${this.turnsHistory[key].move.black}'`,
-      );
-      console.log(tempArray.join('\n'));
-      console.log(this.turnsHistory);
+      // const tempArray = Object.keys(this.turnsHistory).map(
+      //   // prettier-ignore
+      // eslint-disable-next-line max-len
+      //   (key) => `Turn #${this.turnsHistory[key].turn}::: white ${this.turnsHistory[key].figure.white} move: '${this.turnsHistory[key].move.white}' | black ${this.turnsHistory[key].figure.black} move: '${this.turnsHistory[key].move.black}'`,
+      // );
+      // console.log(tempArray.join('\n'));
+      // console.log(this.turnsHistory);
     }
     // ##1<
+  }
+
+  makeTurn() {
+    this.setFEN();
   }
 
   checkAllMoves(figureCell) {
@@ -328,8 +290,7 @@ export default class ChessBoard {
     };
 
     moveCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard(this.fenString, 'white', isVirtualBoard);
-      // testBoard.setupPositionFromFen(this.fenString);
+      const testBoard = new ChessBoard(this.fenString, this.currentTurnColor, isVirtualBoard);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
       testBoard.moveFigure(testFigureCell, testTargetCell);
@@ -348,8 +309,7 @@ export default class ChessBoard {
     // console.log(`canMoveToCells ${figureCell.canMoveToCells}`);
 
     attackCellsNames.forEach((cellName) => {
-      const testBoard = new ChessBoard(this.fenString, 'white', isVirtualBoard);
-      // testBoard.setupPositionFromFen(this.fenString);
+      const testBoard = new ChessBoard(this.fenString, this.currentTurnColor, isVirtualBoard);
       const testFigureCell = testBoard.cellByName(figureName);
       const testTargetCell = testBoard.cellByName(cellName);
       testBoard.moveFigure(testFigureCell, testTargetCell);
@@ -382,7 +342,7 @@ export default class ChessBoard {
       fenArray.push(rowArray.join(''));
     }
 
-    const fenColor = this.currentTurnColor === 'black' ? 'b' : 'w';
+    const newFenColor = this.currentTurnColor === 'black' ? 'w' : 'b';
     const fenEnpass = this.enpass || '-';
     // prettier-ignore
     const fenCastles = [
@@ -391,7 +351,7 @@ export default class ChessBoard {
       this.canCastleKingSideBlack ? 'k' : '',
       this.canCastleQueenSideBlack ? 'q' : '',
     ].join('') || '-';
-    const fenInfo = ` ${fenColor} ${fenCastles} ${fenEnpass} ${this.fiftyEmptyMovesCounter} ${this.turnsCount}`;
+    const fenInfo = ` ${newFenColor} ${fenCastles} ${fenEnpass} ${this.fiftyEmptyMovesCounter} ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
     // if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
@@ -505,7 +465,7 @@ export default class ChessBoard {
       if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
         figure.type = 'queen';
       }
-
+      this.setFEN();
       return true;
     }
     return false;
@@ -522,7 +482,7 @@ export default class ChessBoard {
     if (this.kingsCells.black) this.kingsCells.black.effect = null;
   }
 
-  setupPositionFromFen(fenString) {
+  loadFen(fenString) {
     this.clearFigures();
     this.cleanEffects();
     this.clearCheck();
@@ -590,20 +550,8 @@ export default class ChessBoard {
       });
     });
 
-    const newTurnColor = fen.turn === 'w' ? 'white' : 'black';
-    this.startNewTurn(newTurnColor);
+    const turnColor = fen.turn === 'w' ? 'white' : 'black';
+    // console.log('fenLoad: turnColor: ', turnColor);
+    this.turnPrepare(turnColor);
   }
 }
-
-// const playerSide = 'black';
-// const board = new ChessBoard(playerSide); // ход на белом (по умолчанию при создании доски)
-// console.log('Обращение к свойству напрямую: \n', board.cells.c11);
-// console.log('\nОбращение к свойству через метод: \n', board.cell(1, 1));
-// console.log('\nОбращение к свойству через метод (по имени клетки): \n', board.cellByName('B1'));
-// board.endOfTurn(); // переход хода к черному
-// const { currentTurnColor } = board;
-// console.log('\nКто сейчас ходит: \n', currentTurnColor);
-// const json = JSON.stringify(board);
-// console.log(json);
-// const parse = JSON.parse(json);
-// console.log(parse);
