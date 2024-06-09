@@ -5,6 +5,7 @@ import renderMovesTable from './renders/renderMovesTable.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
 import quickConnection from './quickConnection.js';
+import reverseBoard from './renders/reverseBoard.js';
 
 const app = (connection) => {
   const domBoard = document.querySelector('.board');
@@ -16,6 +17,7 @@ const app = (connection) => {
   const pickFigureModal = document.querySelector('.pickFigureModal');
   const modalPieces = document.querySelector('.pickFigureModal__pieces');
   const modalPiecesElements = createModalPiecesElements(modalPieces);
+  const boardRows = document.querySelectorAll('.board__row');
 
   const state = {
     cursor: 'idle',
@@ -60,6 +62,7 @@ const app = (connection) => {
     switch (data.action) {
       case 'yourSide':
         board.setPlayerSide(data.payload.side);
+        if (data.payload.side === 'black') reverseBoard(boardRows);
         break;
       case 'gameState':
         // console.log('new fen from server received!');
