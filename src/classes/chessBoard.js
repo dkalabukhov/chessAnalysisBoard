@@ -280,7 +280,8 @@ export default class ChessBoard {
     // else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
     // console.log('turnPrepare: turnColor: ', turnColor, this.currentTurnColor);
     this.currentTurnColor = turnColor;
-    // if (turnColor === 'white') this.turnsCount += 1;
+    // ***********************************************************
+    if (turnColor === 'white') this.turnsCount += 1;
     // this.setFEN();
 
     const figureCells = this.getFigureCells();
@@ -288,8 +289,10 @@ export default class ChessBoard {
     this.checkGameState(figureCells);
     // ##1>
     if (!this.isVirtualBoard) {
-      if (turnColor) this.turnsHistory = {};
-      if (turnColor || this.currentTurnColor === 'white') {
+      // if (turnColor) this.turnsHistory = {};
+      // if (turnColor || this.currentTurnColor === 'white') {
+      console.log(222, this.currentTurnColor);
+      if (this.currentTurnColor === 'white') {
         this.turnsHistory[`turn${this.turnsCount}`] = {
           turn: this.turnsCount,
           figure: { white: '', black: '' },
