@@ -1,5 +1,6 @@
-import FenParser from './fenParser.js';
+import FenParser from './controllers/fenParser.js';
 import renderCell from './renders/renderCell.js';
+import renderMovesTable from './renders/renderMovesTable.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
 import quickConnection from './quickConnection.js';
@@ -9,7 +10,7 @@ const app = (connection) => {
   const turn = document.querySelector('.info__turn');
   const fenForm = document.querySelector('.fen__form');
   const fenInput = document.querySelector('.fen__input');
-  const table = document.querySelector('tbody');
+  const domTable = document.querySelector('tbody');
   const boardFEN = document.querySelector('.board__fen');
 
   const state = {
@@ -35,6 +36,7 @@ const app = (connection) => {
       turn.textContent = 'Боевая НИЧЬЯ!';
       // } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
     } else {
+      turn.classList.remove('incheck');
       const name = state.activePlayer;
       const yourTurn = state.isYourTurn ? ' (твой ход)' : '';
       turn.textContent = `Ход: ${name} (${state.turn})${yourTurn}`;
@@ -53,9 +55,10 @@ const app = (connection) => {
         board.setPlayerSide(data.payload.side);
         break;
       case 'gameState':
-        console.log('new fen from server received!');
-        board.fenString = data.payload.fen;
-        board.loadFen(board.fenString);
+        // console.log('new fen from server received!');
+        board.loadFen(data.payload.fen);
+        state.cursor = 'idle';
+        state.figure = null;
         break;
       case 'turnState':
         state.turn = data.payload.activeSide;
@@ -68,80 +71,6 @@ const app = (connection) => {
         break;
     }
     // console.log(data);
-  };
-
-  const renderMovesTable = () => {
-    table.innerHTML = '';
-    const keys = Object.keys(board.turnsHistory);
-    keys.forEach((key) => {
-      const { figure, move, turn } = board.turnsHistory[key];
-      const { white, black } = move;
-      const tr = document.createElement('tr');
-      const turnNumber = document.createElement('td');
-      const whiteMoveCell = document.createElement('td');
-      const blackMoveCell = document.createElement('td');
-      const whiteIcon = document.createElement('img');
-      const blackIcon = document.createElement('img');
-      switch (figure.white) {
-        case 'pawn':
-          whiteIcon.setAttribute('src', './assets/wP.svg');
-          break;
-        case 'knight':
-          whiteIcon.setAttribute('src', './assets/wN.svg');
-          break;
-        case 'bishop':
-          whiteIcon.setAttribute('src', './assets/wB.svg');
-          break;
-        case 'rook':
-          whiteIcon.setAttribute('src', './assets/wR.svg');
-          break;
-        case 'queen':
-          whiteIcon.setAttribute('src', './assets/wQ.svg');
-          break;
-        case 'king':
-          whiteIcon.setAttribute('src', './assets/wK.svg');
-          break;
-        default:
-          break;
-      }
-      switch (figure.black) {
-        case 'pawn':
-          blackIcon.setAttribute('src', './assets/bP.svg');
-          break;
-        case 'knight':
-          blackIcon.setAttribute('src', './assets/bN.svg');
-          break;
-        case 'bishop':
-          blackIcon.setAttribute('src', './assets/bB.svg');
-          break;
-        case 'rook':
-          blackIcon.setAttribute('src', './assets/bR.svg');
-          break;
-        case 'queen':
-          blackIcon.setAttribute('src', './assets/bQ.svg');
-          break;
-        case 'king':
-          blackIcon.setAttribute('src', './assets/bK.svg');
-          break;
-        default:
-          break;
-      }
-      turnNumber.textContent = turn;
-      turnNumber.classList.add('table-secondary');
-      whiteMoveCell.textContent = white;
-      if (whiteMoveCell.textContent === '') {
-        whiteMoveCell.textContent = '...';
-      }
-      if (figure.white) whiteMoveCell.prepend(whiteIcon);
-      whiteMoveCell.classList.add('table-light');
-      blackMoveCell.textContent = black;
-      if (figure.black) blackMoveCell.prepend(blackIcon);
-      blackMoveCell.classList.add('table-light');
-      if (figure.white || figure.black) {
-        tr.append(turnNumber, whiteMoveCell, blackMoveCell);
-        table.append(tr);
-      }
-    });
   };
 
   domBoard.addEventListener('click', (e) => {
@@ -175,7 +104,7 @@ const app = (connection) => {
         }
         const hasMoved = board.moveFigure(board.cellByName(state.figure), targetCell);
         if (hasMoved) {
-          renderMovesTable();
+          renderMovesTable(domTable, board);
           board.makeTurn();
           connection.send(
             JSON.stringify({
@@ -220,7 +149,7 @@ const app = (connection) => {
       // state.turn = board.currentTurnColor;
       state.cursor = 'idle';
       state.figure = null;
-      renderMovesTable();
+      renderMovesTable(domTable, board);
       render();
     }
   });
