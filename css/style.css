@@ -179,3 +179,47 @@ td > img {
   height: 20px;
   width: 20px;
 }
+
+/* Modal */
+
+.pickFigureModal {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: rgb(68, 68, 68, 0.7)
+}
+
+.pickFigureModal__content {
+  background-color: #fff;
+  width: 420px;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.pickFigureModal__piece {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  border: 1px solid gray;
+}
+
+.pickFigureModal__piece:hover {
+  background-color: rgb(135, 135, 135);
+}
+
+.pickFigureModal__heading {
+  margin-bottom: 30px;
+}
+
+.pickFigureModal__piece + .pickFigureModal__piece {
+  margin-left: 10px;
+}

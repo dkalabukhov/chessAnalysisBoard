@@ -54,6 +54,8 @@ export default class ChessBoard {
     this.kingsCells = { white: null, black: null };
 
     this.setupPositionFromFen(initFEN);
+
+    this.pawnPromotion = null;
     // this.placeAllFigures();
 
     // this.effect = null;
@@ -503,7 +505,8 @@ export default class ChessBoard {
       figureCell.figure = null;
       const [, targetYPosition] = targetCell.xyCoordinates;
       if (figure.type === 'pawn' && (targetYPosition === 1 || targetYPosition === 8)) {
-        figure.type = 'queen';
+        if (!this.isVirtualBoard) this.pawnPromotion = figure;
+        else figure.type = 'queen';
       }
 
       return true;

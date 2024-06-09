@@ -2,6 +2,7 @@ import FenParser from './fenParser.js';
 import renderCell from './renders/renderCell.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
+import renderModal from './renders/renderModal.js';
 
 const domBoard = document.querySelector('.board');
 const turn = document.querySelector('.info__turn');
@@ -9,6 +10,18 @@ const fenForm = document.querySelector('.fen__form');
 const fenInput = document.querySelector('.fen__input');
 const table = document.querySelector('tbody');
 const boardFEN = document.querySelector('.board__fen');
+const pickFigureModal = document.querySelector('.pickFigureModal');
+const modalPieces = document.querySelector('.pickFigureModal__pieces');
+const queen = document.createElement('img');
+const bishop = document.createElement('img');
+const knight = document.createElement('img');
+const rook = document.createElement('img');
+queen.setAttribute('data-name', 'queen');
+bishop.setAttribute('data-name', 'bishop');
+knight.setAttribute('data-name', 'knight');
+rook.setAttribute('data-name', 'rook');
+modalPieces.append(queen, bishop, knight, rook);
+const pieces = [queen, bishop, knight, rook];
 
 const state = {
   cursor: 'idle',
@@ -22,6 +35,9 @@ const board = new ChessBoard(initFEN, playerSide);
 // board.startNewTurn('white');
 
 const render = () => {
+  if (board.pawnPromotion) {
+    renderModal(pieces, pickFigureModal, board.pawnPromotion);
+  }
   if (board.checkmate) {
     turn.classList.add('incheck');
     turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} МАТ!`;
@@ -176,6 +192,20 @@ fenForm.addEventListener('submit', (e) => {
     state.figure = null;
     render();
   }
+});
+
+pieces.forEach((piece) => {
+  piece.classList.add('pickFigureModal__piece');
+  piece.addEventListener('click', (e) => {
+    pickFigureModal.style.display = 'none';
+    board.pawnPromotion.type = e.target.dataset.name;
+    board.pawnPromotion = null;
+    board.setFEN();
+    const figureCells = board.getFigureCells();
+    board.setAffects(figureCells);
+    board.checkGameState(figureCells);
+    render();
+  });
 });
 
 render();
