@@ -291,7 +291,7 @@ export default class ChessBoard {
     if (!this.isVirtualBoard) {
       // if (turnColor) this.turnsHistory = {};
       // if (turnColor || this.currentTurnColor === 'white') {
-      console.log(222, this.currentTurnColor);
+      // console.log(222, this.currentTurnColor);
       if (this.currentTurnColor === 'white') {
         this.turnsHistory[`turn${this.turnsCount}`] = {
           turn: this.turnsCount,
