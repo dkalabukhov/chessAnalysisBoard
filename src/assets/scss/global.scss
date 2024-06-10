@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'Jua';
+    src: url('/fonts/Jua-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Cabin';
+    src: url('./fonts/Cabin-Regular.ttf');
+}
+
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.background-img {
+    background-image: url('/images/main-img.png');
+    width: 1025px;
+    height: 576px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-card {
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    border: 1px solid #AA9F9F;
+    padding: 10px 15px;
+}
+
+.header-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+
+    h1 {
+        margin: 0;
+        padding: 0;
+        text-transform: uppercase;
+        font-size: 36px;
+        font-family: 'Jua', sans-serif;
+    }
+
+    .ellipse {
+        background-color: #EBE6E6;
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.card-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-lable {
+    font-size: 12px;
+    font-family: 'Cabin', sans-serif;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.row-item {
+    width: calc((100% - 10px) / 2 );
+}
+
+.row-btn {
+    margin-top: 13px;
+}
