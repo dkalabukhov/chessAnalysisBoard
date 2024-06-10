@@ -57,7 +57,6 @@ export default class ChessBoard {
 
     this.fenString = initFEN;
     this.loadFen(this.fenString);
-    // this.placeAllFigures();
 
     // this.effect = null;
     // this.activeFigure = {
@@ -144,7 +143,6 @@ export default class ChessBoard {
   cleanEffects() {
     this.cellNames.forEach((name) => {
       if (this.cellByName(name).effect !== 'incheck') this.cellByName(name).effect = null;
-      // this.cellByName(name).effect = null;
       this.cellByName(name).isActive = false;
     });
   }
@@ -273,32 +271,14 @@ export default class ChessBoard {
     // if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
   }
 
-  // ### preparing and making turns
+  // ### preparing and making turns, history
   turnPrepare(turnColor) {
-    // console.log('board.turnPrepare()');
-    // if (turnColor) this.currentTurnColor = turnColor;
-    // else this.currentTurnColor = this.currentTurnColor === 'white' ? 'black' : 'white';
-    // console.log('turnPrepare: turnColor: ', turnColor, this.currentTurnColor);
     this.currentTurnColor = turnColor;
-    // ***********************************************************
-    if (turnColor === 'white') this.turnsCount += 1;
-    // this.setFEN();
-
     const figureCells = this.getFigureCells();
     this.setAffects(figureCells);
     this.checkGameState(figureCells);
-    // ##1>
     if (!this.isVirtualBoard) {
-      // if (turnColor) this.turnsHistory = {};
-      // if (turnColor || this.currentTurnColor === 'white') {
-      // console.log(222, this.currentTurnColor);
-      if (this.currentTurnColor === 'white') {
-        this.turnsHistory[`turn${this.turnsCount}`] = {
-          turn: this.turnsCount,
-          figure: { white: '', black: '' },
-          move: { white: '', black: '' },
-        };
-      }
+      if (this.currentTurnColor === 'white') this.makeEmptyHistoryTurn();
       // const tempArray = Object.keys(this.turnsHistory).map(
       //   // prettier-ignore
       // eslint-disable-next-line max-len
@@ -307,15 +287,37 @@ export default class ChessBoard {
       // console.log(tempArray.join('\n'));
       // console.log(this.turnsHistory);
     }
-    // ##1<
   }
 
   makeTurn() {
+    if (this.currentTurnColor === 'black') this.turnsCount += 1;
     this.setFEN();
   }
 
-  // ### checks and processing
+  makeEmptyHistoryTurn() {
+    this.turnsHistory[`turn${this.turnsCount}`] = {
+      turn: this.turnsCount,
+      figure: { white: '', black: '' },
+      move: { white: '', black: '' },
+    };
+  }
 
+  addPawnPromotionToHistory(figureType) {
+    const allowedFiguresTypes = ['queen', 'bishop', 'knight', 'rook'];
+    if (!allowedFiguresTypes.includes(figureType)) {
+      throw new Error(
+        `figureType = ${figureType}, but must be one of array [ ${allowedFiguresTypes} ]`,
+      );
+    }
+    const currentHistoryMoves = this.turnsHistory[`turn${this.turnsCount}`].move;
+    const historyFiguresTypes = ['Q', 'B', 'N', 'R'];
+    const historyFigureType = historyFiguresTypes[allowedFiguresTypes.indexOf(figureType)];
+    currentHistoryMoves[this.currentTurnColor] = `${
+      currentHistoryMoves[this.currentTurnColor]
+    } = ${historyFigureType}`;
+  }
+
+  // ### checks and processing
   fixKingsAffects(figureCells, kingsCells) {
     // console.log('board.fixKingsAffects()');
     const kingsColors = Object.keys(kingsCells);
@@ -551,7 +553,8 @@ export default class ChessBoard {
           this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = 'king';
           this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = castleMoveText;
         } else {
-          const moveText = castleMoveText || ` ${figureCell.name} - ${targetCell.name}`;
+          // const moveText = castleMoveText || ` ${figureCell.name} - ${targetCell.name}`;
+          const moveText = ` ${figureCell.name} - ${targetCell.name}`;
           this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = figure.type;
           this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = moveText;
         }

@@ -66,11 +66,11 @@ const app = (connection) => {
         break;
       case 'gameState':
         // console.log('new fen from server received!');
-        if (data.payload.turnHistory) {
-          board.turnsHistory = data.payload.turnHistory;
+        if (data.payload.turnsHistory) {
+          board.turnsHistory = data.payload.turnsHistory;
           renderMovesTable(domTable, board);
-          console.log('Received history: ', board.turnsHistory);
-        } else console.log('nothing,,,');
+          // console.log('Received history: ', board.turnsHistory);
+        } // else console.log('nothing,,,');
         board.loadFen(data.payload.fen);
         state.cursor = 'idle';
         state.figure = null;
@@ -126,7 +126,7 @@ const app = (connection) => {
               action: 'makeTurn',
               payload: {
                 fen: board.fenString,
-                turnHistory: board.turnsHistory,
+                turnsHistory: board.turnsHistory,
               },
             }),
           );
@@ -151,22 +151,20 @@ const app = (connection) => {
       // eslint-disable-next-line no-alert
       alert('Неверный FEN!');
     } else {
-      // turnsHistory!!!!!!!!!!!!!!!!!!!!!!!!
-      board.setFEN();
       board.loadFen(fenString);
       board.turnsHistory = {};
+      board.makeEmptyHistoryTurn();
       if (state.turn !== board.currentTurnColor) {
         connection.send(
           JSON.stringify({
             action: 'makeTurn',
             payload: {
               fen: fenString,
-              turnHistory: board.turnsHistory,
+              turnsHistory: board.turnsHistory,
             },
           }),
         );
       }
-      // turnsHistory!!!!!!!!!!!!!!!!!!!!!!!!
       // state.turn = board.currentTurnColor;
       state.cursor = 'idle';
       state.figure = null;
@@ -179,8 +177,10 @@ const app = (connection) => {
     piece.classList.add('pickFigureModal__piece');
     piece.addEventListener('click', (e) => {
       pickFigureModal.style.display = 'none';
-      board.pawnPromotion.type = e.target.dataset.name;
+      const newFigureType = e.target.dataset.name;
+      board.pawnPromotion.type = newFigureType;
       board.pawnPromotion = null;
+      board.addPawnPromotionToHistory(newFigureType);
       renderMovesTable(domTable, board);
       board.makeTurn();
       connection.send(
@@ -188,7 +188,7 @@ const app = (connection) => {
           action: 'makeTurn',
           payload: {
             fen: board.fenString,
-            turnHistory: board.turnsHistory,
+            turnsHistory: board.turnsHistory,
           },
         }),
       );
