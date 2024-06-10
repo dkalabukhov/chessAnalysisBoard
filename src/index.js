@@ -27,7 +27,7 @@ const app = (connection) => {
     isYourTurn: false,
   };
 
-  const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq a3 0 1'; // нужно поправить en passant
   const board = new ChessBoard(initFEN);
 
   const render = () => {
@@ -44,6 +44,9 @@ const app = (connection) => {
       turn.classList.add('incheck');
       turn.textContent = 'Боевая НИЧЬЯ!';
       // } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+    } else if (board.threeFold) {
+      turn.classList.add('incheck');
+      turn.textContent = `Боевая НИЧЬЯ! (threeFold: ${board.fenString})`;
     } else {
       turn.classList.remove('incheck');
       const name = state.activePlayer;
@@ -151,6 +154,7 @@ const app = (connection) => {
       // eslint-disable-next-line no-alert
       alert('Неверный FEN!');
     } else {
+      board.clearPositionsArray();
       board.loadFen(fenString);
       board.turnsHistory = {};
       board.makeEmptyHistoryTurn();

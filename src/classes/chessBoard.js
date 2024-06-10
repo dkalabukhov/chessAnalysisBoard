@@ -46,6 +46,9 @@ export default class ChessBoard {
     this.checkmate = null;
     this.stalemate = null;
     this.autoDraw = false;
+    this.threeFold = false;
+    this.positionsArray = [];
+
     this.lostFigures = [];
     this.turnsHistory = {};
 
@@ -158,6 +161,18 @@ export default class ChessBoard {
     if (this.kingsCells.black) this.kingsCells.black.effect = null;
   }
 
+  updatePositionsArray() {
+    const currentPosition = this.fenString.split(' ').slice(0, -2).join(' ');
+    this.positionsArray.push(currentPosition);
+    const countCurrentPosition = this.positionsArray.filter((el) => el === currentPosition).length;
+    if (countCurrentPosition > 2) this.threeFold = true;
+    // if (!this.isVirtualBoard) console.log(countCurrentPosition);
+  }
+
+  clearPositionsArray() {
+    this.positionsArray = [];
+  }
+
   loadFen(fenString) {
     this.clearFigures();
     this.cleanEffects();
@@ -231,6 +246,8 @@ export default class ChessBoard {
 
     const turnColor = fen.turn === 'w' ? 'white' : 'black';
     this.fenString = fenString;
+    if (!this.isVirtualBoard) this.updatePositionsArray();
+    // if (!this.isVirtualBoard) console.log('positionsArray: ', this.positionsArray);
     // console.log('fenLoad: turnColor: ', turnColor);
     this.turnPrepare(turnColor);
   }
