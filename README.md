@@ -10,6 +10,6 @@
 
  npm run lintFix
 
-  #  Сборка пирложения
+  #  Сборка приложения
 
  npm run build (папка "dist")
