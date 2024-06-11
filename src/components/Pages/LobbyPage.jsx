@@ -1,17 +1,17 @@
-import FormItem from '../modules/FormItem';
-import BackgroundImg from '../ui/BackgroundImg/BacgroundImg';
+import FormItem from '../modules/Lobby/FormItem';
+import BackGround from '../ui/BackgroundImg/BacgroundImg';
 import CustomCard from '../ui/CustomCard/CustomCard';
 import HeaderDiv from '../ui/CustomCard/HeaderDiv';
 
-const HomePage = () => (
-  <BackgroundImg>
+const LobbyPage = () => (
+  <BackGround>
     <CustomCard>
       <div className="card-column">
         <HeaderDiv />
         <FormItem />
       </div>
     </CustomCard>
-  </BackgroundImg>
+  </BackGround>
 );
 
-export default HomePage;
+export default LobbyPage;

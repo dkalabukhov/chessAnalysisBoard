@@ -8,6 +8,7 @@ const customTheme = {
     activeBorderColor: '#000000',
     activeShadow: '#000000',
     activeBg: '#FFFFFF',
+    hoverBorderColor: '#bcb8b8',
 
   },
   Button: {
@@ -27,6 +28,7 @@ const customTheme = {
     borderColor: '#000000',
     headerBg: '#FFFFFF',
     headerBorderRadius: 0,
+    fontFamily: 'Cabin, sans-serif',
   },
   Form: {
     itemMarginBottom: 12,
