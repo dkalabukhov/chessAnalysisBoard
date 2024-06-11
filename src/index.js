@@ -63,7 +63,7 @@ const app = (connection) => {
       turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
     }
     if (state.gameStarted) {
-      blackIcon.setAttribute('src', '/assets/greenDot.svg');
+      blackIcon.setAttribute('src', './assets/greenDot.svg');
     }
     board.cellNames.forEach((name) => {
       const domCell = document.querySelector(`[data-cell="${name}"]`);
