@@ -46,6 +46,7 @@ export default class ChessBoard {
     this.checkmate = null;
     this.stalemate = null;
     this.autoDraw = false;
+    this.fiftyMovesDraw = false;
     this.threeFold = false;
     this.positionsArray = [];
 
@@ -180,6 +181,7 @@ export default class ChessBoard {
     this.checkmate = null;
     this.stalemate = null;
     this.autoDraw = false;
+    this.fiftyMovesDraw = false;
 
     const fen = new FenParser(fenString);
     this.enpass = fen.enpass === '-' ? null : fen.enpass;
@@ -465,7 +467,7 @@ export default class ChessBoard {
       this.stalemate = currentColor;
       console.log('STALEMATE!');
     }
-    if (this.fiftyEmptyMovesCounter >= 50) this.autoDraw = true;
+    if (this.fiftyEmptyMovesCounter >= 50) this.fiftyMovesDraw = true;
     if (figureCells.length <= 3) {
       const figures = figureCells.map((cell) => cell.figure.type);
       if (figures.length < 3 || figures.includes('knight') || figures.includes('bishop')) {

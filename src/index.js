@@ -9,7 +9,11 @@ import reverseBoard from './renders/reverseBoard.js';
 
 const app = (connection) => {
   const domBoard = document.querySelector('.board');
-  const turn = document.querySelector('.info__turn');
+  const turn = document.querySelector('.info__status');
+  const reason = document.querySelector('.info__reason');
+  // const whiteIcon = document.querySelector('.white-icon');
+  const blackIcon = document.querySelector('.black-icon');
+  // const beep = document.querySelector('#beep');
   const fenForm = document.querySelector('.fen__form');
   const fenInput = document.querySelector('.fen__input');
   const domTable = document.querySelector('tbody');
@@ -25,9 +29,10 @@ const app = (connection) => {
     turn: 'white',
     activePlayer: '',
     isYourTurn: false,
+    gameStarted: false,
   };
 
-  const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq a3 0 1'; // нужно поправить en passant
+  const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; // нужно поправить en passant
   const board = new ChessBoard(initFEN);
 
   const render = () => {
@@ -35,23 +40,30 @@ const app = (connection) => {
       renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
     }
     if (board.checkmate) {
-      turn.classList.add('incheck');
-      turn.textContent = `Королю ${state.turn === 'white' ? 'белых' : 'черных'} МАТ!`;
+      turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
+      reason.textContent = 'Мат';
     } else if (board.stalemate) {
-      turn.classList.add('incheck');
-      turn.textContent = 'ПАТ!';
+      turn.textContent = 'Ничья';
+      reason.textContent = 'Пат';
     } else if (board.autoDraw) {
-      turn.classList.add('incheck');
-      turn.textContent = 'Боевая НИЧЬЯ!';
+      turn.textContent = 'Ничья';
+      reason.textContent = 'Недостаточно фигур для мата';
       // } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+    } else if (board.fiftyMovesDraw) {
+      turn.textContent = 'Ничья';
+      reason.textContent = 'Ничья по правилу 50 ходов';
     } else if (board.threeFold) {
-      turn.classList.add('incheck');
-      turn.textContent = `Боевая НИЧЬЯ! (threeFold: ${board.fenString})`;
+      turn.textContent = 'Ничья';
+      reason.textContent = 'Троекратное повторение позиции';
     } else {
-      turn.classList.remove('incheck');
-      const name = state.activePlayer;
-      const yourTurn = state.isYourTurn ? ' (твой ход)' : '';
-      turn.textContent = `Ход: ${name} (${state.turn})${yourTurn}`;
+      // turn.classList.remove('incheck');
+      // const name = state.activePlayer;
+      // const yourTurn = state.isYourTurn ? ' (твой ход)' : '';
+      // turn.textContent = `Ход: ${name} (${state.turn})${yourTurn}`;
+      turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+    }
+    if (state.gameStarted) {
+      blackIcon.setAttribute('src', '/assets/greenDot.svg');
     }
     board.cellNames.forEach((name) => {
       const domCell = document.querySelector(`[data-cell="${name}"]`);
@@ -82,6 +94,7 @@ const app = (connection) => {
         state.turn = data.payload.activeSide;
         state.activePlayer = data.payload.activePlayer;
         state.isYourTurn = data.payload.isYourTurn;
+        state.gameStarted = true;
         render();
         break;
       default:
