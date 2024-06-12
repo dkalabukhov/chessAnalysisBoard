@@ -3,14 +3,15 @@ import draw from '../../assets/images/chessTable/draw.png';
 import surrender from '../../assets/images/chessTable/surrender.png';
 import circle from '../../assets/images/chessTable/circle.svg';
 import greenDot from '../../assets/images/chessTable/greenDot.svg';
-import FenParser from './controllers/fenParser.js';
-import renderCell from './renders/renderCell.js';
-import { createModalPiecesElements, renderModal } from './renders/renderModal.js';
-import renderMovesTable from './renders/renderMovesTable.js';
-import pickFigure from './controllers/pickFigure.js';
-import ChessBoard from './classes/chessBoard.js';
-import quickConnection from './quickConnection.js';
-import reverseBoard from './renders/reverseBoard.js';
+
+import FenParser from '../modules/GameLogic/controllers/fenParser.js';
+import renderCell from '../modules/GameLogic/renders/renderCell.js';
+import { createModalPiecesElements, renderModal } from '../modules/GameLogic/renders/renderModal.js';
+import renderMovesTable from '../modules/GameLogic/renders/renderMovesTable.js';
+import pickFigure from '../modules/GameLogic/controllers/pickFigure.js';
+import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
+import quickConnection from '../modules/GameLogic/quickConnection.js';
+import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
 
 const PlayRoomPage = () => {
   const app = (connection) => {

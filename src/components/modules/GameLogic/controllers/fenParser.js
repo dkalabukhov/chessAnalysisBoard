@@ -90,4 +90,3 @@ var FenParser = (function () {
   return FenParser;
 })();
 export default FenParser;
-//# sourceMappingURL=fenParser.js.map
