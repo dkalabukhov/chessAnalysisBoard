@@ -1,7 +1,5 @@
-const serverURL = 'wss://felarn.ru';
-const connection = new WebSocket(serverURL);
+import { io } from 'socket.io-client';
 
-connection.onopen = () => {
-  console.log('WebSocket connection established');
-  connection.send('hello');
-};
+const socket = io('wss://felarn.ru', { transports: ['websocket'] });
+
+export default socket;
