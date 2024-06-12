@@ -12,44 +12,44 @@ const renderMovesTable = (domTable, board) => {
     const blackIcon = document.createElement('img');
     switch (figure.white) {
       case 'pawn':
-        whiteIcon.setAttribute('src', './assets/wP.svg');
+        whiteIcon.setAttribute('src', '../assets/wP.svg');
         break;
       case 'knight':
-        whiteIcon.setAttribute('src', './assets/wN.svg');
+        whiteIcon.setAttribute('src', '../assets/wN.svg');
         break;
       case 'bishop':
-        whiteIcon.setAttribute('src', './assets/wB.svg');
+        whiteIcon.setAttribute('src', '../assets/wB.svg');
         break;
       case 'rook':
-        whiteIcon.setAttribute('src', './assets/wR.svg');
+        whiteIcon.setAttribute('src', '../assets/wR.svg');
         break;
       case 'queen':
-        whiteIcon.setAttribute('src', './assets/wQ.svg');
+        whiteIcon.setAttribute('src', '../assets/wQ.svg');
         break;
       case 'king':
-        whiteIcon.setAttribute('src', './assets/wK.svg');
+        whiteIcon.setAttribute('src', '../assets/wK.svg');
         break;
       default:
         break;
     }
     switch (figure.black) {
       case 'pawn':
-        blackIcon.setAttribute('src', './assets/bP.svg');
+        blackIcon.setAttribute('src', '../assets/bP.svg');
         break;
       case 'knight':
-        blackIcon.setAttribute('src', './assets/bN.svg');
+        blackIcon.setAttribute('src', '../assets/bN.svg');
         break;
       case 'bishop':
-        blackIcon.setAttribute('src', './assets/bB.svg');
+        blackIcon.setAttribute('src', '../assets/bB.svg');
         break;
       case 'rook':
-        blackIcon.setAttribute('src', './assets/bR.svg');
+        blackIcon.setAttribute('src', '../assets/bR.svg');
         break;
       case 'queen':
-        blackIcon.setAttribute('src', './assets/bQ.svg');
+        blackIcon.setAttribute('src', '../assets/bQ.svg');
         break;
       case 'king':
-        blackIcon.setAttribute('src', './assets/bK.svg');
+        blackIcon.setAttribute('src', '../assets/bK.svg');
         break;
       default:
         break;

@@ -4,7 +4,7 @@ import { createModalPiecesElements, renderModal } from './renders/renderModal.js
 import renderMovesTable from './renders/renderMovesTable.js';
 import pickFigure from './controllers/pickFigure.js';
 import ChessBoard from './classes/chessBoard.js';
-import quickConnection from './quickConnection.js';
+import quickConnection from '../modules/GameLogic/quickConnection.js';
 import reverseBoard from './renders/reverseBoard.js';
 
 const app = (connection) => {

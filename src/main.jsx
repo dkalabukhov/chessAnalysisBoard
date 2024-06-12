@@ -10,14 +10,12 @@ import './assets/scss/global.scss';
 import customTheme from './assets/theme/customTheme';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ConfigProvider
-      locale={ru_RU}
-      theme={{
-        components: customTheme,
-      }}
-    >
-      <App />
-    </ConfigProvider>
-  </React.StrictMode>,
+  <ConfigProvider
+    locale={ru_RU}
+    theme={{
+      components: customTheme,
+    }}
+  >
+    <App />
+  </ConfigProvider>,
 );
