@@ -5,6 +5,7 @@ import buttonBlack from '../../../../assets/images/button-black.png';
 import buttonViewer from '../../../../assets/images/button-viewer.png';
 import buttonWhiteActive from '../../../../assets/images/button-white-active.png';
 import buttonBlackActive from '../../../../assets/images/button-black-active.png';
+import buttonViewerActive from '../../../../assets/images/button-viewer-active.png';
 
 const buttonSelector = {
   white: {
@@ -29,7 +30,7 @@ const buttonActiveSelector = {
     img: buttonBlackActive,
   },
   viewer: {
-    img: buttonViewer,
+    img: buttonViewerActive,
   },
 };
 

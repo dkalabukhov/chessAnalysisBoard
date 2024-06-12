@@ -16,6 +16,10 @@ const FormItem = () => {
     navigate(-1);
   };
 
+  const hadnleGoTo = () => {
+    navigate('playroom');
+  };
+
   return (
     <Form form={form}>
       <div style={{ width: '50%' }}>
@@ -38,7 +42,7 @@ const FormItem = () => {
           <CustomButton text="Выйти из комнаты" className="row-btn" onClick={() => handleGoBack()} />
         </div>
         <div className="row-item">
-          <CustomButton text="Начать партию" className="row-btn" />
+          <CustomButton text="Начать партию" className="row-btn" onClick={() => hadnleGoTo()} />
         </div>
       </div>
     </Form>
