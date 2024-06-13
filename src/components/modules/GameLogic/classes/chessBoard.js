@@ -416,6 +416,7 @@ export default class ChessBoard {
       testBoard.setAffects(testFigureCells);
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
+      // if (testBoard.stalemate) console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
     });
     if (figureCell.figure.type === 'king') {
       const incorrectMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
@@ -435,6 +436,7 @@ export default class ChessBoard {
       testBoard.setAffects(testFigureCells);
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredAttacks.push(cellName);
+      // if (testBoard.stalemate) console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
     });
     figureCell.canAttackCells = [...filteredAttacks];
   }

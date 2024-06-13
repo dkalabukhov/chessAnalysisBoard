@@ -77,6 +77,7 @@ const PlayRoomPage = () => {
       } else if (board.stalemate) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Пат';
+        console.log('ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', board.fenString);
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -166,7 +167,7 @@ const PlayRoomPage = () => {
           render();
           break;
         default:
-          console.log('NEW unwatcheble server message: ', data);
+          // console.log('NEW unwatcheble server message: ', data);
           break;
       }
       // console.log('WEBSOCKET MESS: ', data);
