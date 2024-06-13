@@ -43,6 +43,7 @@ const PlayRoomPage = () => {
       activePlayer: globalState.activePlayer,
       isYourTurn: globalState.isYourTurn,
       gameStarted: true,
+      yourSide: globalState.side,
     };
 
     // const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -61,21 +62,63 @@ const PlayRoomPage = () => {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
       if (board.checkmate) {
-        turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
-        reason.textContent = 'Мат';
+        // turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
+        // console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
+        // reason.textContent = 'Мат';
+        const result = state.yourSide !== state.turn ? 'win' : 'loss';
+        const action = JSON.stringify({
+          action: 'finishGame',
+          payload: {
+            result,
+            reason: 'Мат',
+          },
+        });
+        connection.send(action);
       } else if (board.stalemate) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Пат';
+        const action = JSON.stringify({
+          action: 'finishGame',
+          payload: {
+            result: 'draw',
+            reason: 'Пат',
+          },
+        });
+        connection.send(action);
       } else if (board.autoDraw) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Недостаточно фигур для мата';
+        const action = JSON.stringify({
+          action: 'finishGame',
+          payload: {
+            result: 'draw',
+            reason: 'Недостаточно фигур для мата',
+          },
+        });
+        connection.send(action);
         // } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       } else if (board.fiftyMovesDraw) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Ничья по правилу 50 ходов';
+        const action = JSON.stringify({
+          action: 'finishGame',
+          payload: {
+            result: 'draw',
+            reason: 'Ничья по правилу 50 ходов',
+          },
+        });
+        connection.send(action);
       } else if (board.threeFold) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Троекратное повторение позиции';
+        const action = JSON.stringify({
+          action: 'finishGame',
+          payload: {
+            result: 'draw',
+            reason: 'Троекратное повторение позиции',
+          },
+        });
+        connection.send(action);
       } else {
         // turn.classList.remove('incheck');
         // const name = state.activePlayer;
@@ -93,7 +136,9 @@ const PlayRoomPage = () => {
       boardFEN.textContent = board.fenString;
     };
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!
     connection.addEventListener('message', (event) => {
+    // connection.onmessage = (event) => {
       const data = JSON.parse(event.data);
       switch (data.action) {
         // case 'yourSide':
@@ -125,7 +170,9 @@ const PlayRoomPage = () => {
           break;
       }
       // console.log('WEBSOCKET MESS: ', data);
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!
     });
+    // };
 
     domBoard.addEventListener('click', (e) => {
       if (!state.isYourTurn) return;
