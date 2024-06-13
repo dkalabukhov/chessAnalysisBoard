@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import CustomInput from '../../ui/CustomInput/CustomInput';
 import copyLogo from '../../../assets/images/copy-logo.png';
 import CustomButton from '../../ui/CustomButton/CustomButton';
@@ -10,14 +10,14 @@ import GroupButtons from './GroupButtons';
 const FormItem = () => {
   const [form] = useForm();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1);
+    // navigate(-1);
   };
 
   const hadnleGoTo = () => {
-    navigate('playroom');
+    // navigate('playroom');
   };
 
   return (

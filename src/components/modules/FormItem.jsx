@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import CustomInput from '../ui/CustomInput/CustomInput';
 import CustomButton from '../ui/CustomButton/CustomButton';
@@ -11,10 +11,10 @@ const FormItem = () => {
   const [newForm] = useForm();
   const [joinForm] = useForm();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleGoToLobby = () => {
-    navigate('lobby');
+    // navigate('lobby');
   };
 
   return (
