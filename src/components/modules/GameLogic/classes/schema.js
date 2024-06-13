@@ -43,14 +43,14 @@ export default class Schema {
   line([dX, dY], range) {
     this.checks.push(([col, row], color, isPawn) => {
       const colorModifier = color === 'black' ? -1 : 1;
-      const iterator = ([col, row], remainingRange) => {
+      const iterator = ([innerCol, innerRow], remainingRange) => {
         if (remainingRange <= 0) return [];
-        if (col > 8 || col < 1 || row > 8 || row < 1) return [];
-        const cell = this.board.cell(col, row);
+        if (innerCol > 8 || innerCol < 1 || innerRow > 8 || innerRow < 1) return [];
+        const cell = this.board.cell(innerCol, innerRow);
         if (!cell.figure && this.isMove) {
           const out = [
             makeAvailableCell(cell.name, 'dot'),
-            ...iterator([col + dX, row + dY * colorModifier], remainingRange - 1),
+            ...iterator([innerCol + dX, innerRow + dY * colorModifier], remainingRange - 1),
           ];
           return out;
         }
