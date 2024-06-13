@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import GlobalContext from '../../services/GlobalContext.js';
 import sendAction from '../../services/sendAction.js';
+import getServerUrl from '../../services/getServerUrl.js';
 
 // Компонент-провайдер, который будет обертывать приложение
 const WSConnection = ({ children }) => {
+  const serverURL = getServerUrl();
   const [globalState, setGlobalState] = useState({
     connectionStatus: 'waiting',
   });
@@ -26,8 +28,7 @@ const WSConnection = ({ children }) => {
 
   useEffect(() => {
     updateGlobalState({ connectionStatus: 'awaiting' });
-    // const websocket = new WebSocket('wss://felarn.ru');
-    const websocket = new WebSocket('ws://localhost:4444');
+    const websocket = new WebSocket(serverURL);
     updateGlobalState({ websocket });
 
     websocket.onopen = () => {
