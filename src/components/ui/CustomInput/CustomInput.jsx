@@ -8,7 +8,6 @@ const CustomInput = ({
     <Form.Item>
       <Input
         placeholder={label}
-
         value={value}
         defaultValue={defaultValue}
         onChange={onChange}
