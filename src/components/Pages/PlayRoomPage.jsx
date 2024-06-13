@@ -93,7 +93,7 @@ const PlayRoomPage = () => {
       boardFEN.textContent = board.fenString;
     };
 
-    connection.onmessage = (event) => {
+    connection.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       switch (data.action) {
         // case 'yourSide':
@@ -125,7 +125,7 @@ const PlayRoomPage = () => {
           break;
       }
       // console.log('WEBSOCKET MESS: ', data);
-    };
+    });
 
     domBoard.addEventListener('click', (e) => {
       if (!state.isYourTurn) return;
