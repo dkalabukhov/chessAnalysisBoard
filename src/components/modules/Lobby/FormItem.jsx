@@ -13,10 +13,15 @@ const FormItem = () => {
   const [form] = useForm();
   const { globalState } = useGlobal();
 
+  const handleGameNameChange = (event) => {
+    console.log(event.target.value);
+    // sendAction(globalState.websocket, 'rename', { userName: event.target.value });
+  };
+
   return (
     <Form form={form}>
       <div style={{ width: '50%' }}>
-        <CustomInput text="Игровая комната" label="комната Pavel" disabled />
+        <CustomInput text="Игровая комната" disabled={!globalState.youAreHost} defaultValue={globalState.gameName} onChange={handleGameNameChange} />
       </div>
       <div className="form-row">
         <div style={{ flex: 1 }}>
