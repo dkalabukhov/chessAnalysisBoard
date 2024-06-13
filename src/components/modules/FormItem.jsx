@@ -1,5 +1,6 @@
 import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import { useState } from 'react';
 import CustomInput from '../ui/CustomInput/CustomInput';
 import CustomButton from '../ui/CustomButton/CustomButton';
 import CustomTable from '../ui/CustomTable/CustomTable';
@@ -9,12 +10,11 @@ import action from '../../services/action';
 const FormItem = () => {
   const [newForm] = useForm();
   const [joinForm] = useForm();
-  // const { globalState } = useGlobal();
+  const [idToConnect, setID] = useState();
 
-  // const navigate = useNavigate();
-
-  const handleGoToLobby = () => {
-    // navigate('lobby');
+  const handleInputChange = (event) => {
+    setID(event.target.value);
+    console.log(idToConnect);
   };
 
   return (
@@ -30,9 +30,9 @@ const FormItem = () => {
       </Form>
       <Form form={joinForm}>
         <div className="form-row">
-          <div className="row-item"><CustomInput text="ID-игры" label="ID комнаты" /></div>
+          <div className="row-item"><CustomInput text="ID-игры" label="ID комнаты" onChange={handleInputChange} /></div>
           <div className="row-item">
-            <CustomButton text="Подключиться" className="row-btn" onClick={handleGoToLobby} />
+            <CustomButton text="Подключиться" className="row-btn" onClick={action('join', { gameID: idToConnect })} />
           </div>
         </div>
         <CustomTable columns={columns} />
