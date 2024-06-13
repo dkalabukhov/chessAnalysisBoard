@@ -3,7 +3,7 @@ import useGlobal from '../../services/useGlobal.js';
 const NoConnectionPage = () => {
   const { globalState } = useGlobal();
 
-  console.log(globalState.connectionStatus);
+  // console.log(globalState.connectionStatus);
   const messages = {
     awaiting: 'Подключение устанавливается, ожидайте',
     online: 'Подключение установлено, загрузка состояния',

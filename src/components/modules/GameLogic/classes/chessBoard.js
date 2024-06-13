@@ -297,7 +297,9 @@ export default class ChessBoard {
     this.setAffects(figureCells);
     this.checkGameState(figureCells);
     if (!this.isVirtualBoard) {
-      if (this.currentTurnColor === 'white') this.makeEmptyHistoryTurn();
+      // if (this.currentTurnColor === 'white') this.makeEmptyHistoryTurn();
+      if (!this.turnsHistory[`turn${this.turnsCount}`]) this.makeEmptyHistoryTurn();
+
       // const tempArray = Object.keys(this.turnsHistory).map(
       //   // prettier-ignore
       // eslint-disable-next-line max-len

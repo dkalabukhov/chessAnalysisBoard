@@ -17,7 +17,7 @@ const WSConnection = ({ children }) => {
 
   const identification = (connection) => {
     const userID = sessionStorage.getItem('userID');
-    console.log(`USER ID: ${userID}`);
+    // console.log(`USER ID: ${userID}`);
     if (userID) {
       const payload = { userID };
       sendAction(connection, 'identification', payload);
@@ -32,7 +32,7 @@ const WSConnection = ({ children }) => {
     updateGlobalState({ websocket });
 
     websocket.onopen = () => {
-      console.log('Connected to the WebSocket server');
+      // console.log('Connected to the WebSocket server');
       updateGlobalState({ connectionStatus: 'online' });
 
       identification(websocket);
@@ -40,8 +40,8 @@ const WSConnection = ({ children }) => {
 
     websocket.onmessage = (event) => {
       const { action, payload } = JSON.parse(event.data);
-      console.log(`action: ${action} <<`);
-      console.log(payload);
+      // console.log(`action: ${action} <<`);
+      // console.log(payload);
       if (action === 'registered') sessionStorage.setItem('userID', payload.userID);
       updateGlobalState(payload);
     };
@@ -52,7 +52,7 @@ const WSConnection = ({ children }) => {
     };
 
     websocket.onclose = () => {
-      console.log('Disconnected from the WebSocket server');
+      // console.log('Disconnected from the WebSocket server');
       updateGlobalState({ connectionStatus: 'offline' });
     };
 

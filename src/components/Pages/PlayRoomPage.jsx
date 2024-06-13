@@ -10,14 +10,13 @@ import { createModalPiecesElements, renderModal } from '../modules/GameLogic/ren
 import renderMovesTable from '../modules/GameLogic/renders/renderMovesTable.js';
 import pickFigure from '../modules/GameLogic/controllers/pickFigure.js';
 import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
-import quickConnection from '../modules/GameLogic/quickConnection.js';
+// import quickConnection from '../modules/GameLogic/quickConnection.js';
 import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
 
 import useGlobal from '../../services/useGlobal.js';
 
 const PlayRoomPage = () => {
   const { globalState } = useGlobal();
-  const connection1 = globalState.websocket;
 
   const app = (connection) => {
     const domBoard = document.querySelector('.board');
@@ -35,18 +34,27 @@ const PlayRoomPage = () => {
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
 
-    console.log(77777777777, globalState);
+    // **************** new >>>>>>>>
+    console.log('globalState: ', globalState);
     const state = {
       cursor: 'idle',
       figure: null,
-      turn: 'white',
-      activePlayer: '',
-      isYourTurn: false,
-      gameStarted: false,
+      turn: globalState.activeSide || 'white',
+      activePlayer: globalState.activePlayer,
+      isYourTurn: globalState.isYourTurn,
+      gameStarted: true,
     };
 
-    const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; // нужно поправить en passant
+    // const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    const initFEN = globalState.fen || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     const board = new ChessBoard(initFEN);
+    board.setPlayerSide(globalState.side);
+    if (globalState.side === 'black') reverseBoard(boardRows);
+
+    document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+    document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+
+    // <<<<<<<<<<< **************** new
 
     const render = () => {
       if (board.pawnPromotion) {
@@ -88,10 +96,10 @@ const PlayRoomPage = () => {
     connection.onmessage = (event) => {
       const data = JSON.parse(event.data);
       switch (data.action) {
-        case 'yourSide':
-          board.setPlayerSide(data.payload.side);
-          if (data.payload.side === 'black') reverseBoard(boardRows);
-          break;
+        // case 'yourSide':
+        //   board.setPlayerSide(data.payload.side);
+        //   if (data.payload.side === 'black') reverseBoard(boardRows);
+        //   break;
         case 'gameState':
           // console.log('new fen from server received!');
           if (data.payload.turnsHistory) {
@@ -113,10 +121,10 @@ const PlayRoomPage = () => {
           render();
           break;
         default:
-          // console.log('connection.onmessage: new unwatcheble server message');
+          console.log('NEW unwatcheble server message: ', data);
           break;
       }
-      console.log('WEBSOCKET MESS: ', data);
+      // console.log('WEBSOCKET MESS: ', data);
     };
 
     domBoard.addEventListener('click', (e) => {
@@ -234,7 +242,8 @@ const PlayRoomPage = () => {
   useEffect(() => {
     // eslint-disable-next-line func-names
     // quickConnection().then((connection) => app(connection));
-    app(connection1);
+    const connection = globalState.websocket;
+    app(connection);
   });
 
   return (

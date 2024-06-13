@@ -14,7 +14,7 @@ const FormItem = () => {
 
   const handleInputChange = (event) => {
     setID(event.target.value);
-    console.log(idToConnect);
+    // console.log(idToConnect);
   };
 
   return (
