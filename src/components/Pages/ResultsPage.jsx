@@ -7,7 +7,7 @@ const ResultsPage = () => {
   const resultName = {
     youWon: 'Вы победили',
     youLoose: 'Вы проиграли',
-    draw: 'ничья',
+    draw: 'Ничья',
   };
   return (
     <div>
