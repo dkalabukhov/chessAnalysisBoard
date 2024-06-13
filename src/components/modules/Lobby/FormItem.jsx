@@ -1,24 +1,17 @@
 import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import CustomInput from '../../ui/CustomInput/CustomInput';
 import copyLogo from '../../../assets/images/copy-logo.png';
 import CustomButton from '../../ui/CustomButton/CustomButton';
 import PlayersBlock from './PlayersBlock';
 import GroupButtons from './GroupButtons';
+import action from '../../../services/action';
+import useGlobal from '../../../services/useGlobal';
 
 const FormItem = () => {
   const [form] = useForm();
-
-  const navigate = useNavigate();
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
-  const hadnleGoTo = () => {
-    navigate('playroom');
-  };
+  const { globalState } = useGlobal();
 
   return (
     <Form form={form}>
@@ -27,7 +20,7 @@ const FormItem = () => {
       </div>
       <div className="form-row">
         <div style={{ flex: 1 }}>
-          <CustomInput text="Игровая комната" label="комната Pavel" disabled />
+          <CustomInput text="ID комнаты" value={globalState.gameID} />
         </div>
         <img src={copyLogo} alt="copy-logo" style={{ marginTop: 19 }} />
       </div>
@@ -39,10 +32,14 @@ const FormItem = () => {
       </div>
       <div className="form-row">
         <div className="row-item">
-          <CustomButton text="Выйти из комнаты" className="row-btn" onClick={() => handleGoBack()} />
+          <CustomButton text="Выйти из комнаты" className="row-btn" onClick={action('leave')} />
         </div>
         <div className="row-item">
-          <CustomButton text="Начать партию" className="row-btn" onClick={() => hadnleGoTo()} />
+          <CustomButton
+            text="Начать партию"
+            className="row-btn"
+            onClick={action('startMatch', { fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' })}
+          />
         </div>
       </div>
     </Form>
