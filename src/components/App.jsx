@@ -7,7 +7,9 @@ import NoConnectionPage from './Pages/NoConnectionPage';
 
 const App = () => {
   const { globalState } = useGlobal();
-  console.log(globalState.userCondition);
+  // console.log(globalState.userCondition);
+  console.log('=== new State ===');
+  console.log(globalState);
   const pages = {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,

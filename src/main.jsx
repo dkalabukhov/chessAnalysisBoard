@@ -8,7 +8,7 @@ import { ConfigProvider } from 'antd';
 import App from './components/App';
 import './assets/scss/global.scss';
 import customTheme from './assets/theme/customTheme';
-import { WSConnection } from './components/modules/WSConnection.jsx';
+import WSConnection from './components/modules/WSConnection.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <WSConnection>

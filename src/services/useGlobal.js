@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { GlobalContext } from '../components/modules/WSConnection';
+import GlobalContext from './GlobalContext';
 
 const useGlobal = () => {
   const context = useContext(GlobalContext);
