@@ -26,19 +26,21 @@ const WSConnection = ({ children }) => {
 
   useEffect(() => {
     updateGlobalState({ connectionStatus: 'awaiting' });
-    const websocket = new WebSocket('wss://felarn.ru');
-    // const websocket = new WebSocket('ws://localhost:4444');
+    // const websocket = new WebSocket('wss://felarn.ru');
+    const websocket = new WebSocket('ws://localhost:4444');
     updateGlobalState({ websocket });
 
     websocket.onopen = () => {
       console.log('Connected to the WebSocket server');
       updateGlobalState({ connectionStatus: 'online' });
+
       identification(websocket);
     };
 
     websocket.onmessage = (event) => {
       const { action, payload } = JSON.parse(event.data);
       console.log(`action: ${action} <<`);
+      console.log(payload);
       if (action === 'registered') sessionStorage.setItem('userID', payload.userID);
       updateGlobalState(payload);
     };

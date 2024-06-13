@@ -6,6 +6,7 @@ import buttonViewer from '../../../../assets/images/button-viewer.png';
 import buttonWhiteActive from '../../../../assets/images/button-white-active.png';
 import buttonBlackActive from '../../../../assets/images/button-black-active.png';
 import buttonViewerActive from '../../../../assets/images/button-viewer-active.png';
+import useGlobal from '../../../../services/useGlobal';
 
 const buttonSelector = {
   white: {
@@ -16,7 +17,7 @@ const buttonSelector = {
     img: buttonBlack,
     text: 'Черные',
   },
-  viewer: {
+  spectator: {
     img: buttonViewer,
     text: 'Наблюдатель',
   },
@@ -29,22 +30,28 @@ const buttonActiveSelector = {
   black: {
     img: buttonBlackActive,
   },
-  viewer: {
+  spectator: {
     img: buttonViewerActive,
   },
 };
 
-const CustomCheckboxButton = ({ color, hadnleClick, active }) => {
-  const imgSource = color !== active ? buttonSelector[color].img : buttonActiveSelector[color].img;
+const CustomCheckboxButton = ({
+  color, active, onClick,
+}) => {
+  const { globalState } = useGlobal();
+  const side = globalState.side || 'spectator';
+  const imgSource = color !== active
+    ? buttonSelector[side].img
+    : buttonActiveSelector[side].img;
 
   return (
-    <div className={color !== 'viewer' ? 'checkbox' : 'checkbox-start'}>
-      <span>{buttonSelector[color].text}</span>
+    <div className={side !== 'spectator' ? 'checkbox' : 'checkbox-start'}>
+      <span>{buttonSelector[side].text}</span>
       <img
         className="checkbox-img"
         src={imgSource}
         alt="checkbox"
-        onClick={() => hadnleClick(color)}
+        onClick={() => onClick()}
       />
     </div>
   );
