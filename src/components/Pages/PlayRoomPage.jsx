@@ -13,7 +13,12 @@ import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
 import quickConnection from '../modules/GameLogic/quickConnection.js';
 import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
 
+import useGlobal from '../../services/useGlobal.js';
+
 const PlayRoomPage = () => {
+  const { globalState } = useGlobal();
+  const connection1 = globalState.websocket;
+
   const app = (connection) => {
     const domBoard = document.querySelector('.board');
     const turn = document.querySelector('.info__status');
@@ -30,6 +35,7 @@ const PlayRoomPage = () => {
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
 
+    console.log(77777777777, globalState);
     const state = {
       cursor: 'idle',
       figure: null,
@@ -110,7 +116,7 @@ const PlayRoomPage = () => {
           // console.log('connection.onmessage: new unwatcheble server message');
           break;
       }
-      // console.log(data);
+      console.log('WEBSOCKET MESS: ', data);
     };
 
     domBoard.addEventListener('click', (e) => {
@@ -227,7 +233,8 @@ const PlayRoomPage = () => {
 
   useEffect(() => {
     // eslint-disable-next-line func-names
-    quickConnection().then((connection) => app(connection));
+    // quickConnection().then((connection) => app(connection));
+    app(connection1);
   });
 
   return (
