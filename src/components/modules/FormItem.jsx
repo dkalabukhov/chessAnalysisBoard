@@ -30,6 +30,9 @@ const FormItem = () => {
     sendAction(globalState.websocket, 'rename', { userName: event.target.value });
   };
 
+  const roomsData = globalState.list && globalState.list.map((room) => (
+    { ...room, key: room.gameID }));
+
   return (
     <>
       <Form form={newForm}>
@@ -48,7 +51,10 @@ const FormItem = () => {
             <CustomButton text="Подключиться" className="row-btn" onClick={action('join', { gameID: idToConnect })} />
           </div>
         </div>
-        <CustomTable columns={columns} />
+        <CustomTable
+          columns={columns}
+          data={roomsData}
+        />
       </Form>
     </>
   );

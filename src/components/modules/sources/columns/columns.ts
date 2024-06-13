@@ -1,18 +1,24 @@
 const columns = [
+
+//     {
+//         title: 'ID',
+//         key: 'gameID',
+//         dataIndex: 'gameID',
+// },
     {
-        title: 'Игровая комната',
-        key: 'roomName',
-        dataIndex: 'roomName',
+        title: 'название комнаты',
+        key: 'gameName',
+        dataIndex: 'gameName',
 },
 {
     title: 'Хост',
-    key: 'hostname',
-    dataIndex: 'hostname',
+    key: 'hostName',
+    dataIndex: 'hostName',
 },
 {
     title: 'Игроки',
-    key: 'players',
-    dataIndex: 'players',
+    key: 'playerCount',
+    dataIndex: 'playerCount',
 },
 ]
 
