@@ -1,4 +1,5 @@
 import action from '../../services/action';
+import sendAction from '../../services/sendAction';
 import useGlobal from '../../services/useGlobal';
 import CustomButton from '../ui/CustomButton/CustomButton';
 
@@ -22,7 +23,7 @@ const ResultsPage = () => {
         {' '}
         {globalState.reason}
       </p>
-      <CustomButton text="Выйти в главное меню" className="row-btn" onClick={action('leave')} />
+      <CustomButton text="Выйти в главное меню" className="row-btn" onClick={() => { sendAction(globalState.websocket, 'leave'); window.location.reload(); }} />
     </div>
   );
 };
