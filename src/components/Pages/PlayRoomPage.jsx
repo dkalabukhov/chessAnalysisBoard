@@ -15,6 +15,8 @@ import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
 
 import useGlobal from '../../services/useGlobal.js';
 
+let appIsLoaded = false;
+
 const PlayRoomPage = () => {
   const { globalState } = useGlobal();
 
@@ -35,7 +37,7 @@ const PlayRoomPage = () => {
     const boardRows = document.querySelectorAll('.board__row');
 
     // **************** new >>>>>>>>
-    console.log('globalState: ', globalState);
+    console.log('app() loading >> globalState: ', globalState);
     const state = {
       cursor: 'idle',
       figure: null,
@@ -51,6 +53,7 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
+    if (globalState.side === 'white') state.isYourTurn = true;
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -156,6 +159,7 @@ const PlayRoomPage = () => {
           board.loadFen(data.payload.fen);
           state.cursor = 'idle';
           state.figure = null;
+          render();
           break;
         case 'turnState':
           state.turn = data.payload.activeSide;
@@ -164,7 +168,8 @@ const PlayRoomPage = () => {
           state.gameStarted = true;
           // beep.loop = false;
           // beep.play();
-          render();
+          // console.log('render on turnstate! Turn: ', board.currentTurnColor);
+          // render();
           break;
         default:
           // console.log('NEW unwatcheble server message: ', data);
@@ -291,7 +296,11 @@ const PlayRoomPage = () => {
     // eslint-disable-next-line func-names
     // quickConnection().then((connection) => app(connection));
     const connection = globalState.websocket;
-    app(connection);
+    if (!appIsLoaded) {
+      console.log('Loading PlayPage app()');
+      app(connection);
+    }
+    appIsLoaded = true;
   });
 
   return (
