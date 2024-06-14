@@ -9,6 +9,7 @@ const customTheme = {
     activeShadow: '#000000',
     activeBg: '#FFFFFF',
     hoverBorderColor: '#bcb8b8',
+    colorTextDisabled: '#000000',
 
   },
   Button: {
@@ -26,9 +27,10 @@ const customTheme = {
   },
   Table: {
     borderColor: '#000000',
-    headerBg: '#FFFFFF',
-    headerBorderRadius: 0,
+    headerBg: '#EEEEEE',
+    headerBorderRadius: 10,
     fontFamily: 'Cabin, sans-serif',
+    rowHoverBg: '#00f7ff09',
   },
   Form: {
     itemMarginBottom: 12,

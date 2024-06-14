@@ -19,7 +19,7 @@ const buttonSelector = {
   },
   spectator: {
     img: buttonViewer,
-    text: 'Наблюдатель',
+    text: 'Зритель',
   },
 };
 
@@ -36,13 +36,13 @@ const buttonActiveSelector = {
 };
 
 const CustomCheckboxButton = ({
-  color, active, onClick,
+  side, onClick,
 }) => {
   const { globalState } = useGlobal();
-  const side = globalState.side || 'spectator';
-  const imgSource = color !== active
-    ? buttonSelector[side].img
-    : buttonActiveSelector[side].img;
+  // const side = globalState.side || 'spectator';
+  const imgSource = side === globalState.side
+    ? buttonActiveSelector[side].img
+    : buttonSelector[side].img;
 
   return (
     <div className={side !== 'spectator' ? 'checkbox' : 'checkbox-start'}>
