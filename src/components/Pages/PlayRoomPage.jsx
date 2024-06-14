@@ -10,7 +10,6 @@ import { createModalPiecesElements, renderModal } from '../modules/GameLogic/ren
 import renderMovesTable from '../modules/GameLogic/renders/renderMovesTable.js';
 import pickFigure from '../modules/GameLogic/controllers/pickFigure.js';
 import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
-// import quickConnection from '../modules/GameLogic/quickConnection.js';
 import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
 
 import useGlobal from '../../services/useGlobal.js';
@@ -42,9 +41,10 @@ const PlayRoomPage = () => {
       cursor: 'idle',
       figure: null,
       turn: globalState.activeSide || 'white',
-      activePlayer: globalState.activePlayer,
-      isYourTurn: globalState.isYourTurn,
+      activePlayer: globalState.activePlayer, // НАМ ЕЩЕ НУЖНО ЭТО СВОЙСТВО???
+      isYourTurn: globalState.isYourTurn || false,
       gameStarted: true,
+      gameIsOver: false,
       yourSide: globalState.side,
     };
 
@@ -53,7 +53,9 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
-    if (globalState.side === 'white') state.isYourTurn = true;
+    if (globalState.isYourTurn === undefined && globalState.side === 'white') {
+      state.isYourTurn = true;
+    }
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -65,9 +67,10 @@ const PlayRoomPage = () => {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
       if (board.checkmate) {
-        // turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
-        // console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
-        // reason.textContent = 'Мат';
+        turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
+        console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
+        reason.textContent = 'Мат';
+        state.gameIsOver = true;
         const result = state.yourSide !== state.turn ? 'win' : 'loss';
         const action = JSON.stringify({
           action: 'finishGame',
@@ -80,7 +83,7 @@ const PlayRoomPage = () => {
       } else if (board.stalemate) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Пат';
-        console.log('ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', board.fenString);
+        state.gameIsOver = true;
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -92,6 +95,7 @@ const PlayRoomPage = () => {
       } else if (board.autoDraw) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Недостаточно фигур для мата';
+        state.gameIsOver = true;
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -104,6 +108,7 @@ const PlayRoomPage = () => {
       } else if (board.fiftyMovesDraw) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Ничья по правилу 50 ходов';
+        state.gameIsOver = true;
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -115,6 +120,7 @@ const PlayRoomPage = () => {
       } else if (board.threeFold) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Троекратное повторение позиции';
+        state.gameIsOver = true;
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -140,7 +146,6 @@ const PlayRoomPage = () => {
       boardFEN.textContent = board.fenString;
     };
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!
     connection.addEventListener('message', (event) => {
     // connection.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -176,12 +181,11 @@ const PlayRoomPage = () => {
           break;
       }
       // console.log('WEBSOCKET MESS: ', data);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!
     });
     // };
 
     domBoard.addEventListener('click', (e) => {
-      if (!state.isYourTurn) return;
+      if (!state.isYourTurn || state.gameIsOver) return;
       switch (state.cursor) {
         case 'idle': {
           // console.log('domBoard click event: state.cursor = idle');
@@ -237,7 +241,7 @@ const PlayRoomPage = () => {
 
     fenForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!state.isYourTurn) return;
+      if (!state.isYourTurn || state.gameIsOver) return;
       const fenString = fenInput.value.trim();
       if (!FenParser.isFen(fenString)) {
         // eslint-disable-next-line no-alert
@@ -293,8 +297,6 @@ const PlayRoomPage = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line func-names
-    // quickConnection().then((connection) => app(connection));
     const connection = globalState.websocket;
     if (!appIsLoaded) {
       console.log('Loading PlayPage app()');
