@@ -5,6 +5,7 @@ import PlayRoomPage from './Pages/PlayRoomPage';
 import useGlobal from '../services/useGlobal';
 import NoConnectionPage from './Pages/NoConnectionPage';
 import ResultsPage from './Pages/ResultsPage';
+import MessageSpawner from './ui/MessageSpawner/MessageSpawner';
 
 const App = () => {
   const { globalState } = useGlobal();
@@ -20,7 +21,12 @@ const App = () => {
   return (
 
     globalState.connectionStatus === 'online' && globalState.userCondition
-      ? pages[globalState.userCondition]
+      ? (
+        <>
+          {pages[globalState.userCondition]}
+          <MessageSpawner />
+        </>
+      )
       : <NoConnectionPage />
 
   );

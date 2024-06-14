@@ -34,7 +34,6 @@ const WSConnection = ({ children }) => {
     websocket.onopen = () => {
       // console.log('Connected to the WebSocket server');
       updateGlobalState({ connectionStatus: 'online' });
-
       identification(websocket);
     };
 
@@ -42,6 +41,7 @@ const WSConnection = ({ children }) => {
       const { action, payload } = JSON.parse(event.data);
       // console.log(`action: ${action} <<`);
       // console.log(payload);
+      if (action === 'chat') return;
       if (action === 'registered') sessionStorage.setItem('userID', payload.userID);
       updateGlobalState(payload);
     };
