@@ -16,6 +16,17 @@ import useGlobal from '../../services/useGlobal.js';
 
 let appIsLoaded = false;
 
+const isLoadedAllProps = (globalState) => {
+  if (globalState.activeSide === undefined) return false;
+  if (globalState.isYourTurn === undefined) return false;
+  if (globalState.side === undefined) return false;
+  // if (globalState.fen === undefined) return false; // fen раздается только если был сделан ход
+  if (globalState.whitePlayerName === undefined) return false;
+  if (globalState.blackPlayerName === undefined) return false;
+  if (globalState.websocket === undefined) return false;
+  return true;
+};
+
 const PlayRoomPage = () => {
   const { globalState } = useGlobal();
 
@@ -34,15 +45,20 @@ const PlayRoomPage = () => {
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
+    const surrenderButton = document.querySelector('#surrender');
 
     // **************** new >>>>>>>>
     console.log('app() loading >> globalState: ', globalState);
     const state = {
       cursor: 'idle',
       figure: null,
-      turn: globalState.activeSide || 'white',
+      // isLoadedAllProps CHECK
+      // turn: globalState.activeSide || 'white',
+      turn: globalState.activeSide,
       activePlayer: globalState.activePlayer, // НАМ ЕЩЕ НУЖНО ЭТО СВОЙСТВО???
-      isYourTurn: globalState.isYourTurn || false,
+      // isLoadedAllProps CHECK
+      // isYourTurn: globalState.isYourTurn || false,
+      isYourTurn: globalState.isYourTurn,
       gameStarted: true,
       gameIsOver: false,
       yourSide: globalState.side,
@@ -53,9 +69,10 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
-    if (globalState.isYourTurn === undefined && globalState.side === 'white') {
-      state.isYourTurn = true;
-    }
+    // isLoadedAllProps CHECK
+    // if (globalState.isYourTurn === undefined && globalState.side === 'white') {
+    //   state.isYourTurn = true;
+    // }
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -71,7 +88,8 @@ const PlayRoomPage = () => {
         console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
         reason.textContent = 'Мат';
         state.gameIsOver = true;
-        const result = state.yourSide !== state.turn ? 'win' : 'loss';
+        // const result = state.yourSide !== state.turn ? 'win' : 'loss';
+        const result = state.isYourTurn ? 'loss' : 'win';
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
@@ -293,15 +311,37 @@ const PlayRoomPage = () => {
       });
     });
 
+    surrenderButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (board.getPlayerSide() === 'spectator') return;
+      const result = 'loss';
+      const sendReason = `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`;
+      const action = JSON.stringify({
+        action: 'finishGame',
+        payload: {
+          result,
+          reason: sendReason,
+        },
+      });
+      connection.send(action);
+    });
+
     render();
   };
 
   useEffect(() => {
-    const connection = globalState.websocket;
-    if (!appIsLoaded) {
-      console.log('Loading PlayPage app()');
-      app(connection);
+    if (appIsLoaded) {
+      // console.log('appIsLoaded');
+      return;
     }
+    if (!isLoadedAllProps(globalState)) {
+      // console.log('not enaugth data');
+      // console.log(globalState);
+      return;
+    }
+    const connection = globalState.websocket;
+    console.log('Loading PlayPage app()');
+    app(connection);
     appIsLoaded = true;
   });
 
@@ -311,6 +351,7 @@ const PlayRoomPage = () => {
       <div className="wrapper">
         <div className="info">
           <div className="info__player_white">
+            <h3 className="info__heading color-side">Белые:</h3>
             <h3 className="info__heading whitePlayer">White Player</h3>
             <img
               src={greenDot}
@@ -325,11 +366,12 @@ const PlayRoomPage = () => {
             <button type="button" className="info__btn draw" title="Предложить ничью">
               <img src={draw} alt="Предложить ничью" srcSet="" />
             </button>
-            <button type="button" className="info__btn surrender" title="Сдаться">
+            <button type="button" id="surrender" className="info__btn surrender" title="Сдаться">
               <img src={surrender} alt="Сдаться" srcSet="" />
             </button>
           </form>
           <div className="info__player_black">
+            <h3 className="info__heading color-side">Черные:</h3>
             <h3 className="info__heading blackPlayer">Black Player</h3>
             <img
               src={circle}
