@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import createPiece from './createPiece.js';
 
 export default (boardCell, domCell) => {
@@ -76,4 +77,5 @@ export default (boardCell, domCell) => {
       return null;
     }
   }
+  return null;
 };
