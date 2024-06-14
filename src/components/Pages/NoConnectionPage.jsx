@@ -6,9 +6,21 @@ const NoConnectionPage = () => {
 
   // console.log(globalState.connectionStatus);
   const messages = {
-    awaiting: (<h1 className="loader-title">Подключение устанавливается, ожидайте</h1>),
-    online: (<h1 className="loader-title">Подключение установлено, загрузка состояния</h1>),
-    offline: (<h1 className="loader-title">соединение потеряно, попробуйте перезагрузить страницу</h1>),
+    awaiting: (<h1 className="loader-title">
+      Подключение устанавливается.
+      <br />
+      Ожидайте.
+    </h1>),
+    online: (<h1 className="loader-title">
+      Подключение установлено.
+      <br />
+      Загрузка состояния.
+    </h1>),
+    offline: (<h1 className="loader-title">
+      Соединение потеряно.
+      <br />
+      Попробуйте перезагрузить страницу.
+    </h1>),
   };
 
   const color = {
