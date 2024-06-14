@@ -311,6 +311,7 @@ const PlayRoomPage = () => {
       <div className="wrapper">
         <div className="info">
           <div className="info__player_white">
+            <h3 className="info__heading color-side">Белые:</h3>
             <h3 className="info__heading whitePlayer">White Player</h3>
             <img
               src={greenDot}
@@ -330,6 +331,7 @@ const PlayRoomPage = () => {
             </button>
           </form>
           <div className="info__player_black">
+            <h3 className="info__heading color-side">Черные:</h3>
             <h3 className="info__heading blackPlayer">Black Player</h3>
             <img
               src={circle}

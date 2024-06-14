@@ -181,6 +181,26 @@ body {
   padding: 60px 30px;
 }
 
+.info > h3 {
+  font-weight: 600;
+}
+
+.info__player_white > h3, .info__player_black > h3 {
+  font-weight: 400;
+}
+
+.info__player_black, .info__player_white {
+  align-self: flex-start;
+}
+
+.whitePlayer {
+  margin-left: 22px;
+}
+
+.blackPlayer {
+  margin-left: 8px;
+}
+
 .info__player_white {
   margin-bottom: 20px;
 }
@@ -199,6 +219,8 @@ body {
   height: 20px;
   margin-bottom: 5px;
   margin-left: 10px;
+  align-self: flex-end;
+  display: inline-flex;
 }
 
 .info__status {
@@ -231,6 +253,12 @@ body {
 
 .info__btn + .info__btn {
   margin-left: 5px;
+}
+
+.color-side {
+  margin-right: 5px;
+  font-size: 1.2em;
+  color: rgb(73, 73, 75);
 }
 
 /* Board */
