@@ -1,17 +1,30 @@
 import useGlobal from '../../services/useGlobal.js';
+import '../../assets/scss/loader.scss';
 
 const NoConnectionPage = () => {
   const { globalState } = useGlobal();
 
   // console.log(globalState.connectionStatus);
   const messages = {
-    awaiting: 'Подключение устанавливается, ожидайте',
-    online: 'Подключение установлено, загрузка состояния',
-    offline: 'соединение потеряно, попробуйте перезагрузить страницу',
+    awaiting: (<h1 className="loader-title">Подключение устанавливается, ожидайте</h1>),
+    online: (<h1 className="loader-title">Подключение установлено, загрузка состояния</h1>),
+    offline: (<h1 className="loader-title">соединение потеряно, попробуйте перезагрузить страницу</h1>),
+  };
+
+  const color = {
+    awaiting: 'yellow',
+    online: 'green',
+    offline: 'red',
+
   };
 
   return (
-    <h1>{messages[globalState.connectionStatus]}</h1>
+    <>
+      {messages[globalState.connectionStatus]}
+      <div className="loader">
+        <div className={`loader-inner ${color[globalState.connectionStatus]}`} />
+      </div>
+    </>
   );
 };
 export default NoConnectionPage;

@@ -1,0 +1,70 @@
+.loader-title {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    /* width: 80px; 
+    height: 80px; */
+}
+
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+}
+
+.loader-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    animation: loader-spin 1.5s linear infinite;
+}
+
+.red {
+    background-color: #d81818;
+}
+
+.green {
+    background-color: chartreuse;
+}
+
+.yellow {
+    background-color: #f0d125;
+}
+
+.loader-inner::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: url('https://i.pinimg.com/originals/94/4b/93/944b93dba496cd01b8ef616ecd003819.jpg') no-repeat center center;
+    background-size: 100%;
+    animation: loader-animation 2s infinite ease-in-out;
+}
+
+@keyframes loader-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
