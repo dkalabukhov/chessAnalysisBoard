@@ -45,6 +45,7 @@ const PlayRoomPage = () => {
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
+    const surrenderButton = document.querySelector('#surrender');
 
     // **************** new >>>>>>>>
     console.log('app() loading >> globalState: ', globalState);
@@ -309,6 +310,21 @@ const PlayRoomPage = () => {
       });
     });
 
+    surrenderButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (board.getPlayerSide() === 'spectator') return;
+      const result = 'loss';
+      const sendReason = `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`;
+      const action = JSON.stringify({
+        action: 'finishGame',
+        payload: {
+          result,
+          reason: sendReason,
+        },
+      });
+      connection.send(action);
+    });
+
     render();
   };
 
@@ -349,7 +365,7 @@ const PlayRoomPage = () => {
             <button type="button" className="info__btn draw" title="Предложить ничью">
               <img src={draw} alt="Предложить ничью" srcSet="" />
             </button>
-            <button type="button" className="info__btn surrender" title="Сдаться">
+            <button type="button" id="surrender" className="info__btn surrender" title="Сдаться">
               <img src={surrender} alt="Сдаться" srcSet="" />
             </button>
           </form>
