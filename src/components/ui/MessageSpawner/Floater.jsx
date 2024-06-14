@@ -5,7 +5,7 @@ const Floater = ({ from, text, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 6000);
+    }, 8000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
