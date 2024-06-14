@@ -16,6 +16,17 @@ import useGlobal from '../../services/useGlobal.js';
 
 let appIsLoaded = false;
 
+const isLoadedAllProps = (globalState) => {
+  if (globalState.activeSide === undefined) return false;
+  if (globalState.isYourTurn === undefined) return false;
+  if (globalState.side === undefined) return false;
+  // if (globalState.fen === undefined) return false; // fen раздается только если был сделан ход
+  if (globalState.whitePlayerName === undefined) return false;
+  if (globalState.blackPlayerName === undefined) return false;
+  if (globalState.websocket === undefined) return false;
+  return true;
+};
+
 const PlayRoomPage = () => {
   const { globalState } = useGlobal();
 
@@ -40,9 +51,13 @@ const PlayRoomPage = () => {
     const state = {
       cursor: 'idle',
       figure: null,
-      turn: globalState.activeSide || 'white',
+      // isLoadedAllProps CHECK
+      // turn: globalState.activeSide || 'white',
+      turn: globalState.activeSide,
       activePlayer: globalState.activePlayer, // НАМ ЕЩЕ НУЖНО ЭТО СВОЙСТВО???
-      isYourTurn: globalState.isYourTurn || false,
+      // isLoadedAllProps CHECK
+      // isYourTurn: globalState.isYourTurn || false,
+      isYourTurn: globalState.isYourTurn,
       gameStarted: true,
       gameIsOver: false,
       yourSide: globalState.side,
@@ -53,9 +68,10 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
-    if (globalState.isYourTurn === undefined && globalState.side === 'white') {
-      state.isYourTurn = true;
-    }
+    // isLoadedAllProps CHECK
+    // if (globalState.isYourTurn === undefined && globalState.side === 'white') {
+    //   state.isYourTurn = true;
+    // }
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -297,11 +313,18 @@ const PlayRoomPage = () => {
   };
 
   useEffect(() => {
-    const connection = globalState.websocket;
-    if (!appIsLoaded) {
-      console.log('Loading PlayPage app()');
-      app(connection);
+    if (appIsLoaded) {
+      // console.log('appIsLoaded');
+      return;
     }
+    if (!isLoadedAllProps(globalState)) {
+      // console.log('not enaugth data');
+      // console.log(globalState);
+      return;
+    }
+    const connection = globalState.websocket;
+    console.log('Loading PlayPage app()');
+    app(connection);
     appIsLoaded = true;
   });
 
