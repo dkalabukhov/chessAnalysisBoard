@@ -88,7 +88,8 @@ const PlayRoomPage = () => {
         console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
         reason.textContent = 'Мат';
         state.gameIsOver = true;
-        const result = state.yourSide !== state.turn ? 'win' : 'loss';
+        // const result = state.yourSide !== state.turn ? 'win' : 'loss';
+        const result = state.isYourTurn ? 'loss' : 'win';
         const action = JSON.stringify({
           action: 'finishGame',
           payload: {
