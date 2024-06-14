@@ -10,8 +10,8 @@ import MessageSpawner from './ui/MessageSpawner/MessageSpawner';
 const App = () => {
   const { globalState } = useGlobal();
   // console.log(globalState.userCondition);
-  // console.log('=== new State ===');
-  // console.log(globalState);
+  console.log('=== new State ===');
+  console.log(globalState);
   const pages = {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,

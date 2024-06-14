@@ -1,9 +1,10 @@
 .loader-title {
     position: fixed;
-    top: 40%;
+    bottom: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 2em;
+    text-align: center;
     /* width: 80px; 
     height: 80px; */
 }
@@ -52,25 +53,28 @@
     background-size: 100%;
 }
 
-.loader-inner.green
-.loader-inner.yellow{
-    animation: loader-spin 1.5s linear infinite;
-}
-
-.loader-inner.green::before
-.loader-inner.yellow::before{
-    animation: loader-animation 2s infinite ease-in-out;
-
-}
 
 .loader-inner.red{
     animation: shake 1s ease-out infinite;
 }
 
 
+
 .loader-inner.red::before{
     animation: nod 1s infinite ease-in-out;
 }
+
+
+
+.loader-inner.green, .loader-inner.yellow{
+    animation: loader-spin 1.5s linear infinite;
+}
+
+.loader-inner.green::before, .loader-inner.yellow::before{
+    animation: loader-animation 2s infinite ease-in-out;
+
+}
+
 
 @keyframes shake {
     0% { transform: translateX(0) }
