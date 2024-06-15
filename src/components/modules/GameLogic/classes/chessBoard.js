@@ -34,7 +34,7 @@ export default class ChessBoard {
     this.isVirtualBoard = isVirtualBoard;
     this.setPlayerSide(playerSide);
 
-    this.currentTurnColor = null; // null ?
+    this.currentTurnColor = null;
     this.canCastleKingSideWhite = true;
     this.canCastleQueenSideWhite = true;
     this.canCastleKingSideBlack = true;
@@ -61,13 +61,6 @@ export default class ChessBoard {
 
     this.fenString = initFEN;
     this.loadFen(this.fenString);
-
-    // this.effect = null;
-    // this.activeFigure = {
-    //   ref: null,
-    //   currentCell: null,
-    //   targetCell: null,
-    // };
   }
 
   createCells() {
@@ -249,8 +242,6 @@ export default class ChessBoard {
     const turnColor = fen.turn === 'w' ? 'white' : 'black';
     this.fenString = fenString;
     if (!this.isVirtualBoard) this.updatePositionsArray();
-    // if (!this.isVirtualBoard) console.log('positionsArray: ', this.positionsArray);
-    // console.log('fenLoad: turnColor: ', turnColor);
     this.turnPrepare(turnColor);
   }
 
@@ -287,7 +278,6 @@ export default class ChessBoard {
     const fenInfo = ` ${newFenColor} ${fenCastles} ${fenEnpass} ${this.fiftyEmptyMovesCounter} ${this.turnsCount}`;
 
     this.fenString = `${fenArray.join('/')}${fenInfo}`;
-    // if (!this.isVirtualBoard) console.log('board current FEN: ', this.fenString);
   }
 
   // ### preparing and making turns, history
@@ -297,16 +287,7 @@ export default class ChessBoard {
     this.setAffects(figureCells);
     this.checkGameState(figureCells);
     if (!this.isVirtualBoard) {
-      // if (this.currentTurnColor === 'white') this.makeEmptyHistoryTurn();
       if (!this.turnsHistory[`turn${this.turnsCount}`]) this.makeEmptyHistoryTurn();
-
-      // const tempArray = Object.keys(this.turnsHistory).map(
-      //   // prettier-ignore
-      // eslint-disable-next-line max-len
-      //   (key) => `Turn #${this.turnsHistory[key].turn}::: white ${this.turnsHistory[key].figure.white} move: '${this.turnsHistory[key].move.white}' | black ${this.turnsHistory[key].figure.black} move: '${this.turnsHistory[key].move.black}'`,
-      // );
-      // console.log(tempArray.join('\n'));
-      // console.log(this.turnsHistory);
     }
   }
 
@@ -340,7 +321,6 @@ export default class ChessBoard {
 
   // ### checks and processing
   fixKingsAffects(figureCells, kingsCells) {
-    // console.log('board.fixKingsAffects()');
     const kingsColors = Object.keys(kingsCells);
     kingsColors.forEach((kingColor) => {
       const allDangerCells = figureCells.reduce((acc, cell) => {
@@ -358,7 +338,6 @@ export default class ChessBoard {
   }
 
   setAffects(figureCells) {
-    // console.log('board.setAffects()');
     this.cellNames.forEach((cellName) => {
       this.cellByName(cellName).canMoveToCells = [];
       this.cellByName(cellName).canAttackCells = [];
@@ -389,7 +368,6 @@ export default class ChessBoard {
   }
 
   checkAllMoves(figureCell) {
-    // console.log(`checkAllMoves ${figureCell.name}`);
     const figureName = figureCell.name;
     const isVirtualBoard = true;
 
@@ -416,7 +394,6 @@ export default class ChessBoard {
       testBoard.setAffects(testFigureCells);
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredMoves.push(cellName);
-      // if (testBoard.stalemate) console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
     });
     if (figureCell.figure.type === 'king') {
       const incorrectMove = getIncorrectCastleKingMove(figureCell, filteredMoves);
@@ -425,7 +402,6 @@ export default class ChessBoard {
       }
     }
     figureCell.canMoveToCells = [...filteredMoves];
-    // console.log(`canMoveToCells ${figureCell.canMoveToCells}`);
 
     attackCellsNames.forEach((cellName) => {
       const testBoard = new ChessBoard(this.fenString, this.currentTurnColor, isVirtualBoard);
@@ -436,7 +412,6 @@ export default class ChessBoard {
       testBoard.setAffects(testFigureCells);
       const testKingCell = testBoard.kingsCells[testBoard.currentTurnColor];
       if (!testKingCell.underAttackingCells.length) filteredAttacks.push(cellName);
-      // if (testBoard.stalemate) console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
     });
     figureCell.canAttackCells = [...filteredAttacks];
   }
@@ -465,11 +440,9 @@ export default class ChessBoard {
     if (!isAvailableMoves && this.isCheck(currentColor)) {
       this.checkmate = currentColor;
       this.kingsCells[currentColor].effect = 'incheck';
-      console.log('CHECKMATE!');
     }
     if (!isAvailableMoves && !this.isCheck(currentColor)) {
       this.stalemate = currentColor;
-      console.log('STALEMATE!');
     }
     if (this.fiftyEmptyMovesCounter >= 50) this.fiftyMovesDraw = true;
     if (figureCells.length <= 3) {
@@ -485,7 +458,6 @@ export default class ChessBoard {
     const canMove = figureCell.canMoveToCells.includes(targetCell.name);
     const canAttack = figureCell.canAttackCells.includes(targetCell.name);
     if (canMove || canAttack) {
-      // ##1>
       let castleMoveText;
       const { figure } = figureCell;
       const lostFigure = targetCell.figure;
@@ -503,25 +475,21 @@ export default class ChessBoard {
         const [currentPosition] = figureCell.xyCoordinates;
         const [targetPosition] = targetCell.xyCoordinates;
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g1') {
-          // ##1>
           castleMoveText = ' O-O';
           this.cellByName('h1').figure = null;
           this.cellByName('f1').figure = new ChessFigure('rook', 'white');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'g8') {
-          // ##1>
           castleMoveText = ' O-O';
           this.cellByName('h8').figure = null;
           this.cellByName('f8').figure = new ChessFigure('rook', 'black');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c1') {
-          // ##1>
           castleMoveText = ' O-O-O';
           this.cellByName('a1').figure = null;
           this.cellByName('d1').figure = new ChessFigure('rook', 'white');
         }
         if (Math.abs(currentPosition - targetPosition) === 2 && targetCell.name === 'c8') {
-          // ##1>
           castleMoveText = ' O-O-O';
           this.cellByName('a8').figure = null;
           this.cellByName('d8').figure = new ChessFigure('rook', 'black');
@@ -570,19 +538,16 @@ export default class ChessBoard {
       if (figure.type === 'pawn' || targetCell.figure) {
         this.fiftyEmptyMovesCounter = 0;
       } else this.fiftyEmptyMovesCounter += 1;
-      // ##1>
       if (!this.isVirtualBoard) {
         if (castleMoveText) {
           this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = 'king';
           this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = castleMoveText;
         } else {
-          // const moveText = castleMoveText || ` ${figureCell.name} - ${targetCell.name}`;
           const moveText = ` ${figureCell.name} - ${targetCell.name}`;
           this.turnsHistory[`turn${this.turnsCount}`].figure[figure.color] = figure.type;
           this.turnsHistory[`turn${this.turnsCount}`].move[figure.color] = moveText;
         }
       }
-      // ##1<
       targetCell.figure = figure;
       figureCell.figure = null;
       const [, targetYPosition] = targetCell.xyCoordinates;

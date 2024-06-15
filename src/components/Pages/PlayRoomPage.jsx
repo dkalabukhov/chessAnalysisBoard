@@ -20,7 +20,6 @@ const isLoadedAllProps = (globalState) => {
   if (globalState.activeSide === undefined) return false;
   if (globalState.isYourTurn === undefined) return false;
   if (globalState.side === undefined) return false;
-  // if (globalState.fen === undefined) return false; // fen раздается только если был сделан ход
   if (globalState.whitePlayerName === undefined) return false;
   if (globalState.blackPlayerName === undefined) return false;
   if (globalState.websocket === undefined) return false;
@@ -47,37 +46,25 @@ const PlayRoomPage = () => {
     const boardRows = document.querySelectorAll('.board__row');
     const surrenderButton = document.querySelector('#surrender');
 
-    // **************** new >>>>>>>>
     console.log('app() loading >> globalState: ', globalState);
     const state = {
       cursor: 'idle',
       figure: null,
-      // isLoadedAllProps CHECK
-      // turn: globalState.activeSide || 'white',
       turn: globalState.activeSide,
       activePlayer: globalState.activePlayer, // НАМ ЕЩЕ НУЖНО ЭТО СВОЙСТВО???
-      // isLoadedAllProps CHECK
-      // isYourTurn: globalState.isYourTurn || false,
       isYourTurn: globalState.isYourTurn,
       gameStarted: true,
       gameIsOver: false,
       yourSide: globalState.side,
     };
 
-    // const initFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     const initFEN = globalState.fen || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
-    // isLoadedAllProps CHECK
-    // if (globalState.isYourTurn === undefined && globalState.side === 'white') {
-    //   state.isYourTurn = true;
-    // }
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
-
-    // <<<<<<<<<<< **************** new
 
     const render = () => {
       if (board.pawnPromotion) {
@@ -122,7 +109,6 @@ const PlayRoomPage = () => {
           },
         });
         connection.send(action);
-        // } else turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       } else if (board.fiftyMovesDraw) {
         turn.textContent = 'Ничья';
         reason.textContent = 'Ничья по правилу 50 ходов';
@@ -148,10 +134,6 @@ const PlayRoomPage = () => {
         });
         connection.send(action);
       } else {
-        // turn.classList.remove('incheck');
-        // const name = state.activePlayer;
-        // const yourTurn = state.isYourTurn ? ' (твой ход)' : '';
-        // turn.textContent = `Ход: ${name} (${state.turn})${yourTurn}`;
         turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       }
       if (state.gameStarted) {
@@ -165,20 +147,13 @@ const PlayRoomPage = () => {
     };
 
     connection.addEventListener('message', (event) => {
-    // connection.onmessage = (event) => {
       const data = JSON.parse(event.data);
       switch (data.action) {
-        // case 'yourSide':
-        //   board.setPlayerSide(data.payload.side);
-        //   if (data.payload.side === 'black') reverseBoard(boardRows);
-        //   break;
         case 'gameState':
-          // console.log('new fen from server received!');
           if (data.payload.turnsHistory) {
             board.turnsHistory = data.payload.turnsHistory;
             renderMovesTable(domTable, board);
-            // console.log('Received history: ', board.turnsHistory);
-          } // else console.log('nothing,,,');
+          }
           board.loadFen(data.payload.fen);
           state.cursor = 'idle';
           state.figure = null;
@@ -189,24 +164,17 @@ const PlayRoomPage = () => {
           state.activePlayer = data.payload.activePlayer;
           state.isYourTurn = data.payload.isYourTurn;
           state.gameStarted = true;
-          // beep.loop = false;
-          // beep.play();
-          // console.log('render on turnstate! Turn: ', board.currentTurnColor);
-          // render();
           break;
         default:
-          // console.log('NEW unwatcheble server message: ', data);
+          console.log('NEW unwatcheble server message: ', data);
           break;
       }
-      // console.log('WEBSOCKET MESS: ', data);
     });
-    // };
 
     domBoard.addEventListener('click', (e) => {
       if (!state.isYourTurn || state.gameIsOver) return;
       switch (state.cursor) {
         case 'idle': {
-          // console.log('domBoard click event: state.cursor = idle');
           if (e.target.hasAttribute('alt')) {
             const activeCellName = e.target.parentElement.dataset.cell;
             const activeCell = board.cellByName(activeCellName);
@@ -219,7 +187,6 @@ const PlayRoomPage = () => {
           break;
         }
         case 'active': {
-          // console.log('domBoard click event: state.cursor = active');
           const targetCellName = e.target.alt
             ? e.target.parentElement.dataset.cell
             : e.target.dataset.cell;
@@ -280,7 +247,6 @@ const PlayRoomPage = () => {
             }),
           );
         }
-        // state.turn = board.currentTurnColor;
         state.cursor = 'idle';
         state.figure = null;
         renderMovesTable(domTable, board);
@@ -330,15 +296,8 @@ const PlayRoomPage = () => {
   };
 
   useEffect(() => {
-    if (appIsLoaded) {
-      // console.log('appIsLoaded');
-      return;
-    }
-    if (!isLoadedAllProps(globalState)) {
-      // console.log('not enaugth data');
-      // console.log(globalState);
-      return;
-    }
+    if (appIsLoaded) return;
+    if (!isLoadedAllProps(globalState)) return;
     const connection = globalState.websocket;
     console.log('Loading PlayPage app()');
     app(connection);
