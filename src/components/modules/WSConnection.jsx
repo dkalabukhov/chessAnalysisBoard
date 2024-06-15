@@ -47,7 +47,7 @@ const WSConnection = ({ children }) => {
     };
 
     websocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      // console.error('WebSocket error:', error);
       updateGlobalState({ connectionStatus: 'offline' });
     };
 

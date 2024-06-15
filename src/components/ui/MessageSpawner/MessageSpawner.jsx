@@ -18,7 +18,7 @@ const MessageSpawner = () => {
   useEffect(() => {
     globalState.websocket.addEventListener('message', (event) => {
       const { action, payload } = JSON.parse(event.data);
-      console.log(payload);
+      // console.log(payload);
       if (action === 'chat') addMessage(payload.from, payload.message);
     });
   }, []);

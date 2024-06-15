@@ -66,12 +66,14 @@ const PlayRoomPage = () => {
 
     // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
-    const whitePlayerFiled = document.querySelector('.whitePlayer');
-    const blackPlayerFiled = document.querySelector('.blackPlayer');
+    // const whitePlayerFiled = document.querySelector('.whitePlayer');
+    // const blackPlayerFiled = document.querySelector('.blackPlayer');
 
     const render = () => {
-      whitePlayerFiled.textContent = globalState.whitePlayerName;
-      blackPlayerFiled.textContent = globalState.blackPlayerName;
+      // whitePlayerFiled.textContent = globalState.whitePlayerName;
+      // blackPlayerFiled.textContent = globalState.blackPlayerName;
+      document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+      document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
 
       if (board.pawnPromotion) {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
