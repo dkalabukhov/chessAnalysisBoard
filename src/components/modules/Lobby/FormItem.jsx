@@ -18,6 +18,17 @@ const FormItem = () => {
     // sendAction(globalState.websocket, 'rename', { userName: event.target.value });
   };
 
+  const copyID = () => {
+    navigator.clipboard
+      .writeText(globalState.gameID)
+      .then(() => {
+        console.log('ID скопирован');
+      })
+      .catch(() => {
+        console.error('Не удалось скопировать текст: ', err);
+      });
+  };
+
   return (
     <Form form={form}>
       <div style={{ width: '50%' }}>
@@ -27,7 +38,7 @@ const FormItem = () => {
         <div style={{ flex: 1 }}>
           <CustomInput text="ID комнаты" value={globalState.gameID} />
         </div>
-        <img src={copyLogo} alt="copy-logo" style={{ marginTop: 19 }} />
+        <img src={copyLogo} alt="copy-logo" style={{ marginTop: 19 }} onClick={copyID} />
       </div>
       <div className="form-row">
         <div style={{ width: '50%' }}>
