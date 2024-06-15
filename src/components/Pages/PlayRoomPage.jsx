@@ -119,6 +119,10 @@ const PlayRoomPage = () => {
           state.isYourTurn = data.payload.isYourTurn;
           state.gameStarted = true;
           break;
+        case 'drawProposal':
+          // eslint-disable-next-line no-alert
+          alert('Соперник предлагает ничью!');
+          break;
         default:
           console.log('NEW unwatchable server message: ', data);
           break;
@@ -233,7 +237,7 @@ const PlayRoomPage = () => {
 
     surrenderButton.addEventListener('click', (e) => {
       e.preventDefault();
-      if (board.getPlayerSide() === 'spectator') return;
+      if (board.isSpectator()) return;
       const result = 'loss';
       const sendReason = `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`;
       const action = JSON.stringify({
@@ -243,7 +247,15 @@ const PlayRoomPage = () => {
           reason: sendReason,
         },
       });
-      if (!board.isSpectator()) connection.send(action);
+      connection.send(action);
+    });
+
+    proposeDrawButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (board.isSpectator()) return;
+      console.log('you propose draw!');
+      const action = JSON.stringify({ action: 'proposeDraw', payload: null });
+      connection.send(action);
     });
 
     render();
