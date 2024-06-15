@@ -448,3 +448,27 @@ td > img {
   cursor: default  !important;
 }
 
+.copyIDbutton{
+  border-radius: 5px;
+  // background-color: rgb(148, 146, 146);
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.5));
+  cursor: pointer;
+  // align-self: center;
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.copyIDbutton:hover{
+  position: relative;
+  top:-2px;
+  left:-2px;
+  filter: drop-shadow(2px 2px 3px rgb(0 0 0 / 0.5));
+}
+
+.copyIDbutton:active{
+  position: relative;
+  top:0px;
+  left:0px;
+  filter: drop-shadow(0px 0px 1px rgb(0 0 0 / 0.7));
+}
