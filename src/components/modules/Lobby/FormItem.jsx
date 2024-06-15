@@ -30,10 +30,13 @@ const FormItem = () => {
         <img src={copyLogo} alt="copy-logo" style={{ marginTop: 19 }} />
       </div>
       <div className="form-row">
-        <div style={{ width: '60%' }}>
+        <div style={{ width: '50%' }}>
           <GroupButtons />
         </div>
-        <PlayersBlock />
+        <div style={{ width: '50%' }}>
+          <PlayersBlock />
+        </div>
+
       </div>
       <div className="form-row">
         <div className="row-item">
