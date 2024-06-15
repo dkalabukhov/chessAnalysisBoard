@@ -6,6 +6,8 @@ import useGlobal from '../services/useGlobal';
 import NoConnectionPage from './Pages/NoConnectionPage';
 import ResultsPage from './Pages/ResultsPage';
 import MessageSpawner from './ui/MessageSpawner/MessageSpawner';
+import CustomButton from './ui/CustomButton/CustomButton';
+import action from '../services/action';
 
 const App = () => {
   const { globalState } = useGlobal();
@@ -15,11 +17,11 @@ const App = () => {
   const pages = {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,
-    inGame: <PlayRoomPage />,
+    inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={action('leave')} />],
     onResultScreen: <ResultsPage />,
   };
-  return (
 
+  return (
     globalState.connectionStatus === 'online' && globalState.userCondition
       ? (
         <>
