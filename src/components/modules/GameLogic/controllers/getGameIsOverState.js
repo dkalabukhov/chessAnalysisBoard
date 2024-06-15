@@ -1,4 +1,4 @@
-const getFinishGameState = (board, state) => {
+const getGameIsOverState = (board, state) => {
   const actionValue = 'finishGame';
   if (board.checkmate) {
     const turnContext = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
@@ -65,4 +65,4 @@ const getFinishGameState = (board, state) => {
   return null;
 };
 
-export default getFinishGameState;
+export default getGameIsOverState;

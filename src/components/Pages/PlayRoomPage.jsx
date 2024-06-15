@@ -11,7 +11,7 @@ import renderMovesTable from '../modules/GameLogic/renders/renderMovesTable.js';
 import pickFigure from '../modules/GameLogic/controllers/pickFigure.js';
 import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
 import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
-import getFinishGameState from '../modules/GameLogic/controllers/getFinishGameState.js';
+import getGameIsOverState from '../modules/GameLogic/controllers/getGameIsOverState.js';
 
 import useGlobal from '../../services/useGlobal.js';
 
@@ -46,6 +46,7 @@ const PlayRoomPage = () => {
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
     const surrenderButton = document.querySelector('#surrender');
+    const proposeDrawButton = document.querySelector('#propose_draw');
 
     console.log('app() loading >> globalState: ', globalState);
     const state = {
@@ -64,27 +65,27 @@ const PlayRoomPage = () => {
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
 
-    // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-    // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+    document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+    document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
     // const whitePlayerFiled = document.querySelector('.whitePlayer');
     // const blackPlayerFiled = document.querySelector('.blackPlayer');
 
     const render = () => {
       // whitePlayerFiled.textContent = globalState.whitePlayerName;
       // blackPlayerFiled.textContent = globalState.blackPlayerName;
-      document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-      document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+      // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+      // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
 
       if (board.pawnPromotion) {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
-      const finishGameState = getFinishGameState(board, state);
-      if (finishGameState) {
+      const gameIsOverState = getGameIsOverState(board, state);
+      if (gameIsOverState) {
         state.gameIsOver = true;
-        turn.textContent = finishGameState.turnContext;
-        reason.textContent = finishGameState.reasonContext;
-        console.log(`${finishGameState.turnContext}. Причина: ${finishGameState.reasonContext}`);
-        if (!board.isSpectator()) connection.send(finishGameState.action);
+        turn.textContent = gameIsOverState.turnContext;
+        reason.textContent = gameIsOverState.reasonContext;
+        console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
+        if (!board.isSpectator()) connection.send(gameIsOverState.action);
       } else {
         turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       }
@@ -102,8 +103,7 @@ const PlayRoomPage = () => {
       const data = JSON.parse(event.data);
       switch (data.action) {
         case 'gameState':
-          console.log('gameState MES: ', data);
-          if (board.isSpectator()) console.log(globalState.whitePlayerName);
+          // console.log('gameState MES: ', data);
           if (data.payload.turnsHistory) {
             board.turnsHistory = data.payload.turnsHistory;
             renderMovesTable(domTable, board);
@@ -120,7 +120,7 @@ const PlayRoomPage = () => {
           state.gameStarted = true;
           break;
         default:
-          // console.log('NEW unwatchable server message: ', data);
+          console.log('NEW unwatchable server message: ', data);
           break;
       }
     });
@@ -276,7 +276,7 @@ const PlayRoomPage = () => {
           <h3 className="info__status">Ход белых</h3>
           <span className="info__reason" />
           <form className="info__form">
-            <button type="button" className="info__btn draw" title="Предложить ничью">
+            <button type="button" id="propose_draw" className="info__btn draw" title="Предложить ничью">
               <img src={draw} alt="Предложить ничью" srcSet="" />
             </button>
             <button type="button" id="surrender" className="info__btn surrender" title="Сдаться">
