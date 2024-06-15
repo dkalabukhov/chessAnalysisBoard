@@ -11,6 +11,7 @@ import renderMovesTable from '../modules/GameLogic/renders/renderMovesTable.js';
 import pickFigure from '../modules/GameLogic/controllers/pickFigure.js';
 import ChessBoard from '../modules/GameLogic/classes/chessBoard.js';
 import reverseBoard from '../modules/GameLogic/renders/reverseBoard.js';
+import getFinishGameState from '../modules/GameLogic/controllers/getFinishGameState.js';
 
 import useGlobal from '../../services/useGlobal.js';
 
@@ -63,76 +64,25 @@ const PlayRoomPage = () => {
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
 
-    document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-    document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+    // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+    // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+    const whitePlayerFiled = document.querySelector('.whitePlayer');
+    const blackPlayerFiled = document.querySelector('.blackPlayer');
 
     const render = () => {
+      whitePlayerFiled.textContent = globalState.whitePlayerName;
+      blackPlayerFiled.textContent = globalState.blackPlayerName;
+
       if (board.pawnPromotion) {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
-      if (board.checkmate) {
-        turn.textContent = `${state.turn === 'white' ? 'Черные' : 'Белые'} победили`;
-        console.log(`${state.turn === 'white' ? 'Черные' : 'Белые'} победили`);
-        reason.textContent = 'Мат';
+      const finishGameState = getFinishGameState(board, state);
+      if (finishGameState) {
         state.gameIsOver = true;
-        // const result = state.yourSide !== state.turn ? 'win' : 'loss';
-        const result = state.isYourTurn ? 'loss' : 'win';
-        const action = JSON.stringify({
-          action: 'finishGame',
-          payload: {
-            result,
-            reason: 'Мат',
-          },
-        });
-        connection.send(action);
-      } else if (board.stalemate) {
-        turn.textContent = 'Ничья';
-        reason.textContent = 'Пат';
-        state.gameIsOver = true;
-        const action = JSON.stringify({
-          action: 'finishGame',
-          payload: {
-            result: 'draw',
-            reason: 'Пат',
-          },
-        });
-        connection.send(action);
-      } else if (board.autoDraw) {
-        turn.textContent = 'Ничья';
-        reason.textContent = 'Недостаточно фигур для мата';
-        state.gameIsOver = true;
-        const action = JSON.stringify({
-          action: 'finishGame',
-          payload: {
-            result: 'draw',
-            reason: 'Недостаточно фигур для мата',
-          },
-        });
-        connection.send(action);
-      } else if (board.fiftyMovesDraw) {
-        turn.textContent = 'Ничья';
-        reason.textContent = 'Ничья по правилу 50 ходов';
-        state.gameIsOver = true;
-        const action = JSON.stringify({
-          action: 'finishGame',
-          payload: {
-            result: 'draw',
-            reason: 'Ничья по правилу 50 ходов',
-          },
-        });
-        connection.send(action);
-      } else if (board.threeFold) {
-        turn.textContent = 'Ничья';
-        reason.textContent = 'Троекратное повторение позиции';
-        state.gameIsOver = true;
-        const action = JSON.stringify({
-          action: 'finishGame',
-          payload: {
-            result: 'draw',
-            reason: 'Троекратное повторение позиции',
-          },
-        });
-        connection.send(action);
+        turn.textContent = finishGameState.turnContext;
+        reason.textContent = finishGameState.reasonContext;
+        console.log(`${finishGameState.turnContext}. Причина: ${finishGameState.reasonContext}`);
+        if (!board.isSpectator()) connection.send(finishGameState.action);
       } else {
         turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       }
@@ -150,6 +100,8 @@ const PlayRoomPage = () => {
       const data = JSON.parse(event.data);
       switch (data.action) {
         case 'gameState':
+          console.log('gameState MES: ', data);
+          if (board.isSpectator()) console.log(globalState.whitePlayerName);
           if (data.payload.turnsHistory) {
             board.turnsHistory = data.payload.turnsHistory;
             renderMovesTable(domTable, board);
@@ -166,7 +118,7 @@ const PlayRoomPage = () => {
           state.gameStarted = true;
           break;
         default:
-          console.log('NEW unwatcheble server message: ', data);
+          // console.log('NEW unwatchable server message: ', data);
           break;
       }
     });
@@ -289,7 +241,7 @@ const PlayRoomPage = () => {
           reason: sendReason,
         },
       });
-      connection.send(action);
+      if (!board.isSpectator()) connection.send(action);
     });
 
     render();
