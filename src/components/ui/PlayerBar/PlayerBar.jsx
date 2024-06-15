@@ -7,7 +7,7 @@ const PlayerBar = ({ status = 'online', playerName = 'игрок', isHost }) => 
   return (
     <div className="playerBar">
       <div className={`playerStatus ${status}`} />
-      <div>{playerName}</div>
+      <div className="playerName">{playerName}</div>
       <img className="crown" src={crownIcon} style={{ display: isVisible }} alt="Host" />
     </div>
   );
