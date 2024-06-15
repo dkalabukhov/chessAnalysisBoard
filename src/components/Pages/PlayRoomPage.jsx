@@ -123,6 +123,14 @@ const PlayRoomPage = () => {
           // eslint-disable-next-line no-alert
           alert('Соперник предлагает ничью!');
           break;
+        case 'winProposal':
+          // eslint-disable-next-line no-alert
+          if (data.payload.ableToDeclareWin) {
+            alert('Соперник давно в оффлайне - ты можешь требовать победу!');
+          } else {
+            alert('про... ты свое счастье.......');
+          }
+          break;
         default:
           console.log('NEW unwatchable server message: ', data);
           break;
@@ -238,13 +246,11 @@ const PlayRoomPage = () => {
     surrenderButton.addEventListener('click', (e) => {
       e.preventDefault();
       if (board.isSpectator()) return;
-      const result = 'loss';
-      const sendReason = `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`;
       const action = JSON.stringify({
         action: 'finishGame',
         payload: {
-          result,
-          reason: sendReason,
+          result: 'loss',
+          reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
         },
       });
       connection.send(action);
@@ -316,6 +322,7 @@ const PlayRoomPage = () => {
             <div className="cell" data-cell="f8" />
             <div className="cell" data-cell="g8" />
             <div className="cell" data-cell="h8" />
+            {/* <div className="cell" data-cell="h8" /> */}
           </div>
           <div className="board__row" data-row={7}>
             <div className="cell" data-cell="a7" />
