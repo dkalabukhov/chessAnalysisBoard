@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGlobal from '../../../services/useGlobal';
 import './Modal.css';
 import Floater from './Floater';
@@ -15,11 +15,13 @@ const MessageSpawner = () => {
     setMessages((prev) => prev.filter((message) => message.id !== id));
   };
 
-  globalState.websocket.addEventListener('message', (event) => {
-    const { action, payload } = JSON.parse(event.data);
-    console.log(payload);
-    if (action === 'chat') addMessage(payload.from, payload.message);
-  });
+  useEffect(() => {
+    globalState.websocket.addEventListener('message', (event) => {
+      const { action, payload } = JSON.parse(event.data);
+      console.log(payload);
+      if (action === 'chat') addMessage(payload.from, payload.message);
+    });
+  }, []);
 
   return (
     <div>
