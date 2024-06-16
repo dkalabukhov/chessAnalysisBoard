@@ -1,15 +1,15 @@
 import useGlobal from '../../../services/useGlobal';
 import PlayerBar from '../../ui/PlayerBar/PlayerBar';
 
-const PlayersBlock = () => {
+const PlayersBlock = ({ width }) => {
   const { globalState } = useGlobal();
   return (
     <div style={{
-      display: 'flex', flexDirection: 'column', gap: '2px',
+      display: 'flex', flexDirection: 'column', gap: '2px', width,
     }}
     >
       <span>Список игроков</span>
-      <div className="players-block" style={{ overflowY: 'auto' }}>
+      <div className="players-block" style={{ overflowY: 'auto', width }}>
         {globalState.playerList
         && globalState.playerList.map((player, index) => (
 
