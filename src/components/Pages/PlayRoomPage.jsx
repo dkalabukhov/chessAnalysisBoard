@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 
-// import circle from '../../assets/images/chessTable/circle.svg';
-
 import FenParser from '../modules/GameLogic/controllers/fenParser.js';
 import renderCell from '../modules/GameLogic/renders/renderCell.js';
 import { createModalPiecesElements, renderModal } from '../modules/GameLogic/renders/renderModal.js';
@@ -46,8 +44,8 @@ const PlayRoomPage = () => {
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
-    const surrenderButton = document.querySelector('#surrender');
-    const proposeDrawButton = document.querySelector('#propose_draw');
+    // const surrenderButton = document.querySelector('#surrender');
+    // const proposeDrawButton = document.querySelector('#propose_draw');
 
     console.log('app() loading >> globalState: ', globalState);
     const state = {
@@ -121,10 +119,10 @@ const PlayRoomPage = () => {
           state.isYourTurn = data.payload.isYourTurn;
           state.gameStarted = true;
           break;
-        case 'drawProposal':
-          // eslint-disable-next-line no-alert
-          alert('Соперник предлагает ничью!');
-          break;
+        // case 'drawProposal':
+        //   // eslint-disable-next-line no-alert
+        //   alert('Соперник предлагает ничью!');
+        //   break;
         case 'winProposal':
           // eslint-disable-next-line no-alert
           if (data.payload.ableToDeclareWin) {
@@ -247,26 +245,26 @@ const PlayRoomPage = () => {
       });
     });
 
-    surrenderButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (board.isSpectator()) return;
-      const action = JSON.stringify({
-        action: 'finishGame',
-        payload: {
-          result: 'loss',
-          reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
-        },
-      });
-      connection.send(action);
-    });
+    // surrenderButton.addEventListener('click', (e) => {
+    //   e.preventDefault();
+    //   if (board.isSpectator()) return;
+    //   const action = JSON.stringify({
+    //     action: 'finishGame',
+    //     payload: {
+    //       result: 'loss',
+    //       reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
+    //     },
+    //   });
+    //   connection.send(action);
+    // });
 
-    proposeDrawButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (board.isSpectator()) return;
-      console.log('you propose draw!');
-      const action = JSON.stringify({ action: 'proposeDraw', payload: null });
-      connection.send(action);
-    });
+    // proposeDrawButton.addEventListener('click', (e) => {
+    //   e.preventDefault();
+    //   if (board.isSpectator()) return;
+    //   console.log('you propose draw!');
+    //   const action = JSON.stringify({ action: 'proposeDraw', payload: null });
+    //   connection.send(action);
+    // });
 
     render();
     beep.play();
