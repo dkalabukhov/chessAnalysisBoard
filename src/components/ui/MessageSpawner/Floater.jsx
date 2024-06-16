@@ -11,7 +11,7 @@ const Floater = ({ from, text, onClose }) => {
   }, [onClose]);
 
   return ReactDOM.createPortal(
-    <div className="modal">
+    <div className="floaterModal">
 
       {`${from}: ${text}`}
     </div>,
