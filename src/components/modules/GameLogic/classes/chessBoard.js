@@ -160,7 +160,6 @@ export default class ChessBoard {
     this.positionsArray.push(currentPosition);
     const countCurrentPosition = this.positionsArray.filter((el) => el === currentPosition).length;
     if (countCurrentPosition > 2) this.threeFold = true;
-    // if (!this.isVirtualBoard) console.log(countCurrentPosition);
   }
 
   clearPositionsArray() {
@@ -294,6 +293,11 @@ export default class ChessBoard {
   makeTurn() {
     if (this.currentTurnColor === 'black') this.turnsCount += 1;
     this.setFEN();
+  }
+
+  setNewTurnsHistory(newHistory) {
+    this.turnsHistory = { ...newHistory };
+    if (!this.turnsHistory[`turn${this.turnsCount}`]) this.makeEmptyHistoryTurn();
   }
 
   makeEmptyHistoryTurn() {

@@ -64,6 +64,7 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
+    if (globalState.turnsHistory) board.setNewTurnsHistory(globalState.turnsHistory);
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -267,6 +268,7 @@ const PlayRoomPage = () => {
     });
 
     render();
+    renderMovesTable(domTable, board);
   };
 
   useEffect(() => {
