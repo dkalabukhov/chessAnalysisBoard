@@ -1,5 +1,3 @@
-// import getAvailableCells from './getAvailableCells.js';
-
 export default (activeCell, board) => {
   activeCell.canMoveToCells.forEach((cell) => {
     board.cellByName(cell).effect = 'dot';

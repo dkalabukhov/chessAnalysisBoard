@@ -8,16 +8,23 @@ import ResultsPage from './Pages/ResultsPage';
 import MessageSpawner from './ui/MessageSpawner/MessageSpawner';
 import CustomButton from './ui/CustomButton/CustomButton';
 import action from '../services/action';
+import sendAction from '../services/sendAction';
 
 const App = () => {
   const { globalState } = useGlobal();
   // console.log(globalState.userCondition);
-  console.log('=== new State ===');
-  console.log(globalState);
+  // console.log('=== new State ===');
+  // console.log(globalState);
   const pages = {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,
-    inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={action('leave')} />],
+    // inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={action('leave')} />],
+    inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={() => {
+      if (globalState.side === 'spectator') {
+        sendAction(globalState.websocket, 'leave');
+        window.location.reload();
+      }
+     }} />],
     onResultScreen: <ResultsPage />,
   };
 

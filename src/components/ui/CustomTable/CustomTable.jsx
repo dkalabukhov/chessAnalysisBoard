@@ -6,7 +6,7 @@ const CustomTable = ({ columns, data }) => {
   const { globalState } = useGlobal();
   const onRowClick = (record, rowIndex) => ({
     onClick: (event) => {
-      console.log(`Подключение к ID: ${record.gameID}`);
+      // console.log(`Подключение к ID: ${record.gameID}`);
       sendAction(globalState.websocket, 'join', { gameID: record.gameID });
     },
   });

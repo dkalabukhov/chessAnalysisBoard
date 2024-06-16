@@ -14,7 +14,7 @@ const FormItem = () => {
   const { globalState } = useGlobal();
 
   const handleGameNameChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     // sendAction(globalState.websocket, 'rename', { userName: event.target.value });
   };
 
