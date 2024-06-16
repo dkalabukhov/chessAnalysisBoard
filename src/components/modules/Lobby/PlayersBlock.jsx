@@ -11,20 +11,15 @@ const PlayersBlock = () => {
       <span>Список игроков</span>
       <div className="players-block" style={{ overflowY: 'auto' }}>
         {globalState.playerList
-        && globalState.playerList.map((player, index) => {
-          console.log('перерисовка');
-          console.log(player);
-          console.log(player.isHost);
-          return (
+        && globalState.playerList.map((player, index) => (
 
-            <PlayerBar
-              key={index}
-              playerName={player.userName}
-              status={player.connectionStatus}
-              isHost={player.isHost}
-            />
-          );
-        })}
+          <PlayerBar
+            key={index}
+            playerName={player.userName}
+            status={player.connectionStatus}
+            isHost={player.isHost}
+          />
+        ))}
       </div>
     </div>
   );
