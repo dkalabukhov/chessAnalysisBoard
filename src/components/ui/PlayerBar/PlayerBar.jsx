@@ -1,4 +1,3 @@
-import './PlayerBar.scss';
 // import { ReactComponent as MyIcon } from '../../../../public/assets/crown.svg';
 import crownIcon from '../../../assets/images/crown.svg';
 

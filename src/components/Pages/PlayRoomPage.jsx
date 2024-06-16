@@ -15,6 +15,7 @@ import getGameIsOverState from '../modules/GameLogic/controllers/getGameIsOverSt
 
 import useGlobal from '../../services/useGlobal.js';
 import Board from './Board.jsx';
+import TopPlayer from './TopPlayer.jsx';
 
 let appIsLoaded = false;
 
@@ -41,7 +42,7 @@ const PlayRoomPage = () => {
     const fenForm = document.querySelector('.fen__form');
     const fenInput = document.querySelector('.fen__input');
     const domTable = document.querySelector('tbody');
-    const boardFEN = document.querySelector('.board__fen');
+    // const boardFEN = document.querySelector('.board__fen');
     const pickFigureModal = document.querySelector('.pickFigureModal');
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
@@ -98,7 +99,7 @@ const PlayRoomPage = () => {
         const domCell = document.querySelector(`[data-cell="${name}"]`);
         renderCell(board.cellByName(name), domCell);
       });
-      boardFEN.textContent = board.fenString;
+      fenInput.value = board.fenString;
     };
 
     connection.addEventListener('message', (event) => {
@@ -285,6 +286,7 @@ const PlayRoomPage = () => {
   return (
     <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
+      <TopPlayer />
       <div className="wrapper">
         <div className="info">
           <div className="info__player_white">

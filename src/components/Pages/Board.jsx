@@ -1,3 +1,5 @@
+import BottomPlayer from "./BottomPlayer.jsx";
+
 const Board = () => (
   <div className="board">
     <div className="board__row" data-row={9}>
@@ -120,13 +122,11 @@ const Board = () => (
       <div className="xA-cell" data-cell="top-a">h</div>
       <div className="empty-cell" data-cell="top-empty" />
     </div>
+    <BottomPlayer />
     <div className="fen">
       <form className="fen__form">
         <h3 className="fen__heading">FEN</h3>
         <input type="text" className="fen__input" />
-        <button type="submit" className="fen__btn">Загрузить</button>
-        <h3 className="fen__heading">Board FEN: </h3>
-        <span className="board__fen" />
       </form>
     </div>
   </div>

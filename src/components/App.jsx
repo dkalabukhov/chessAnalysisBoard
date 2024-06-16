@@ -19,12 +19,7 @@ const App = () => {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,
     // inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={action('leave')} />],
-    inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={() => {
-      if (globalState.side === 'spectator') {
-        sendAction(globalState.websocket, 'leave');
-        window.location.reload();
-      }
-     }} />],
+    inGame: <PlayRoomPage />,
     onResultScreen: <ResultsPage />,
   };
 
