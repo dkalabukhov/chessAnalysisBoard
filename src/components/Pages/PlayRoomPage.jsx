@@ -36,7 +36,7 @@ const PlayRoomPage = () => {
     const reason = document.querySelector('.info__reason');
     // const whiteIcon = document.querySelector('.white-icon');
     const blackIcon = document.querySelector('.black-icon');
-    // const beep = document.querySelector('#beep');
+    const beep = document.querySelector('.beep');
     const fenForm = document.querySelector('.fen__form');
     const fenInput = document.querySelector('.fen__input');
     const domTable = document.querySelector('tbody');
@@ -64,6 +64,7 @@ const PlayRoomPage = () => {
     const board = new ChessBoard(initFEN);
     board.setPlayerSide(globalState.side);
     if (globalState.side === 'black') reverseBoard(boardRows);
+    if (globalState.turnsHistory) board.setNewTurnsHistory(globalState.turnsHistory);
 
     document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
     document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
@@ -267,6 +268,8 @@ const PlayRoomPage = () => {
     });
 
     render();
+    beep.play();
+    renderMovesTable(domTable, board);
   };
 
   useEffect(() => {
@@ -458,6 +461,7 @@ const PlayRoomPage = () => {
           <div className="pickFigureModal__pieces" />
         </div>
       </div>
+      <audio src="../assets/beep.mp3" className = "beep" />
     </>
   );
 };
