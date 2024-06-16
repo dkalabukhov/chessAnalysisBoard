@@ -2,7 +2,7 @@ import { Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 // import { useNavigate } from 'react-router-dom';
 import CustomInput from '../../ui/CustomInput/CustomInput';
-import copyLogo from '../../../assets/images/copy-logo.png';
+import copyIcon from '../../../assets/images/copy-icon.svg';
 import CustomButton from '../../ui/CustomButton/CustomButton';
 import PlayersBlock from './PlayersBlock';
 import GroupButtons from './GroupButtons';
@@ -18,6 +18,17 @@ const FormItem = () => {
     // sendAction(globalState.websocket, 'rename', { userName: event.target.value });
   };
 
+  const copyID = () => {
+    navigator.clipboard
+      .writeText(globalState.gameID)
+      .then(() => {
+        console.log('ID скопирован');
+      })
+      .catch(() => {
+        console.error('Не удалось скопировать текст: ', err);
+      });
+  };
+
   return (
     <Form form={form}>
       <div style={{ width: '50%' }}>
@@ -27,13 +38,22 @@ const FormItem = () => {
         <div style={{ flex: 1 }}>
           <CustomInput text="ID комнаты" value={globalState.gameID} />
         </div>
-        <img src={copyLogo} alt="copy-logo" style={{ marginTop: 19 }} />
+        <img
+          className="copyIDbutton"
+          src={copyIcon}
+          alt="copy-logo"
+          // style={{ marginTop: 19 }}
+          onClick={copyID}
+        />
       </div>
       <div className="form-row">
-        <div style={{ width: '60%' }}>
+        <div style={{ width: '50%' }}>
           <GroupButtons />
         </div>
-        <PlayersBlock />
+        <div style={{ width: '50%' }}>
+          <PlayersBlock />
+        </div>
+
       </div>
       <div className="form-row">
         <div className="row-item">

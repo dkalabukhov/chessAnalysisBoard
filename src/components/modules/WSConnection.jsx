@@ -33,6 +33,7 @@ const WSConnection = ({ children }) => {
 
     websocket.onopen = () => {
       // console.log('Connected to the WebSocket server');
+      setInterval(() => { sendAction(websocket, 'ping'); }, 20000);
       updateGlobalState({ connectionStatus: 'online' });
       identification(websocket);
     };
