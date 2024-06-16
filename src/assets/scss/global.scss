@@ -499,3 +499,19 @@ td > img {
   left:0px;
   filter: drop-shadow(0px 0px 1px rgb(0 0 0 / 0.7));
 }
+
+
+.roomName {
+  padding: 1px;
+  font-size: 18px;  
+  font-weight: 700;
+  color: black;
+}
+.roomName::placeholder { 
+  color: black;
+}
+
+
+.roomName.host::placeholder { 
+  color: gray;
+}

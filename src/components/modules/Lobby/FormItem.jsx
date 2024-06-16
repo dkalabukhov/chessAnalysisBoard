@@ -8,6 +8,7 @@ import PlayersBlock from './PlayersBlock';
 import GroupButtons from './GroupButtons';
 import action from '../../../services/action';
 import useGlobal from '../../../services/useGlobal';
+import sendAction from '../../../services/sendAction';
 
 const FormItem = () => {
   const [form] = useForm();
@@ -15,7 +16,7 @@ const FormItem = () => {
 
   const handleGameNameChange = (event) => {
     // console.log(event.target.value);
-    // sendAction(globalState.websocket, 'rename', { userName: event.target.value });
+    if (event.target.value) sendAction(globalState.websocket, 'renameGame', { newGameName: event.target.value });
   };
 
   const copyID = () => {
@@ -32,7 +33,16 @@ const FormItem = () => {
   return (
     <Form form={form}>
       <div style={{ width: '50%' }}>
-        <CustomInput text="Игровая комната" disabled={!globalState.youAreHost} defaultValue={globalState.gameName} onChange={handleGameNameChange} />
+        <CustomInput
+          className={`roomName ${globalState.youAreHost ? 'host' : ''}`}
+          text="Игровая комната"
+          disabled={!globalState.youAreHost}
+          // style={{ value: globalState.gameName }}
+          label={globalState.gameName}
+          defaultValue={globalState.gameName}
+          onPressEnter={handleGameNameChange}
+          onBlur={handleGameNameChange}
+        />
       </div>
       <div className="form-row">
         <div style={{ flex: 1 }}>

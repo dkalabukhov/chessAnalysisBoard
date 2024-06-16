@@ -1,19 +1,20 @@
 import { Input, Form } from 'antd';
 
 const CustomInput = ({
-  text, label, disabled, value, onChange, defaultValue, onBlur, onPressEnter,
+  text, label, disabled, value, onChange, defaultValue, onBlur, onPressEnter, className,
 }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
     <span className="form-label">{text}</span>
     <Form.Item>
       <Input
-        placeholder={label}
+        className={className}
         value={value}
-        defaultValue={defaultValue}
         onChange={onChange}
         onBlur={onBlur}
         onPressEnter={onPressEnter}
         disabled={disabled}
+        placeholder={label}
+        defaultValue={defaultValue}
       />
     </Form.Item>
   </div>
