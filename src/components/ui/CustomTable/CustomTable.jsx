@@ -1,8 +1,10 @@
 import { Table } from 'antd';
 import sendAction from '../../../services/sendAction';
 import useGlobal from '../../../services/useGlobal';
+import action from '../../../services/action';
+import CustomButton from '../CustomButton/CustomButton';
 
-const CustomTable = ({ columns, data }) => {
+const CustomTable = ({ columns, data, newGameName }) => {
   const { globalState } = useGlobal();
   const onRowClick = (record, rowIndex) => ({
     onClick: (event) => {
@@ -18,7 +20,13 @@ const CustomTable = ({ columns, data }) => {
       dataSource={data}
       onRow={onRowClick}
       bordered
-
+      locale={{
+        emptyText: <>
+          <p> Нет открытых комнат. </p>
+          <p>Но вы може создать свою.</p>
+          <CustomButton text="Создать" className="row-btn" onClick={action('createGame', newGameName ? { gameName: newGameName } : null)} />
+                   </>,
+      }}
     />
   );
 };
