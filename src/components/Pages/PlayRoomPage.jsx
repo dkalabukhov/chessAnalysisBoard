@@ -36,7 +36,7 @@ const PlayRoomPage = () => {
     const reason = document.querySelector('.info__reason');
     // const whiteIcon = document.querySelector('.white-icon');
     const blackIcon = document.querySelector('.black-icon');
-    // const beep = document.querySelector('#beep');
+    const beep = document.querySelector('.beep');
     const fenForm = document.querySelector('.fen__form');
     const fenInput = document.querySelector('.fen__input');
     const domTable = document.querySelector('tbody');
@@ -268,6 +268,7 @@ const PlayRoomPage = () => {
     });
 
     render();
+    beep.play();
     renderMovesTable(domTable, board);
   };
 
@@ -460,6 +461,7 @@ const PlayRoomPage = () => {
           <div className="pickFigureModal__pieces" />
         </div>
       </div>
+      <audio src="../assets/beep.mp3" className = "beep" />
     </>
   );
 };
