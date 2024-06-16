@@ -31,6 +31,7 @@ const customTheme = {
     headerBorderRadius: 10,
     fontFamily: 'Cabin, sans-serif',
     rowHoverBg: '#00f7ff09',
+    lineHeight: '14px',
   },
   Form: {
     itemMarginBottom: 12,

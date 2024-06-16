@@ -41,7 +41,7 @@ const FormItem = () => {
         </div>
         <div className="form-row">
           <div className="row-item"><CustomInput text="Игровая комната" label="комната Pavel" onChange={handlenewGameNameChange} /></div>
-          <div className="row-item"><CustomButton text="Создать" className="row-btn" onClick={action('createGame', { gameName: newGameName || `${globalState.userName}\`s board` })} /></div>
+          <div className="row-item"><CustomButton text="Создать" className="row-btn" onClick={action('createGame', newGameName ? { gameName: newGameName } : null)} /></div>
         </div>
       </Form>
       <Form form={joinForm}>

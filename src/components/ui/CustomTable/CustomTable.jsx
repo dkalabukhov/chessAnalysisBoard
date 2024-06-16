@@ -12,7 +12,14 @@ const CustomTable = ({ columns, data }) => {
   });
   return (
 
-    <Table columns={columns} dataSource={data} onRow={onRowClick} bordered />
+    <Table
+      pagination={{ defaultPageSize: 5 }}
+      columns={columns}
+      dataSource={data}
+      onRow={onRowClick}
+      bordered
+
+    />
   );
 };
 
