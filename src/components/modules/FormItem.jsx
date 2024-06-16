@@ -37,7 +37,7 @@ const FormItem = () => {
     <>
       <Form form={newForm}>
         <div style={{ width: '50%' }}>
-          <CustomInput text="Ваше имя" label="Введите своё имя" defaultValue={globalState.userName} onChange={handleNameChange} />
+          <CustomInput text="Ваше имя" label="Введите своё имя" defaultValue={globalState.userName} onPressEnter={handleNameChange} onBlur={handleNameChange} />
         </div>
         <div className="form-row">
           <div className="row-item"><CustomInput text="Игровая комната" label="комната Pavel" onChange={handlenewGameNameChange} /></div>
@@ -52,6 +52,7 @@ const FormItem = () => {
           </div>
         </div>
         <CustomTable
+          newGameName={newGameName}
           columns={columns}
           data={roomsData}
         />
