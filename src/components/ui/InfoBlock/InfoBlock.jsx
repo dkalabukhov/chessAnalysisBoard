@@ -10,11 +10,11 @@ import action from '../../../services/action';
 
 const InfoBtn = ({
   // text, image, alt, width, hide, imgSize = '40px', onClick,
-  text, image, width, hide, imgSize = '40px', onClick,
+  text, image, width, hide, imgSize = '40px', onClick, color = 'none',
 }) => {
   console.log(hide);
   const style = {
-    background: 'none',
+    background: color,
     border: '1px solid rgb(209, 208, 208)',
     borderRadius: '5px',
     padding: '5px 10px',
@@ -85,6 +85,7 @@ const InfoBlock = () => {
             image={draw}
             width={halfWidth}
             onClick={action('finishGame', { result: 'draw', reason: 'по соглашению игроков.' })}
+            color="lightgreen"
           />
           <InfoBtn
             text="Отказ"
@@ -92,6 +93,7 @@ const InfoBlock = () => {
             imgSize="32px"
             width={halfWidth}
             onClick={() => { refusalMessage(); updateGlobalState({ ableToDeclareDraw: false }); }}
+            color="rgb(255, 176, 176)"
           />
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={globalState.ableToDeclareDraw}>
