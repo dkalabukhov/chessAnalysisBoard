@@ -77,6 +77,7 @@ const InfoBlock = () => {
             image={win}
             width={btnWidth}
             onClick={action('finishGame', { result: 'win', reason: 'противник отсутствовал слишком долго.' })}
+            color="lightgreen"
           />
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={!globalState.ableToDeclareDraw}>
@@ -85,7 +86,7 @@ const InfoBlock = () => {
             image={draw}
             width={halfWidth}
             onClick={action('finishGame', { result: 'draw', reason: 'по соглашению игроков.' })}
-            color="lightgreen"
+            color="rgb(255, 255, 96)"
           />
           <InfoBtn
             text="Отказ"
