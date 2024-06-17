@@ -1,4 +1,4 @@
-import BottomPlayer from "./BottomPlayer.jsx";
+import BottomPlayer from './BottomPlayer.jsx';
 
 const Board = () => (
   <div className="board">
@@ -127,6 +127,9 @@ const Board = () => (
       <form className="fen__form">
         <h3 className="fen__heading">FEN</h3>
         <input type="text" className="fen__input" />
+        {/* roll back! */}
+        <button type="submit" className="fen__btn">Загрузить</button>
+        {/* roll back! */}
       </form>
     </div>
   </div>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { useEffect } from 'react';
 
 import FenParser from '../modules/GameLogic/controllers/fenParser.js';
@@ -80,15 +81,15 @@ const PlayRoomPage = () => {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
       const gameIsOverState = getGameIsOverState(board, state);
-      // if (gameIsOverState) {
-      //   state.gameIsOver = true;
-      //   turn.textContent = gameIsOverState.turnContext;
-      //   reason.textContent = gameIsOverState.reasonContext;
-      //   console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
-      //   if (!board.isSpectator()) connection.send(gameIsOverState.action);
-      // } else {
-      //   turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
-      // }
+      if (gameIsOverState) {
+        state.gameIsOver = true;
+        // turn.textContent = gameIsOverState.turnContext;
+        // reason.textContent = gameIsOverState.reasonContext;
+        console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
+        if (!board.isSpectator()) connection.send(gameIsOverState.action);
+      } else {
+        // turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+      }
       // if (state.gameStarted) {
       //   blackIcon.setAttribute('src', '../assets/greenDot.svg');
       // }
@@ -96,7 +97,8 @@ const PlayRoomPage = () => {
         const domCell = document.querySelector(`[data-cell="${name}"]`);
         renderCell(board.cellByName(name), domCell);
       });
-      fenInput.value = board.fenString;
+      // roll back!
+      // fenInput.value = board.fenString;
     };
 
     connection.addEventListener('message', (event) => {
@@ -194,7 +196,8 @@ const PlayRoomPage = () => {
 
     fenForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!state.isYourTurn || state.gameIsOver) return;
+      // if (!state.isYourTurn || state.gameIsOver) return;
+      if (!state.isYourTurn) return;
       const fenString = fenInput.value.trim();
       if (!FenParser.isFen(fenString)) {
         // eslint-disable-next-line no-alert
