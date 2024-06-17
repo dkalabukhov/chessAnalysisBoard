@@ -19,8 +19,8 @@ const App = () => {
     outOfGame: <HomePage />,
     inLobby: <LobbyPage />,
     // inGame: [<PlayRoomPage />, <CustomButton text="выйти" onClick={action('leave')} />],
-    inGame: <PlayRoomPage />,
-    onResultScreen: <ResultsPage />,
+    inGame: <PlayRoomPage leftBlock="game" />,
+    onResultScreen: <PlayRoomPage leftBlock="results" />,
   };
 
   return (
