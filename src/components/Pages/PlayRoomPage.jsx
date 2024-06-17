@@ -14,6 +14,7 @@ import useGlobal from '../../services/useGlobal.js';
 import Board from './Board.jsx';
 import TopPlayer from './TopPlayer.jsx';
 import InfoBlock from '../ui/InfoBlock/InfoBlock.jsx';
+import ResultsBlock from '../ui/ResultsBlock/ResultsBlock.jsx';
 
 let appIsLoaded = false;
 
@@ -27,7 +28,7 @@ const isLoadedAllProps = (globalState) => {
   return true;
 };
 
-const PlayRoomPage = () => {
+const PlayRoomPage = ({ leftBlock }) => {
   const { globalState } = useGlobal();
 
   const app = (connection) => {
@@ -288,9 +289,8 @@ const PlayRoomPage = () => {
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
       <TopPlayer />
       <div className="wrapper">
-
-        <InfoBlock />
-
+        {leftBlock === 'game' && <InfoBlock />}
+        {leftBlock === 'results' && <ResultsBlock />}
         <Board />
 
         <div className="moves">
