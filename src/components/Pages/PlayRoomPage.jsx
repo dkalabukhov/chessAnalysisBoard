@@ -1,8 +1,4 @@
 import { useEffect } from 'react';
-import draw from '../../assets/images/chessTable/draw.png';
-import surrender from '../../assets/images/chessTable/surrender.png';
-import circle from '../../assets/images/chessTable/circle.svg';
-import greenDot from '../../assets/images/chessTable/greenDot.svg';
 
 import FenParser from '../modules/GameLogic/controllers/fenParser.js';
 import renderCell from '../modules/GameLogic/renders/renderCell.js';
@@ -16,6 +12,7 @@ import getGameIsOverState from '../modules/GameLogic/controllers/getGameIsOverSt
 import useGlobal from '../../services/useGlobal.js';
 import Board from './Board.jsx';
 import TopPlayer from './TopPlayer.jsx';
+import InfoBlock from '../ui/InfoBlock/InfoBlock.jsx';
 
 let appIsLoaded = false;
 
@@ -34,10 +31,10 @@ const PlayRoomPage = () => {
 
   const app = (connection) => {
     const domBoard = document.querySelector('.board');
-    const turn = document.querySelector('.info__status');
-    const reason = document.querySelector('.info__reason');
+    // const turn = document.querySelector('.info__status');
+    // const reason = document.querySelector('.info__reason');
     // const whiteIcon = document.querySelector('.white-icon');
-    const blackIcon = document.querySelector('.black-icon');
+    // const blackIcon = document.querySelector('.black-icon');
     const beep = document.querySelector('.beep');
     const fenForm = document.querySelector('.fen__form');
     const fenInput = document.querySelector('.fen__input');
@@ -47,8 +44,8 @@ const PlayRoomPage = () => {
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
-    const surrenderButton = document.querySelector('#surrender');
-    const proposeDrawButton = document.querySelector('#propose_draw');
+    // const surrenderButton = document.querySelector('#surrender');
+    // const proposeDrawButton = document.querySelector('#propose_draw');
 
     console.log('app() loading >> globalState: ', globalState);
     const state = {
@@ -68,8 +65,8 @@ const PlayRoomPage = () => {
     if (globalState.side === 'black') reverseBoard(boardRows);
     if (globalState.turnsHistory) board.setNewTurnsHistory(globalState.turnsHistory);
 
-    document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-    document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
+    // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
+    // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
     // const whitePlayerFiled = document.querySelector('.whitePlayer');
     // const blackPlayerFiled = document.querySelector('.blackPlayer');
 
@@ -83,18 +80,18 @@ const PlayRoomPage = () => {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
       const gameIsOverState = getGameIsOverState(board, state);
-      if (gameIsOverState) {
-        state.gameIsOver = true;
-        turn.textContent = gameIsOverState.turnContext;
-        reason.textContent = gameIsOverState.reasonContext;
-        console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
-        if (!board.isSpectator()) connection.send(gameIsOverState.action);
-      } else {
-        turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
-      }
-      if (state.gameStarted) {
-        blackIcon.setAttribute('src', '../assets/greenDot.svg');
-      }
+      // if (gameIsOverState) {
+      //   state.gameIsOver = true;
+      //   turn.textContent = gameIsOverState.turnContext;
+      //   reason.textContent = gameIsOverState.reasonContext;
+      //   console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
+      //   if (!board.isSpectator()) connection.send(gameIsOverState.action);
+      // } else {
+      //   turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
+      // }
+      // if (state.gameStarted) {
+      //   blackIcon.setAttribute('src', '../assets/greenDot.svg');
+      // }
       board.cellNames.forEach((name) => {
         const domCell = document.querySelector(`[data-cell="${name}"]`);
         renderCell(board.cellByName(name), domCell);
@@ -122,10 +119,10 @@ const PlayRoomPage = () => {
           state.isYourTurn = data.payload.isYourTurn;
           state.gameStarted = true;
           break;
-        case 'drawProposal':
-          // eslint-disable-next-line no-alert
-          alert('Соперник предлагает ничью!');
-          break;
+        // case 'drawProposal':
+        //   // eslint-disable-next-line no-alert
+        //   alert('Соперник предлагает ничью!');
+        //   break;
         case 'winProposal':
           // eslint-disable-next-line no-alert
           if (data.payload.ableToDeclareWin) {
@@ -248,26 +245,26 @@ const PlayRoomPage = () => {
       });
     });
 
-    surrenderButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (board.isSpectator()) return;
-      const action = JSON.stringify({
-        action: 'finishGame',
-        payload: {
-          result: 'loss',
-          reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
-        },
-      });
-      connection.send(action);
-    });
+    // surrenderButton.addEventListener('click', (e) => {
+    //   e.preventDefault();
+    //   if (board.isSpectator()) return;
+    //   const action = JSON.stringify({
+    //     action: 'finishGame',
+    //     payload: {
+    //       result: 'loss',
+    //       reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
+    //     },
+    //   });
+    //   connection.send(action);
+    // });
 
-    proposeDrawButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (board.isSpectator()) return;
-      console.log('you propose draw!');
-      const action = JSON.stringify({ action: 'proposeDraw', payload: null });
-      connection.send(action);
-    });
+    // proposeDrawButton.addEventListener('click', (e) => {
+    //   e.preventDefault();
+    //   if (board.isSpectator()) return;
+    //   console.log('you propose draw!');
+    //   const action = JSON.stringify({ action: 'proposeDraw', payload: null });
+    //   connection.send(action);
+    // });
 
     render();
     beep.play();
@@ -288,45 +285,18 @@ const PlayRoomPage = () => {
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
       <TopPlayer />
       <div className="wrapper">
-        <div className="info">
-          <div className="info__player_white">
-            <h3 className="info__heading color-side">Белые:</h3>
-            <h3 className="info__heading whitePlayer">White Player</h3>
-            <img
-              src={greenDot}
-              className="info__icon white-icon"
-              alt=""
-              srcSet=""
-            />
-          </div>
-          <h3 className="info__status">Ход белых</h3>
-          <span className="info__reason" />
-          <form className="info__form">
-            <button type="button" id="propose_draw" className="info__btn draw" title="Предложить ничью">
-              <img src={draw} alt="Предложить ничью" srcSet="" />
-            </button>
-            <button type="button" id="surrender" className="info__btn surrender" title="Сдаться">
-              <img src={surrender} alt="Сдаться" srcSet="" />
-            </button>
-          </form>
-          <div className="info__player_black">
-            <h3 className="info__heading color-side">Черные:</h3>
-            <h3 className="info__heading blackPlayer">Black Player</h3>
-            <img
-              src={circle}
-              className="info__icon black-icon"
-              alt=""
-              srcSet=""
-            />
-          </div>
-        </div>
+
+        <InfoBlock />
+
         <Board />
+
         <div className="moves">
           <h5 className="moves__heading">История ходов:</h5>
           <table className="table table-hover">
             <tbody />
           </table>
         </div>
+
       </div>
       <div className="pickFigureModal">
         <div className="pickFigureModal__content">
