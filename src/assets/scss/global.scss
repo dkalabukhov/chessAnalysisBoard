@@ -235,18 +235,21 @@ body {
 
 .info__status {
   font-size: 1.5em;
+  color:rgb(172, 16, 16);
 }
 
-
-
 .info__reason {
-  color: rgb(93, 92, 92);
-  font-size: 15px;
+  color: rgb(82, 42, 42);
+  font-size: 1.2em;
   margin-bottom: 1.3em;
 }
 
+.info__players {
+  color:rgba(16, 9, 99, 0.836);
+  font-size: 1.2em;
+}
+
 .info__btn {
- 
   border: none;
   background: none;
   border: 1px solid rgb(209, 208, 208);

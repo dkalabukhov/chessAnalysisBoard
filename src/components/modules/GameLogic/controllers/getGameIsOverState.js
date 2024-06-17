@@ -8,7 +8,7 @@ const getGameIsOverState = (board, state) => {
       action: actionValue,
       payload: {
         result,
-        reason: 'Мат',
+        reason: 'мат.',
       },
     });
     return { turnContext, reasonContext, action };
@@ -20,7 +20,7 @@ const getGameIsOverState = (board, state) => {
       action: actionValue,
       payload: {
         result: 'draw',
-        reason: 'Пат',
+        reason: 'пат.',
       },
     });
     return { turnContext, reasonContext, action };
@@ -32,7 +32,7 @@ const getGameIsOverState = (board, state) => {
       action: actionValue,
       payload: {
         result: 'draw',
-        reason: 'Недостаточно фигур для мата',
+        reason: 'недостаточно фигур для мата.',
       },
     });
     return { turnContext, reasonContext, action };
@@ -44,7 +44,7 @@ const getGameIsOverState = (board, state) => {
       action: actionValue,
       payload: {
         result: 'draw',
-        reason: 'Ничья по правилу 50 ходов',
+        reason: 'правило 50 ходов.',
       },
     });
     return { turnContext, reasonContext, action };
@@ -56,7 +56,7 @@ const getGameIsOverState = (board, state) => {
       action: actionValue,
       payload: {
         result: 'draw',
-        reason: 'Троекратное повторение позиции',
+        reason: 'троекратное повторение позиции.',
       },
     });
     return { turnContext, reasonContext, action };

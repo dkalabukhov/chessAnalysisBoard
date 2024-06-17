@@ -1,4 +1,4 @@
-import action from '../../services/action';
+// import action from '../../services/action';
 import sendAction from '../../services/sendAction';
 import useGlobal from '../../services/useGlobal';
 import CustomButton from '../ui/CustomButton/CustomButton';
@@ -12,14 +12,14 @@ const ResultsPage = () => {
   };
   return (
     <div>
-      <h1>игра завершилась</h1>
+      <h1>Игра завершилась</h1>
       <p>
-        исход:
+        Исход:
         {' '}
         {resultName[globalState.result]}
       </p>
       <p>
-        причина:
+        Причина:
         {' '}
         {globalState.reason}
       </p>

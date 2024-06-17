@@ -1,4 +1,4 @@
-import { message } from 'antd';
+// import { message } from 'antd';
 import draw from '../../../assets/images/chessTable/draw.png';
 import surrender from '../../../assets/images/chessTable/surrender.png';
 import win from '../../../assets/images/win.svg';
@@ -9,7 +9,8 @@ import HeaderDiv from '../CustomCard/HeaderDiv';
 import action from '../../../services/action';
 
 const InfoBtn = ({
-  text, image, alt, width, hide, imgSize = '40px', onClick,
+  // text, image, alt, width, hide, imgSize = '40px', onClick,
+  text, image, width, hide, imgSize = '40px', onClick,
 }) => {
   console.log(hide);
   const style = {
@@ -75,7 +76,7 @@ const InfoBlock = () => {
             text="Объявить победу"
             image={win}
             width={btnWidth}
-            onClick={action('finishGame', { result: 'win', reason: 'Противник отсутствовал слишком долго.' })}
+            onClick={action('finishGame', { result: 'win', reason: 'противник отсутствовал слишком долго.' })}
           />
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={!globalState.ableToDeclareDraw}>
@@ -83,7 +84,7 @@ const InfoBlock = () => {
             text="Ничья"
             image={draw}
             width={halfWidth}
-            onClick={action('finishGame', { result: 'draw', reason: 'Игроки сошлись на ничьей' })}
+            onClick={action('finishGame', { result: 'draw', reason: 'по соглашению игроков.' })}
           />
           <InfoBtn
             text="Отказ"
@@ -95,7 +96,7 @@ const InfoBlock = () => {
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={globalState.ableToDeclareDraw}>
           <InfoBtn
-            text="Предложить ниью"
+            text="Предложить ничью"
             image={draw}
             width={btnWidth}
             onClick={action('proposeDraw')}

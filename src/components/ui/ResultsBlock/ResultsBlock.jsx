@@ -1,6 +1,6 @@
-import draw from '../../../assets/images/chessTable/draw.png';
-import surrender from '../../../assets/images/chessTable/surrender.png';
-import win from '../../../assets/images/win.svg';
+// import draw from '../../../assets/images/chessTable/draw.png';
+// import surrender from '../../../assets/images/chessTable/surrender.png';
+// import win from '../../../assets/images/win.svg';
 import useGlobal from '../../../services/useGlobal';
 import HeaderDiv from '../CustomCard/HeaderDiv';
 import sendAction from '../../../services/sendAction';
@@ -28,7 +28,8 @@ const FlexContainer = ({
 );
 
 const ResultsBlock = () => {
-  const { globalState, updateGlobalState } = useGlobal();
+  // const { globalState, updateGlobalState } = useGlobal();
+  const { globalState } = useGlobal();
   const btnWidth = '220px';
   const styleCentered = {
     textAlign: 'center', alignSelfSelf: 'center', justifySelf: 'center', margin: 'auto',
@@ -40,32 +41,41 @@ const ResultsBlock = () => {
       <form className="info__form" style={{ marginTop: 'auto' }}>
         <FlexContainer width={btnWidth} flexDirection="column">
           <p className="info__status" style={styleCentered}>
-            игра завершилась
+            Игра завершилась
           </p>
         </FlexContainer>
         <FlexContainer width={btnWidth}>
           {globalState.isDraw
             ? (
               <p className="info__status" style={styleCentered}>
-                ничьей
+                ничьей.
               </p>
             )
             : (
               <p style={styleCentered} className="info__status">
                 {'победой '}
-                {globalState.winnerSide === 'white' && 'белых'}
-                {globalState.winnerSide === 'black' && 'черных'}
+                {globalState.winnerSide === 'white' && 'белых.'}
+                {globalState.winnerSide === 'black' && 'черных.'}
               </p>
             )}
         </FlexContainer>
-        <FlexContainer width={btnWidth}>
-          <p style={styleCentered} className="info__status">
-            {'причина: '}
+        {/* <FlexContainer width={btnWidth}>
+          <p style={styleCentered} className="info__reason">
+
+            {'Причина: '}
           </p>
         </FlexContainer>
         <FlexContainer width={btnWidth}>
-          <p style={styleCentered} className="info__status">
+          <p style={styleCentered} className="info__reason">
 
+            {globalState.reason}
+          </p>
+        </FlexContainer> */}
+        <FlexContainer width={btnWidth}> </FlexContainer>
+        <FlexContainer width={btnWidth}>
+          <p className="info__reason">
+
+            {'Причина: '}
             {globalState.reason}
           </p>
         </FlexContainer>
@@ -73,9 +83,9 @@ const ResultsBlock = () => {
         { globalState.winnerName
         && (
         <FlexContainer width={btnWidth}>
-          <p>
+          <p className="info__players">
 
-            {globalState.isWinner ? 'Вы победили' : `Победитель:${globalState.winnerName}`}
+            {globalState.isWinner ? 'Вы победили.' : `${globalState.winnerName} победил.`}
           </p>
         </FlexContainer>
         )}
@@ -83,9 +93,9 @@ const ResultsBlock = () => {
         { globalState.looserName
         && (
         <FlexContainer width={btnWidth}>
-          <p>
+          <p className="info__players">
 
-            {globalState.isLooser ? 'Вы проиграли' : `Победитель:${globalState.looserName}`}
+            {globalState.isLooser ? 'Вы проиграли.' : `${globalState.looserName} проиграл.`}
           </p>
         </FlexContainer>
         )}

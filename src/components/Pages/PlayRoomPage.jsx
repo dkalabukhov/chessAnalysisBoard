@@ -137,7 +137,7 @@ const PlayRoomPage = ({ leftBlock }) => {
           }
           break;
         default:
-          console.log('NEW unwatchable server message: ', data);
+          // console.log('NEW unwatchable server message: ', data);
           break;
       }
     });
@@ -197,8 +197,7 @@ const PlayRoomPage = ({ leftBlock }) => {
 
     fenForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // if (!state.isYourTurn || state.gameIsOver) return;
-      if (!state.isYourTurn) return;
+      if (!state.isYourTurn || state.gameIsOver) return;
       const fenString = fenInput.value.trim();
       if (!FenParser.isFen(fenString)) {
         // eslint-disable-next-line no-alert
