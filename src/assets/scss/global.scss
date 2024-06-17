@@ -611,6 +611,10 @@ td > img {
 
 // Top/Bottom player
 
+.top-player {
+  padding-top: 25px;
+}
+
 .top-player, .bottom-player {
   display: flex;
   margin-top: 5px;
@@ -632,5 +636,11 @@ td > img {
   width: 22px;
   height: 22px;
   margin-left: 5px;
+  margin-bottom: 10px;
+}
+
+// FenCopy
+
+.fen-copy {
   margin-bottom: 10px;
 }

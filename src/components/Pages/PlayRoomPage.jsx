@@ -99,7 +99,7 @@ const PlayRoomPage = ({ leftBlock }) => {
         renderCell(board.cellByName(name), domCell);
       });
       // roll back!
-      // fenInput.value = board.fenString;
+      fenInput.value = board.fenString;
     };
 
     connection.addEventListener('message', (event) => {
