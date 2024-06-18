@@ -74,6 +74,7 @@ const FormItem = () => {
             text="Начать партию"
             className="row-btn"
             onClick={action('startMatch', { fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' })}
+            hide={globalState.side === 'spectator'}
           />
         </div>
       </div>
