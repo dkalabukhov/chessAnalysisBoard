@@ -30,6 +30,7 @@ const FlexContainer = ({
 const ResultsBlock = () => {
   // const { globalState, updateGlobalState } = useGlobal();
   const { globalState } = useGlobal();
+  console.log('ResultsBlock globalState: ', globalState);
   const btnWidth = '220px';
   const styleCentered = {
     textAlign: 'center', alignSelfSelf: 'center', justifySelf: 'center', margin: 'auto',

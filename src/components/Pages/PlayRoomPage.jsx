@@ -92,6 +92,9 @@ const PlayRoomPage = ({ leftBlock }) => {
           state.turn = data.payload.activeSide;
           state.isYourTurn = data.payload.isYourTurn;
           break;
+        case 'gameEnded':
+          state.gameIsOver = true;
+          break;
         default:
           // console.log('NEW unwatchable server message: ', data);
           break;
@@ -99,7 +102,7 @@ const PlayRoomPage = ({ leftBlock }) => {
     });
 
     domBoard.addEventListener('click', (e) => {
-      if (!state.isYourTurn || state.gameIsOver) return;
+      if (!state.isYourTurn || state.gameIsOver || globalState.result) return;
       switch (state.cursor) {
         case 'idle': {
           if (e.target.hasAttribute('alt')) {
@@ -153,7 +156,7 @@ const PlayRoomPage = ({ leftBlock }) => {
 
     fenForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!state.isYourTurn || state.gameIsOver) return;
+      if (!state.isYourTurn || state.gameIsOver || globalState.result) return;
       const fenString = fenInput.value.trim();
       if (!FenParser.isFen(fenString)) {
         // eslint-disable-next-line no-alert
@@ -211,11 +214,18 @@ const PlayRoomPage = ({ leftBlock }) => {
 
   useEffect(() => {
     if (appIsLoaded) return;
-    if (!isLoadedAllProps(globalState)) return;
     const connection = globalState.websocket;
-    console.log('Loading PlayPage app()');
-    app(connection);
-    appIsLoaded = true;
+    if (globalState.result) {
+      console.log('playpage Reload: GAME IS OVER!!!');
+      app(connection);
+      appIsLoaded = true;
+      return;
+    }
+    if (isLoadedAllProps(globalState)) {
+      console.log('Loading PlayPage app()');
+      app(connection);
+      appIsLoaded = true;
+    }
   });
 
   return (
