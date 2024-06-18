@@ -4,11 +4,7 @@ import LobbyPage from './Pages/LobbyPage';
 import PlayRoomPage from './Pages/PlayRoomPage';
 import useGlobal from '../services/useGlobal';
 import NoConnectionPage from './Pages/NoConnectionPage';
-import ResultsPage from './Pages/ResultsPage';
 import MessageSpawner from './ui/MessageSpawner/MessageSpawner';
-import CustomButton from './ui/CustomButton/CustomButton';
-import action from '../services/action';
-import sendAction from '../services/sendAction';
 
 const App = () => {
   const { globalState } = useGlobal();
