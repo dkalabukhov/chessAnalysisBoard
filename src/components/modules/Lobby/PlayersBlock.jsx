@@ -8,7 +8,7 @@ const PlayersBlock = ({ width, padding }) => {
       display: 'flex', flexDirection: 'column', gap: '2px', width, textAlign: 'center', padding,
     }}
     >
-      <span>Список игроков</span>
+      <span>В комнате находятся:</span>
       <div className="players-block" style={{ overflowY: 'auto', width }}>
         {globalState.playerList
         && globalState.playerList.map((player, index) => (
