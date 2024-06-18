@@ -7,14 +7,12 @@ import useGlobal from '../../../services/useGlobal';
 import PlayersBlock from '../../modules/Lobby/PlayersBlock';
 import HeaderDiv from '../CustomCard/HeaderDiv';
 import action from '../../../services/action';
-import CustomButton from '../CustomButton/CustomButton';
-import sendAction from '../../../services/sendAction';
+import leaveIcon from '../../../assets/images/logouticon.png';
 
 const InfoBtn = ({
   // text, image, alt, width, hide, imgSize = '40px', onClick,
   text, image, width, hide, imgSize = '40px', onClick, color = 'none',
 }) => {
-  console.log('InfoBtn hide value: ', hide);
   const style = {
     background: color,
     border: '1px solid rgb(209, 208, 208)',
@@ -67,12 +65,14 @@ const InfoBlock = () => {
   // const propose = action('proposeDraw');
   // const proposalMessage = action('chat', { message: 'Предлагаю ничью!' });
   const refusalMessage = action('chat', { message: 'Я отказываюсь от ничьей!' });
+  const isSpectator = globalState.side === 'spectator';
   return (
     <div className="info">
       <HeaderDiv />
       <h3 className="info__status">{activeSideText[globalState.activeSide]}</h3>
       <form className="info__form">
         <FlexContainer width={btnWidth}>
+          {!isSpectator && (
           <InfoBtn
             hide={!globalState.ableToDeclareWin}
             text="Объявить победу"
@@ -81,51 +81,61 @@ const InfoBlock = () => {
             onClick={action('finishGame', { result: 'win', reason: 'противник отсутствовал слишком долго.' })}
             color="lightgreen"
           />
+          )}
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={!globalState.ableToDeclareDraw}>
-          <InfoBtn
-            text="Ничья"
-            image={draw}
-            width={halfWidth}
-            onClick={action('finishGame', { result: 'draw', reason: 'по соглашению игроков.' })}
-            color="rgb(255, 255, 96)"
-          />
-          <InfoBtn
-            text="Отказ"
-            image={cross}
-            imgSize="32px"
-            width={halfWidth}
-            onClick={() => { refusalMessage(); updateGlobalState({ ableToDeclareDraw: false }); }}
-            color="rgb(255, 176, 176)"
-          />
+          {!isSpectator && (
+          <>
+            <InfoBtn
+              text="Ничья"
+              image={draw}
+              width={halfWidth}
+              onClick={action('finishGame', { result: 'draw', reason: 'по соглашению игроков.' })}
+              color="rgb(255, 255, 96)"
+            />
+            <InfoBtn
+              text="Отказ"
+              image={cross}
+              imgSize="32px"
+              width={halfWidth}
+              onClick={() => { refusalMessage(); updateGlobalState({ ableToDeclareDraw: false }); }}
+              color="rgb(255, 176, 176)"
+            />
+          </>
+          )}
         </FlexContainer>
         <FlexContainer width={btnWidth} hide={globalState.ableToDeclareDraw}>
+          {!isSpectator && (
           <InfoBtn
             text="Предложить ничью"
             image={draw}
             width={btnWidth}
             onClick={action('proposeDraw')}
           />
+          )}
+          {isSpectator && (
+          <InfoBtn
+            text="Покинуть игру"
+            image={leaveIcon}
+            width={btnWidth}
+            onClick={action('leave')}
+          />
+          )}
         </FlexContainer>
         <FlexContainer width={btnWidth}>
+          {!isSpectator && (
           <InfoBtn
             text="Сдаться"
             image={surrender}
             width={btnWidth}
             onClick={action('finishGame', { result: 'loss', reason: `${globalState.userName} сдался.` })}
           />
+          )}
         </FlexContainer>
       </form>
 
       <PlayersBlock width="100%" padding="32px" />
-      <FlexContainer width={btnWidth} justifySelf="end">
-        <CustomButton
-          text="Выйти в главное меню"
-          className="row-btn"
-          onClick={() => { sendAction(globalState.websocket, 'leave'); window.location.reload(); }}
-          hide={globalState.side !== 'spectator'}
-        />
-      </FlexContainer>
+      <FlexContainer width={btnWidth} justifySelf="end" />
     </div>
   );
 };
