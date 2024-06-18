@@ -12,7 +12,7 @@ const InfoBtn = ({
   // text, image, alt, width, hide, imgSize = '40px', onClick,
   text, image, width, hide, imgSize = '40px', onClick, color = 'none',
 }) => {
-  console.log(hide);
+  console.log('InfoBtn hide value: ', hide);
   const style = {
     background: color,
     border: '1px solid rgb(209, 208, 208)',

@@ -33,30 +33,21 @@ const PlayRoomPage = ({ leftBlock }) => {
 
   const app = (connection) => {
     const domBoard = document.querySelector('.board');
-    // const turn = document.querySelector('.info__status');
-    // const reason = document.querySelector('.info__reason');
-    // const whiteIcon = document.querySelector('.white-icon');
-    // const blackIcon = document.querySelector('.black-icon');
     const beep = document.querySelector('.beep');
     const fenForm = document.querySelector('.fen__form');
     const fenInput = document.querySelector('.fen__input');
     const domTable = document.querySelector('tbody');
-    // const boardFEN = document.querySelector('.board__fen');
     const pickFigureModal = document.querySelector('.pickFigureModal');
     const modalPieces = document.querySelector('.pickFigureModal__pieces');
     const modalPiecesElements = createModalPiecesElements(modalPieces);
     const boardRows = document.querySelectorAll('.board__row');
-    // const surrenderButton = document.querySelector('#surrender');
-    // const proposeDrawButton = document.querySelector('#propose_draw');
 
     console.log('app() loading >> globalState: ', globalState);
     const state = {
       cursor: 'idle',
       figure: null,
       turn: globalState.activeSide,
-      activePlayer: globalState.activePlayer, // НАМ ЕЩЕ НУЖНО ЭТО СВОЙСТВО???
       isYourTurn: globalState.isYourTurn,
-      gameStarted: true,
       gameIsOver: false,
       yourSide: globalState.side,
     };
@@ -67,33 +58,15 @@ const PlayRoomPage = ({ leftBlock }) => {
     if (globalState.side === 'black') reverseBoard(boardRows);
     if (globalState.turnsHistory) board.setNewTurnsHistory(globalState.turnsHistory);
 
-    // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-    // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
-    // const whitePlayerFiled = document.querySelector('.whitePlayer');
-    // const blackPlayerFiled = document.querySelector('.blackPlayer');
-
     const render = () => {
-      // whitePlayerFiled.textContent = globalState.whitePlayerName;
-      // blackPlayerFiled.textContent = globalState.blackPlayerName;
-      // document.querySelector('.whitePlayer').textContent = globalState.whitePlayerName;
-      // document.querySelector('.blackPlayer').textContent = globalState.blackPlayerName;
-
       if (board.pawnPromotion) {
         renderModal(modalPiecesElements, pickFigureModal, board.pawnPromotion);
       }
       const gameIsOverState = getGameIsOverState(board, state);
       if (gameIsOverState) {
         state.gameIsOver = true;
-        // turn.textContent = gameIsOverState.turnContext;
-        // reason.textContent = gameIsOverState.reasonContext;
-        console.log(`${gameIsOverState.turnContext}. Причина: ${gameIsOverState.reasonContext}`);
         if (!board.isSpectator()) connection.send(gameIsOverState.action);
-      } else {
-        // turn.textContent = `Ход ${state.turn === 'white' ? 'белых' : 'черных'}`;
       }
-      // if (state.gameStarted) {
-      //   blackIcon.setAttribute('src', '../assets/greenDot.svg');
-      // }
       board.cellNames.forEach((name) => {
         const domCell = document.querySelector(`[data-cell="${name}"]`);
         renderCell(board.cellByName(name), domCell);
@@ -106,7 +79,6 @@ const PlayRoomPage = ({ leftBlock }) => {
       const data = JSON.parse(event.data);
       switch (data.action) {
         case 'gameState':
-          // console.log('gameState MES: ', data);
           if (data.payload.turnsHistory) {
             board.turnsHistory = data.payload.turnsHistory;
             renderMovesTable(domTable, board);
@@ -118,23 +90,7 @@ const PlayRoomPage = ({ leftBlock }) => {
           break;
         case 'turnState':
           state.turn = data.payload.activeSide;
-          state.activePlayer = data.payload.activePlayer;
           state.isYourTurn = data.payload.isYourTurn;
-          state.gameStarted = true;
-          break;
-        // case 'drawProposal':
-        //   // eslint-disable-next-line no-alert
-        //   alert('Соперник предлагает ничью!');
-        //   break;
-        case 'winProposal':
-          // eslint-disable-next-line no-alert
-          if (data.payload.ableToDeclareWin) {
-            // eslint-disable-next-line no-alert
-            // alert('Соперник давно в оффлайне - ты можешь требовать победу!');
-          } else {
-            // eslint-disable-next-line no-alert
-            // alert('про... ты свое счастье.......');
-          }
           break;
         default:
           // console.log('NEW unwatchable server message: ', data);
@@ -247,27 +203,6 @@ const PlayRoomPage = ({ leftBlock }) => {
         render();
       });
     });
-
-    // surrenderButton.addEventListener('click', (e) => {
-    //   e.preventDefault();
-    //   if (board.isSpectator()) return;
-    //   const action = JSON.stringify({
-    //     action: 'finishGame',
-    //     payload: {
-    //       result: 'loss',
-    //       reason: `${board.getPlayerSide() === 'white' ? 'Белые' : 'Черные'} сдались`,
-    //     },
-    //   });
-    //   connection.send(action);
-    // });
-
-    // proposeDrawButton.addEventListener('click', (e) => {
-    //   e.preventDefault();
-    //   if (board.isSpectator()) return;
-    //   console.log('you propose draw!');
-    //   const action = JSON.stringify({ action: 'proposeDraw', payload: null });
-    //   connection.send(action);
-    // });
 
     render();
     beep.play();
