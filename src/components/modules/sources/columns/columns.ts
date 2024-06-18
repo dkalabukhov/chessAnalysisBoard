@@ -6,7 +6,7 @@ const columns = [
 //         dataIndex: 'gameID',
 // },
     {
-        title: 'название комнаты',
+        title: 'Название комнаты',
         key: 'gameName',
         dataIndex: 'gameName',
 },

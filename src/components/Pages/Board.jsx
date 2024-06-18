@@ -153,7 +153,7 @@ const Board = () => {
         </form>
       </div>
     </div>
-  )
+  );
 };
 
 export default Board;
