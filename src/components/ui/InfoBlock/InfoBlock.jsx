@@ -7,6 +7,8 @@ import useGlobal from '../../../services/useGlobal';
 import PlayersBlock from '../../modules/Lobby/PlayersBlock';
 import HeaderDiv from '../CustomCard/HeaderDiv';
 import action from '../../../services/action';
+import CustomButton from '../CustomButton/CustomButton';
+import sendAction from '../../../services/sendAction';
 
 const InfoBtn = ({
   // text, image, alt, width, hide, imgSize = '40px', onClick,
@@ -115,7 +117,15 @@ const InfoBlock = () => {
         </FlexContainer>
       </form>
 
-      <PlayersBlock width="100%" padding="12px" />
+      <PlayersBlock width="100%" padding="32px" />
+      <FlexContainer width={btnWidth} justifySelf="end">
+        <CustomButton
+          text="Выйти в главное меню"
+          className="row-btn"
+          onClick={() => { sendAction(globalState.websocket, 'leave'); window.location.reload(); }}
+          hide={globalState.side !== 'spectator'}
+        />
+      </FlexContainer>
     </div>
   );
 };
