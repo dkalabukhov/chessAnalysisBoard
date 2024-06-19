@@ -1,10 +1,11 @@
 import { useRef } from 'react';
+import { Tooltip } from 'react-tooltip';
 import BottomPlayer from './BottomPlayer.jsx';
 import copyIcon from '../../assets/images/copy-icon.svg';
 
 const Board = () => {
   const fenInput = useRef(null);
-  const copyID = () => {
+  const copyFEN = () => {
     navigator.clipboard
       .writeText(fenInput.current.value)
       .then(() => {
@@ -145,8 +146,11 @@ const Board = () => {
             className="copyIDbutton fen-copy"
             src={copyIcon}
             alt="copy-logo"
-            onClick={copyID}
+            onClick={copyFEN}
+            data-tooltip-id="copyID"
+            data-tooltip-content="скопировать текущий FEN в буфер обмена"
           />
+          <Tooltip id="copyID" />
           {/* roll back! */}
           <button type="submit" className="fen__btn">Загрузить</button>
           {/* roll back! */}

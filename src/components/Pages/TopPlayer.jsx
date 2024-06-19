@@ -6,6 +6,7 @@ const TopPlayer = () => {
   const topPlayerSide = side === 'black' ? 'white' : 'black';
   if (!globalState.playerList) return null;
   const [topPlayer] = globalState.playerList.filter((player) => player.side === topPlayerSide);
+  if (!topPlayer) return null;
   const { userName } = topPlayer;
   return (
     <div className="top-player">
