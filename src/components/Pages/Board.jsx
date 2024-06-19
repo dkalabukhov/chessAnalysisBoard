@@ -152,7 +152,7 @@ const Board = () => {
           />
           <Tooltip id="copyID" />
           {/* roll back! */}
-          <button type="submit" className="fen__btn">Загрузить</button>
+          {/* <button type="submit" className="fen__btn">Загрузить</button> */}
           {/* roll back! */}
         </form>
       </div>
