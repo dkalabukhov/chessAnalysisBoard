@@ -7,6 +7,7 @@ import useGlobal from '../../../services/useGlobal';
 import PlayersBlock from '../../modules/Lobby/PlayersBlock';
 import HeaderDiv from '../CustomCard/HeaderDiv';
 import action from '../../../services/action';
+import sendAction from '../../../services/sendAction';
 import leaveIcon from '../../../assets/images/logouticon.png';
 
 const InfoBtn = ({
@@ -118,7 +119,7 @@ const InfoBlock = () => {
             text="Покинуть игру"
             image={leaveIcon}
             width={btnWidth}
-            onClick={action('leave')}
+            onClick={() => { sendAction(globalState.websocket, 'leave'); window.location.reload(); }}
           />
           )}
         </FlexContainer>
