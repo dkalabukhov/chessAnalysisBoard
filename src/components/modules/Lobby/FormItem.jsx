@@ -10,6 +10,7 @@ import GroupButtons from './GroupButtons';
 import action from '../../../services/action';
 import useGlobal from '../../../services/useGlobal';
 import sendAction from '../../../services/sendAction';
+import PrivacySwitcher from '../../ui/CustomButton/CustomCheckboxButton/PrivacySwitcher';
 
 const FormItem = () => {
   const [form] = useForm();
@@ -36,11 +37,12 @@ const FormItem = () => {
   if (!globalState.youAreHost) startTooltip = 'Начать игру может только создатель';
 
   return (
-    <Form form={form}>
-      <div style={{ width: '50%' }}>
+    <Form form={form} style={{ justifyContent: 'start' }}>
+      <div className="form-row" style={{ width: '60%' }}>
+        <PrivacySwitcher />
         <CustomInput
           className={`roomName ${globalState.youAreHost ? 'host' : ''}`}
-          text="Игровая комната"
+          text="комната:"
           disabled={!globalState.youAreHost}
           // style={{ value: globalState.gameName }}
           label={globalState.gameName}
@@ -63,6 +65,7 @@ const FormItem = () => {
           data-tooltip-content="скопировать ID игры в буфер обмена"
         />
         <Tooltip id="copyID" />
+
       </div>
       <div className="form-row">
         <div style={{ width: '50%' }}>
