@@ -1,6 +1,6 @@
 .floaterModal {
     position: fixed;
-    bottom: -100%;
+    /* bottom: -100%; */
     left: 1%;
     /* transform: translate(0%, 0); */
     background-color: white;
@@ -8,7 +8,7 @@
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     opacity: 0;
-    animation: slide 9s forwards, fade 8s forwards;
+    animation: slide 12s forwards, fade 11s forwards;
     max-width: 30%;
     pointer-events: none;
 }
@@ -16,19 +16,27 @@
 @keyframes slide {
     0% {
         animation-timing-function: cubic-bezier(.1, .57, .4, .64);
-        bottom: 0;
+        top: 100%;
     }
 
     100% {
-        bottom: 60%;
+        top: 0%;
 
     }
 }
 
 @keyframes fade {
+    /* 0% {
+        opacity: 1;
+    } */
+
     0% {
         animation-timing-function: cubic-bezier(.53, .02, .66, .84);
         opacity: 1;
+    }
+
+    80% {
+        opacity: 0.3;
     }
 
     100% {
