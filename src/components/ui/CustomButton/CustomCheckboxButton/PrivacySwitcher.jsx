@@ -22,7 +22,7 @@ const PrivacySwitcher = () => {
   const gameType = globalState.isPrivate ? 'private' : 'open';
 
   return (
-    <div className="checkbox-start" style={{ alignItems: 'center' }}>
+    <div className="checkbox-start" style={{ alignItems: 'center', alignSelf: 'start' }}>
       <span>{buttonSelector[gameType].text}</span>
       <img
         className="checkbox-img"
