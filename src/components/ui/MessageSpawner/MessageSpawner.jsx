@@ -6,8 +6,11 @@ import Floater from './Floater';
 const MessageSpawner = () => {
   const { globalState } = useGlobal();
   const [messages, setMessages] = useState([]);
+  const buffer = [];
+  let lastMessageTime = new Date();
+  const messageCD = 500; // ms
 
-  const addMessage = (from, text) => {
+  const addFloatingMessage = (from, text) => {
     setMessages((prev) => [...prev, { id: Math.random(), from, text }]);
   };
 
@@ -15,11 +18,24 @@ const MessageSpawner = () => {
     setMessages((prev) => prev.filter((message) => message.id !== id));
   };
 
+  const spawnMessage = () => {
+    if (new Date() - lastMessageTime < messageCD) return;
+    const newFloatingMessage = buffer.pop();
+    if (!newFloatingMessage) return;
+    addFloatingMessage(newFloatingMessage.from, newFloatingMessage.text);
+    lastMessageTime = new Date();
+    setTimeout(spawnMessage, messageCD + 10);
+  };
+  const addToBuffer = (from, text) => {
+    buffer.unshift({ from, text });
+    spawnMessage();
+  };
+
   useEffect(() => {
+    // setInterval(spawnMessage, messageCD);
     globalState.websocket.addEventListener('message', (event) => {
       const { action, payload } = JSON.parse(event.data);
-      // console.log(payload);
-      if (action === 'chat') addMessage(payload.from, payload.message);
+      if (action === 'chat') addToBuffer(payload.from, payload.message);
     });
   }, []);
 
